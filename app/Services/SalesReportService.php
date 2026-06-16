@@ -28,7 +28,7 @@ class SalesReportService
     /**
      * Indicadores do mês corrente com comparação ao mês anterior.
      *
-     * @return array{gross: float, refunds: float, net: float, salesCount: int, averageTicket: float, netDeltaPercent: ?float, countDelta: int}
+     * @return array{gross: float, refunds: float, net: float, commission: float, salesCount: int, averageTicket: float, netDeltaPercent: ?float, countDelta: int}
      */
     public function currentMonthKpis(): array
     {
@@ -44,6 +44,7 @@ class SalesReportService
             'gross' => $current['gross'],
             'refunds' => $current['refunds'],
             'net' => $net,
+            'commission' => $current['commission'],
             'salesCount' => $current['count'],
             'averageTicket' => $current['count'] > 0 ? $net / $current['count'] : 0.0,
             'netDeltaPercent' => $previousNet > 0 ? (($net - $previousNet) / $previousNet) * 100 : null,
@@ -140,19 +141,47 @@ class SalesReportService
     }
 
     /**
-     * @return array{gross: float, refunds: float, count: int}
+     * Ranking de vendedores por faturamento bruto e comissão linear no período.
+     *
+     * @return array{labels: array<int, string>, gross: array<int, float>, commission: array<int, float>, salesCount: array<int, int>}
+     */
+    public function sellersPerformance(int $limit = 5, int $months = 12): array
+    {
+        $since = CarbonImmutable::now()->startOfMonth()->subMonths($months - 1);
+
+        $rows = DB::table('orders')
+            ->leftJoin('sellers', 'sellers.id', '=', 'orders.seller_id')
+            ->whereIn('orders.status', OrderStatus::soldValues())
+            ->where('orders.created_at', '>=', $since)
+            ->selectRaw('COALESCE(sellers.name, ?) as seller_name, COALESCE(SUM(orders.total_amount), 0) as gross, COALESCE(SUM(orders.commission_amount), 0) as commission, COUNT(*) as sales_count', ['Sem vendedor'])
+            ->groupBy('orders.seller_id', 'sellers.name')
+            ->orderByDesc('gross')
+            ->limit($limit)
+            ->get();
+
+        return [
+            'labels' => $rows->pluck('seller_name')->all(),
+            'gross' => $rows->pluck('gross')->map(fn ($value): float => (float) $value)->all(),
+            'commission' => $rows->pluck('commission')->map(fn ($value): float => (float) $value)->all(),
+            'salesCount' => $rows->pluck('sales_count')->map(fn ($value): int => (int) $value)->all(),
+        ];
+    }
+
+    /**
+     * @return array{gross: float, refunds: float, commission: float, count: int}
      */
     private function aggregateBetween(CarbonImmutable $start, CarbonImmutable $end): array
     {
         $row = Order::query()
             ->whereIn('status', OrderStatus::soldValues())
             ->whereBetween('created_at', [$start, $end])
-            ->selectRaw('COALESCE(SUM(total_amount), 0) as gross, COALESCE(SUM(refunded_amount), 0) as refunds, COUNT(*) as cnt')
+            ->selectRaw('COALESCE(SUM(total_amount), 0) as gross, COALESCE(SUM(refunded_amount), 0) as refunds, COALESCE(SUM(commission_amount), 0) as commission, COUNT(*) as cnt')
             ->first();
 
         return [
             'gross' => (float) ($row->gross ?? 0),
             'refunds' => (float) ($row->refunds ?? 0),
+            'commission' => (float) ($row->commission ?? 0),
             'count' => (int) ($row->cnt ?? 0),
         ];
     }

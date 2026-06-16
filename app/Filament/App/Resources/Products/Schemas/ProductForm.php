@@ -4,8 +4,8 @@ namespace App\Filament\App\Resources\Products\Schemas;
 
 use App\Models\Product;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Leandrocfe\FilamentPtbrFormFields\Money;
@@ -38,6 +38,12 @@ class ProductForm
                         Money::make('cost_price')
                             ->label('Custo')
                             ->required(),
+                        TextInput::make('commission_rate')
+                            ->label('Comissão do produto (%)')
+                            ->numeric()
+                            ->minValue(0)
+                            ->maxValue(100)
+                            ->helperText('Opcional. Quando preenchida, substitui a comissão padrão do vendedor neste produto.'),
                         TextInput::make('stock')
                             ->label('Estoque')
                             ->integer()

@@ -4,6 +4,7 @@ namespace App\Filament\App\Resources\Orders\Schemas;
 
 use App\Enums\OrderOrigin;
 use App\Enums\OrderStatus;
+use App\Models\Seller;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Section;
@@ -30,8 +31,20 @@ class OrderForm
                             ->options(OrderOrigin::class)
                             ->default(OrderOrigin::Balcao->value)
                             ->required(),
+                        Select::make('seller_id')
+                            ->label('Vendedor')
+                            ->relationship('seller', 'name', modifyQueryUsing: fn ($query) => $query->active()->orderBy('name'))
+                            ->default(fn (): ?int => Seller::active()->linkedToUser(auth()->id())->value('id'))
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->helperText('Vendedor responsável pela comissão.'),
                         Money::make('total_amount')
                             ->label('Total')
+                            ->disabled()
+                            ->dehydrated(false),
+                        Money::make('commission_amount')
+                            ->label('Comissão')
                             ->disabled()
                             ->dehydrated(false),
                         Select::make('payment_method')

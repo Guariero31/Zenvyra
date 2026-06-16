@@ -12,16 +12,33 @@ use Illuminate\Validation\ValidationException;
 
 class OrderLifecycleManager
 {
-    public function __construct(private StockManager $stock) {}
+    public function __construct(
+        private StockManager $stock,
+        private CommissionCalculator $commission,
+    ) {}
 
     public function recalculateTotal(Order $order): void
     {
-        $total = $order->items()
-            ->selectRaw('COALESCE(SUM(quantity * price_at_sale), 0) as total')
-            ->value('total');
+        $order->loadMissing('seller');
+        $items = $order->items()->with('product')->get();
+        $total = '0.00';
+        $commissionAmount = '0.00';
+
+        foreach ($items as $item) {
+            $total = bcadd($total, bcmul((string) $item->quantity, (string) $item->price_at_sale, 2), 2);
+
+            $snapshot = $this->commission->snapshotForItem($item, $order);
+            $commissionAmount = bcadd($commissionAmount, $snapshot['amount'], 2);
+
+            $item->forceFill([
+                'commission_rate' => $snapshot['rate'],
+                'commission_amount' => $snapshot['amount'],
+            ])->saveQuietly();
+        }
 
         $order->forceFill([
             'total_amount' => $total,
+            'commission_amount' => $commissionAmount,
         ])->saveQuietly();
     }
 

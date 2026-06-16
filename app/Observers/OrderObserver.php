@@ -18,6 +18,10 @@ class OrderObserver
 
     public function updated(Order $order): void
     {
+        if ($order->wasChanged('seller_id')) {
+            $this->orders->recalculateTotal($order);
+        }
+
         if ($order->wasChanged('status')) {
             $this->orders->deductInventoryIfPaid($order);
         }

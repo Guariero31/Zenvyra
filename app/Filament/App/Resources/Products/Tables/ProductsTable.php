@@ -46,6 +46,12 @@ class ProductsTable
                     ->money('BRL')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('commission_rate')
+                    ->label('Comissão')
+                    ->suffix('%')
+                    ->placeholder('Padrão do vendedor')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('stock')
                     ->label('Estoque')
                     ->state(fn (Product $record): int => $record->effectiveStock())

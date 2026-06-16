@@ -27,6 +27,8 @@ class OrderItemFactory extends Factory
             'quantity' => fake()->numberBetween(1, 5),
             'price_at_sale' => $price,
             'cost_at_sale' => round($price * 0.5, 2),
+            'commission_rate' => 0,
+            'commission_amount' => 0,
         ];
     }
 }

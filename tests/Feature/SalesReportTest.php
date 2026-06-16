@@ -10,11 +10,13 @@ use App\Filament\App\Widgets\MonthlyRevenueChart;
 use App\Filament\App\Widgets\MonthlySalesCountChart;
 use App\Filament\App\Widgets\PaymentMethodRevenueChart;
 use App\Filament\App\Widgets\SalesStatsOverview;
+use App\Filament\App\Widgets\SellersPerformanceChart;
 use App\Filament\App\Widgets\TopProductsChart;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\Seller;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Services\SalesReportService;
@@ -121,6 +123,28 @@ class SalesReportTest extends TestCase
         $this->assertSame(600.0, $data['data'][0]);
     }
 
+    public function test_sellers_performance_groups_revenue_and_commission(): void
+    {
+        $seller = Seller::factory()->create(['name' => 'Maria Vendas', 'commission_rate' => 10]);
+        $product = $this->createProduct('Produto Comissionado');
+        $order = Order::factory()->create([
+            'seller_id' => $seller->id,
+            'status' => OrderStatus::Paid,
+        ]);
+        OrderItem::factory()->for($order)->create([
+            'product_id' => $product->id,
+            'quantity' => 2,
+            'price_at_sale' => 100,
+        ]);
+
+        $data = $this->reports->sellersPerformance();
+
+        $this->assertSame('Maria Vendas', $data['labels'][0]);
+        $this->assertSame(200.0, $data['gross'][0]);
+        $this->assertSame(20.0, $data['commission'][0]);
+        $this->assertSame(1, $data['salesCount'][0]);
+    }
+
     public function test_dashboard_widgets_render_for_tenant(): void
     {
         $tenant = Tenant::create(['te_name' => 'Loja BI']);
@@ -140,6 +164,7 @@ class SalesReportTest extends TestCase
         Livewire::test(MonthlySalesCountChart::class)->assertOk();
         Livewire::test(PaymentMethodRevenueChart::class)->assertOk();
         Livewire::test(TopProductsChart::class)->assertOk();
+        Livewire::test(SellersPerformanceChart::class)->assertOk();
     }
 
     private function createProduct(string $title = 'Produto Demo'): Product

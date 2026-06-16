@@ -25,6 +25,10 @@ class OrdersTable
                     ->label('Cliente')
                     ->searchable()
                     ->placeholder('Sem cliente'),
+                TextColumn::make('seller.name')
+                    ->label('Vendedor')
+                    ->searchable()
+                    ->placeholder('Sem vendedor'),
                 TextColumn::make('origin')
                     ->label('Origem')
                     ->badge(),
@@ -49,6 +53,11 @@ class OrdersTable
                     ->label('Estornado')
                     ->money('BRL')
                     ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('commission_amount')
+                    ->label('Comissão')
+                    ->money('BRL')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('status')
@@ -60,6 +69,11 @@ class OrdersTable
                         'BALCAO' => 'Balcão',
                         'CATALOGO_WHATSAPP' => 'Catálogo WhatsApp',
                     ]),
+                SelectFilter::make('seller_id')
+                    ->label('Vendedor')
+                    ->relationship('seller', 'name')
+                    ->searchable()
+                    ->preload(),
             ])
             ->recordActions([
                 EditAction::make(),

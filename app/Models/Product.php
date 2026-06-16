@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProductFactory> */
+    /** @use HasFactory<ProductFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -22,6 +23,7 @@ class Product extends Model
         'sku',
         'price',
         'cost_price',
+        'commission_rate',
         'stock',
         'low_stock_threshold',
         'status',
@@ -32,6 +34,7 @@ class Product extends Model
         return [
             'price' => 'decimal:2',
             'cost_price' => 'decimal:2',
+            'commission_rate' => 'decimal:2',
             'stock' => 'integer',
             'low_stock_threshold' => 'integer',
         ];

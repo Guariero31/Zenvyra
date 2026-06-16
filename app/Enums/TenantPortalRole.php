@@ -13,6 +13,7 @@ enum TenantPortalRole: string implements HasColor, HasIcon, HasLabel
 {
     case Member = 'member';
     case Leader = 'leader';
+    case Vendedor = 'vendedor';
     case Rh = 'rh';
     case AdministradorCliente = 'administrador_cliente';
 
@@ -21,6 +22,7 @@ enum TenantPortalRole: string implements HasColor, HasIcon, HasLabel
         return match ($this) {
             self::Member => 'Colaborador',
             self::Leader => 'Líder',
+            self::Vendedor => 'Vendedor',
             self::Rh => 'RH',
             self::AdministradorCliente => 'Administrador da Loja',
         };
@@ -31,6 +33,7 @@ enum TenantPortalRole: string implements HasColor, HasIcon, HasLabel
         return match ($this) {
             self::Member => 'gray',
             self::Leader => 'info',
+            self::Vendedor => 'success',
             self::Rh => 'warning',
             self::AdministradorCliente => 'success',
         };
@@ -41,6 +44,7 @@ enum TenantPortalRole: string implements HasColor, HasIcon, HasLabel
         return match ($this) {
             self::Member => Heroicon::OutlinedUser,
             self::Leader => Heroicon::OutlinedUserGroup,
+            self::Vendedor => Heroicon::OutlinedShoppingBag,
             self::Rh => Heroicon::OutlinedIdentification,
             self::AdministradorCliente => Heroicon::OutlinedShieldCheck,
         };

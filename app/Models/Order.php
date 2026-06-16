@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\OrderOrigin;
 use App\Enums\OrderStatus;
+use Database\Factories\OrderFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,14 +14,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
-    /** @use HasFactory<\Database\Factories\OrderFactory> */
+    /** @use HasFactory<OrderFactory> */
     use HasFactory;
 
     protected $fillable = [
         'customer_id',
         'user_id',
+        'seller_id',
         'origin',
         'total_amount',
+        'commission_amount',
         'payment_method',
         'status',
         'inventory_deducted_at',
@@ -34,6 +37,7 @@ class Order extends Model
             'origin' => OrderOrigin::class,
             'status' => OrderStatus::class,
             'total_amount' => 'decimal:2',
+            'commission_amount' => 'decimal:2',
             'refunded_amount' => 'decimal:2',
             'inventory_deducted_at' => 'datetime',
             'refunded_at' => 'datetime',
@@ -46,11 +50,16 @@ class Order extends Model
     }
 
     /**
-     * Vendedor responsável pela venda. Vive no schema central (public.users).
+     * Usuário que registrou a venda. Vive no schema central (public.users).
      */
-    public function seller(): BelongsTo
+    public function operator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function seller(): BelongsTo
+    {
+        return $this->belongsTo(Seller::class);
     }
 
     public function items(): HasMany

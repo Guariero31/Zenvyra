@@ -22,8 +22,10 @@ class OrderFactory extends Factory
         return [
             'customer_id' => Customer::factory(),
             'user_id' => null,
+            'seller_id' => null,
             'origin' => fake()->randomElement(OrderOrigin::cases()),
             'total_amount' => 0,
+            'commission_amount' => 0,
             'payment_method' => fake()->randomElement(['dinheiro', 'pix', 'cartao_credito', 'cartao_debito']),
             'status' => OrderStatus::Pending,
         ];

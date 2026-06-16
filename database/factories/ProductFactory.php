@@ -27,6 +27,7 @@ class ProductFactory extends Factory
             'sku' => strtoupper(Str::random(8)),
             'price' => $price,
             'cost_price' => round($price * fake()->randomFloat(2, 0.4, 0.7), 2),
+            'commission_rate' => null,
             'stock' => fake()->numberBetween(10, 100),
             'low_stock_threshold' => 5,
             'status' => 'active',

@@ -99,6 +99,14 @@ class ItemsRelationManager extends RelationManager
                     ->label('Custo')
                     ->money('BRL')
                     ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('commission_rate')
+                    ->label('Comissão')
+                    ->suffix('%')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('commission_amount')
+                    ->label('Valor comissão')
+                    ->money('BRL')
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

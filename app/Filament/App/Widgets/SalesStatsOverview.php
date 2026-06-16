@@ -30,6 +30,9 @@ class SalesStatsOverview extends BaseWidget
             Stat::make('Ticket médio', $this->money($kpis['averageTicket']))
                 ->description('Faturamento líquido por venda')
                 ->color('info'),
+            Stat::make('Comissões no mês', $this->money($kpis['commission']))
+                ->description('Valor bruto comissionado')
+                ->color('warning'),
             Stat::make('Estornos no mês', $this->money($kpis['refunds']))
                 ->description('Valor devolvido aos clientes')
                 ->color($kpis['refunds'] > 0 ? 'danger' : 'gray'),

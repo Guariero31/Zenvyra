@@ -177,6 +177,48 @@ class SubscriptionLifecycleTest extends TestCase
         $this->assertTrue($tenant->fresh()->hasActiveSubscription());
     }
 
+    public function test_middleware_transitions_state_and_allows_access_within_grace_period(): void
+    {
+        $tenant = Tenant::factory()->create();
+
+        // Subscription is Active but ends_at is in the past — no command ran yet
+        Subscription::factory()->create([
+            'tenant_id' => $tenant->id,
+            'ends_at' => now()->subHour(),
+            'grace_ends_at' => null,
+        ]);
+
+        $this->bootTenantPanel($tenant);
+
+        // Middleware should call refreshState (→ PastDue) and still allow access
+        $response = (new EnsureSubscriptionIsActive(app(SubscriptionManager::class)))
+            ->handle(Request::create('/app/'.$tenant->te_slug), fn (): Response => new Response('ok'));
+
+        $this->assertSame('ok', $response->getContent());
+        $this->assertSame(SubscriptionStatus::PastDue, $tenant->subscriptions()->latest('id')->first()->status);
+    }
+
+    public function test_middleware_transitions_state_and_blocks_access_after_grace_period(): void
+    {
+        $tenant = Tenant::factory()->create();
+
+        // Subscription is PastDue but grace_ends_at is in the past — no command ran yet
+        Subscription::factory()->pastDue()->create([
+            'tenant_id' => $tenant->id,
+            'grace_ends_at' => now()->subHour(),
+        ]);
+
+        $this->bootTenantPanel($tenant);
+
+        // Middleware should call refreshState (→ Expired) and block access without running the command
+        $response = (new EnsureSubscriptionIsActive(app(SubscriptionManager::class)))
+            ->handle(Request::create('/app/'.$tenant->te_slug), fn (): Response => new Response('ok'));
+
+        $this->assertTrue($response->isRedirect());
+        $this->assertStringContainsString('assinatura-pendente', $response->headers->get('Location'));
+        $this->assertSame(SubscriptionStatus::Expired, $tenant->subscriptions()->latest('id')->first()->status);
+    }
+
     public function test_middleware_blocks_tenant_without_active_subscription(): void
     {
         $tenant = Tenant::factory()->create();
@@ -184,7 +226,7 @@ class SubscriptionLifecycleTest extends TestCase
 
         $this->bootTenantPanel($tenant);
 
-        $response = (new EnsureSubscriptionIsActive())
+        $response = (new EnsureSubscriptionIsActive(app(SubscriptionManager::class)))
             ->handle(Request::create('/app/'.$tenant->te_slug), fn (): Response => new Response('ok'));
 
         $this->assertTrue($response->isRedirect());
@@ -198,7 +240,7 @@ class SubscriptionLifecycleTest extends TestCase
 
         $this->bootTenantPanel($tenant);
 
-        $response = (new EnsureSubscriptionIsActive())
+        $response = (new EnsureSubscriptionIsActive(app(SubscriptionManager::class)))
             ->handle(Request::create('/app/'.$tenant->te_slug), fn (): Response => new Response('ok'));
 
         $this->assertSame('ok', $response->getContent());

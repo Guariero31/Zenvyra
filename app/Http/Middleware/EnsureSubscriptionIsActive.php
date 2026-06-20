@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use App\Models\Tenant;
+use App\Services\SubscriptionManager;
 use Closure;
 use Filament\Facades\Filament;
 use Illuminate\Http\Request;
@@ -17,12 +18,23 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class EnsureSubscriptionIsActive
 {
+    public function __construct(private readonly SubscriptionManager $subscriptionManager) {}
+
     public function handle(Request $request, Closure $next): Response
     {
         $tenant = Filament::getTenant();
 
-        if ($tenant instanceof Tenant && ! $tenant->hasActiveSubscription()) {
-            return redirect()->route('subscription.blocked', ['tenant' => $tenant->te_slug]);
+        if ($tenant instanceof Tenant) {
+            $latestSubscription = $tenant->subscriptions()->latest('id')->first();
+
+            if ($latestSubscription !== null) {
+                $this->subscriptionManager->refreshState($latestSubscription);
+                $tenant->unsetRelation('subscriptions');
+            }
+
+            if (! $tenant->hasActiveSubscription()) {
+                return redirect()->route('subscription.blocked', ['tenant' => $tenant->te_slug]);
+            }
         }
 
         return $next($request);

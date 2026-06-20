@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Filament\Admin\Resources\Administrators\Pages\CreateAdministrator;
+use App\Filament\Admin\Resources\Administrators\Pages\EditAdministrator;
+use App\Filament\Admin\Resources\Administrators\Pages\ListAdministrators;
+use App\Filament\Admin\Resources\IdentidadeVisuals\Pages\EditIdentidadeVisual;
 use App\Filament\Admin\Resources\Plans\Pages\CreatePlan;
 use App\Filament\Admin\Resources\Plans\Pages\EditPlan;
 use App\Filament\Admin\Resources\Plans\Pages\ListPlans;
+use App\Filament\Admin\Resources\StoreOwners\Pages\CreateStoreOwner;
+use App\Filament\Admin\Resources\StoreOwners\Pages\EditStoreOwner;
+use App\Filament\Admin\Resources\StoreOwners\Pages\ListStoreOwners;
 use App\Filament\Admin\Resources\Subscriptions\Pages\CreateSubscription;
 use App\Filament\Admin\Resources\Subscriptions\Pages\EditSubscription;
 use App\Filament\Admin\Resources\Subscriptions\Pages\ListSubscriptions;
 use App\Filament\Admin\Resources\Tenants\Pages\CreateTenant;
 use App\Filament\Admin\Resources\Tenants\Pages\EditTenant;
 use App\Filament\Admin\Resources\Tenants\Pages\ListTenants;
-use App\Filament\Admin\Resources\Administrators\Pages\CreateAdministrator;
-use App\Filament\Admin\Resources\Administrators\Pages\EditAdministrator;
-use App\Filament\Admin\Resources\Administrators\Pages\ListAdministrators;
-use App\Filament\Admin\Resources\StoreOwners\Pages\CreateStoreOwner;
-use App\Filament\Admin\Resources\StoreOwners\Pages\EditStoreOwner;
-use App\Filament\Admin\Resources\StoreOwners\Pages\ListStoreOwners;
+use App\Models\IdentidadeVisual;
 use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\Tenant;
@@ -42,6 +44,13 @@ class AdminResourcesTest extends TestCase
 
         $this->admin = User::factory()->platformAdmin()->create();
         $this->actingAs($this->admin);
+    }
+
+    public function test_admin_identidade_visual_resource_page_can_load(): void
+    {
+        $registro = IdentidadeVisual::obterOuCriar();
+
+        Livewire::test(EditIdentidadeVisual::class, ['record' => $registro->id])->assertOk();
     }
 
     public function test_admin_tenant_resource_pages_can_load(): void

@@ -2,6 +2,7 @@
 
 namespace App\Filament\App\Resources\Orders;
 
+use App\Enums\OrderStatus;
 use App\Enums\TenantPortalRole;
 use App\Filament\App\Resources\Orders\Pages\CreateOrder;
 use App\Filament\App\Resources\Orders\Pages\EditOrder;
@@ -27,7 +28,7 @@ class OrderResource extends Resource
 
     protected static bool $isScopedToTenant = false;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingCart;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingBag;
 
     protected static ?string $modelLabel = 'pedido';
 
@@ -35,9 +36,23 @@ class OrderResource extends Resource
 
     protected static ?string $navigationLabel = 'Pedidos';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Vendas';
+    protected static \UnitEnum|string|null $navigationGroup = null;
 
-    protected static ?int $navigationSort = 20;
+    protected static ?int $navigationSort = 2;
+
+    public static function getNavigationBadge(): ?string
+    {
+        $count = static::getEloquentQuery()
+            ->where('status', OrderStatus::Pending)
+            ->count();
+
+        return $count > 0 ? (string) $count : null;
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'danger';
+    }
 
     public static function form(Schema $schema): Schema
     {

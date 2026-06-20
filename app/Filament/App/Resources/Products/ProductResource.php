@@ -13,10 +13,10 @@ use App\Filament\App\Resources\Products\Tables\ProductsTable;
 use App\Models\Product;
 use BackedEnum;
 use Filament\Resources\Resource;
-use Illuminate\Database\Eloquent\Builder;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProductResource extends Resource
 {
@@ -24,17 +24,17 @@ class ProductResource extends Resource
 
     protected static bool $isScopedToTenant = false;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingBag;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
 
     protected static ?string $modelLabel = 'produto';
 
     protected static ?string $pluralModelLabel = 'produtos';
 
-    protected static ?string $navigationLabel = 'Produtos';
+    protected static ?string $navigationLabel = 'Catálogo';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Catálogo';
+    protected static \UnitEnum|string|null $navigationGroup = null;
 
-    protected static ?int $navigationSort = 20;
+    protected static ?int $navigationSort = 3;
 
     protected static ?string $recordTitleAttribute = 'title';
 

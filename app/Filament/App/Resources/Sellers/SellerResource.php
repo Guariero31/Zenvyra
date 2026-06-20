@@ -28,9 +28,9 @@ class SellerResource extends Resource
 
     protected static ?string $navigationLabel = 'Vendedores';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Vendas';
+    protected static \UnitEnum|string|null $navigationGroup = null;
 
-    protected static ?int $navigationSort = 30;
+    protected static ?int $navigationSort = 6;
 
     protected static ?string $recordTitleAttribute = 'name';
 

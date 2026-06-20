@@ -28,9 +28,9 @@ class CustomerResource extends Resource
 
     protected static ?string $navigationLabel = 'Clientes';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Vendas';
+    protected static \UnitEnum|string|null $navigationGroup = null;
 
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 5;
 
     protected static ?string $recordTitleAttribute = 'name';
 

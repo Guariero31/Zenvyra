@@ -9,7 +9,7 @@ use Filament\Widgets\ChartWidget;
 
 class MonthlyRevenueChart extends ChartWidget
 {
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 4;
 
     protected ?string $heading = 'Faturamento mensal';
 

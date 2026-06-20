@@ -9,7 +9,7 @@ use Filament\Widgets\ChartWidget;
 
 class PaymentMethodRevenueChart extends ChartWidget
 {
-    protected static ?int $sort = 4;
+    protected static ?int $sort = 6;
 
     protected ?string $heading = 'Faturamento por forma de pagamento';
 

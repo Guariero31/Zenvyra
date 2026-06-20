@@ -9,7 +9,7 @@ use Filament\Widgets\ChartWidget;
 
 class SellersPerformanceChart extends ChartWidget
 {
-    protected static ?int $sort = 6;
+    protected static ?int $sort = 8;
 
     protected ?string $heading = 'Ranking de vendedores';
 

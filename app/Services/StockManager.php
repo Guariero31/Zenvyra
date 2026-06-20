@@ -65,6 +65,32 @@ class StockManager
     }
 
     /**
+     * Registra um ajuste manual de estoque (positivo = entrada, negativo = baixa).
+     */
+    public function adjustment(Product $product, ?ProductVariation $variation, int $signedQuantity, ?string $reason, ?int $userId): StockMovement
+    {
+        if ($signedQuantity === 0) {
+            throw ValidationException::withMessages([
+                'quantity' => 'O ajuste não pode ser zero.',
+            ]);
+        }
+
+        return DB::transaction(function () use ($product, $variation, $signedQuantity, $reason, $userId): StockMovement {
+            $this->applyDelta($product, $variation, $signedQuantity);
+
+            return $this->record(
+                productId: $variation?->product_id ?? $product->getKey(),
+                variationId: $variation?->getKey(),
+                type: StockMovementType::Adjustment,
+                quantity: $signedQuantity,
+                orderId: null,
+                reason: $reason,
+                userId: $userId,
+            );
+        });
+    }
+
+    /**
      * Devolve estoque por causa de um estorno e registra o movimento.
      * Deve ser chamado dentro da transação do estorno.
      */

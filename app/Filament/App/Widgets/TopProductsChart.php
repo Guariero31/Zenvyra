@@ -9,7 +9,7 @@ use Filament\Widgets\ChartWidget;
 
 class TopProductsChart extends ChartWidget
 {
-    protected static ?int $sort = 5;
+    protected static ?int $sort = 7;
 
     protected ?string $heading = 'Top produtos por receita';
 

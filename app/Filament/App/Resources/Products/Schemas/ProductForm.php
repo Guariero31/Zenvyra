@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\App\Resources\Products\Schemas;
 
+use App\Filament\Forms\Components\Percent;
 use App\Models\Product;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -58,12 +59,9 @@ class ProductForm
                             ->label('Custo')
                             ->helperText('Apenas para controle interno.'),
 
-                        TextInput::make('commission_rate')
+                        Percent::make('commission_rate')
                             ->label('Comissão (%)')
-                            ->numeric()
-                            ->minValue(0)
-                            ->maxValue(100)
-                            ->suffix('%')
+                            ->nullable()
                             ->placeholder('Padrão do vendedor')
                             ->helperText('Deixe vazio para usar a comissão padrão do vendedor.'),
                     ]),

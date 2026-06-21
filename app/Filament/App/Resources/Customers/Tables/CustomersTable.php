@@ -5,6 +5,7 @@ namespace App\Filament\App\Resources\Customers\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -40,6 +41,8 @@ class CustomersTable
                 //
             ])
             ->recordActions([
+                ViewAction::make()
+                    ->label(false),
                 EditAction::make()
                     ->label(false),
             ])

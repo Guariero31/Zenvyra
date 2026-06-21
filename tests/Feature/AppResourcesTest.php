@@ -12,9 +12,12 @@ use App\Filament\App\Resources\Categories\Pages\ListCategories;
 use App\Filament\App\Resources\Customers\Pages\CreateCustomer;
 use App\Filament\App\Resources\Customers\Pages\EditCustomer;
 use App\Filament\App\Resources\Customers\Pages\ListCustomers;
+use App\Filament\App\Resources\Customers\Pages\ViewCustomer;
+use App\Filament\App\Resources\Customers\RelationManagers\OrdersRelationManager;
 use App\Filament\App\Resources\Orders\Pages\CreateOrder;
 use App\Filament\App\Resources\Orders\Pages\EditOrder;
 use App\Filament\App\Resources\Orders\Pages\ListOrders;
+use App\Filament\App\Resources\Orders\Pages\ViewOrder;
 use App\Filament\App\Resources\Orders\RelationManagers\ItemsRelationManager;
 use App\Filament\App\Resources\Products\Pages\CreateProduct;
 use App\Filament\App\Resources\Products\Pages\EditProduct;
@@ -158,7 +161,41 @@ class AppResourcesTest extends TestCase
 
         Livewire::test(ListCustomers::class)->assertOk();
         Livewire::test(CreateCustomer::class)->assertOk();
+        Livewire::test(ViewCustomer::class, ['record' => $customer->id])->assertOk();
         Livewire::test(EditCustomer::class, ['record' => $customer->id])->assertOk();
+    }
+
+    public function test_customer_edit_shows_purchase_history(): void
+    {
+        $customer = Customer::create([
+            'name' => 'Cliente Com Histórico',
+            'phone' => '11999990000',
+        ]);
+
+        $paidOrder = Order::create([
+            'customer_id' => $customer->id,
+            'user_id' => auth()->id(),
+            'origin' => 'BALCAO',
+            'total_amount' => 250,
+            'payment_method' => 'pix',
+            'status' => OrderStatus::Paid,
+        ]);
+
+        $pendingOrder = Order::create([
+            'customer_id' => $customer->id,
+            'user_id' => auth()->id(),
+            'origin' => 'BALCAO',
+            'total_amount' => 99,
+            'payment_method' => 'dinheiro',
+            'status' => OrderStatus::Pending,
+        ]);
+
+        Livewire::test(OrdersRelationManager::class, [
+            'ownerRecord' => $customer,
+            'pageClass' => EditCustomer::class,
+        ])
+            ->assertCanSeeTableRecords([$paidOrder, $pendingOrder])
+            ->assertOk();
     }
 
     public function test_app_team_resource_pages_can_load(): void
@@ -181,6 +218,7 @@ class AppResourcesTest extends TestCase
 
         Livewire::test(ListOrders::class)->assertOk();
         Livewire::test(CreateOrder::class)->assertOk();
+        Livewire::test(ViewOrder::class, ['record' => $order->id])->assertOk();
         Livewire::test(EditOrder::class, ['record' => $order->id])->assertOk();
     }
 

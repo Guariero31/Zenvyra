@@ -3,6 +3,7 @@
 namespace App\Filament\App\Resources\TeamMembers\Schemas;
 
 use App\Enums\TenantPortalRole;
+use App\Filament\Forms\Components\Percent;
 use App\Models\Tenant;
 use App\Models\User;
 use Filament\Facades\Filament;
@@ -73,9 +74,8 @@ class TeamMemberForm
                                 'RH' => 'RH',
                             ])
                             ->searchable(),
-                        TextInput::make('tu_commission_rate')
+                        Percent::make('tu_commission_rate')
                             ->label('Comissão padrão (%)')
-                            ->numeric()
                             ->minValue(0)
                             ->maxValue(100)
                             ->default(0)

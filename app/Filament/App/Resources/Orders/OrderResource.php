@@ -7,9 +7,11 @@ use App\Enums\TenantPortalRole;
 use App\Filament\App\Resources\Orders\Pages\CreateOrder;
 use App\Filament\App\Resources\Orders\Pages\EditOrder;
 use App\Filament\App\Resources\Orders\Pages\ListOrders;
+use App\Filament\App\Resources\Orders\Pages\ViewOrder;
 use App\Filament\App\Resources\Orders\RelationManagers\ItemsRelationManager;
 use App\Filament\App\Resources\Orders\RelationManagers\RefundsRelationManager;
 use App\Filament\App\Resources\Orders\Schemas\OrderForm;
+use App\Filament\App\Resources\Orders\Schemas\OrderInfolist;
 use App\Filament\App\Resources\Orders\Tables\OrdersTable;
 use App\Models\Order;
 use App\Models\Tenant;
@@ -58,6 +60,11 @@ class OrderResource extends Resource
         return OrderForm::configure($schema);
     }
 
+    public static function infolist(Schema $schema): Schema
+    {
+        return OrderInfolist::configure($schema);
+    }
+
     public static function table(Table $table): Table
     {
         return OrdersTable::configure($table);
@@ -87,6 +94,7 @@ class OrderResource extends Resource
         return [
             'index' => ListOrders::route('/'),
             'create' => CreateOrder::route('/create'),
+            'view' => ViewOrder::route('/{record}'),
             'edit' => EditOrder::route('/{record}/edit'),
         ];
     }

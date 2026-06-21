@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\OrderStatus;
 use App\Enums\TenantPortalRole;
 use App\Filament\App\Resources\Categories\Pages\CreateCategory;
 use App\Filament\App\Resources\Categories\Pages\EditCategory;
@@ -181,6 +182,27 @@ class AppResourcesTest extends TestCase
         Livewire::test(ListOrders::class)->assertOk();
         Livewire::test(CreateOrder::class)->assertOk();
         Livewire::test(EditOrder::class, ['record' => $order->id])->assertOk();
+    }
+
+    public function test_list_orders_tabs_filter_by_status(): void
+    {
+        $paid = Order::create([
+            'origin' => 'BALCAO',
+            'total_amount' => 100,
+            'status' => OrderStatus::Paid,
+        ]);
+
+        $canceled = Order::create([
+            'origin' => 'BALCAO',
+            'total_amount' => 50,
+            'status' => OrderStatus::Canceled,
+        ]);
+
+        Livewire::test(ListOrders::class)
+            ->assertCanSeeTableRecords([$paid, $canceled])
+            ->set('activeTab', OrderStatus::Paid->value)
+            ->assertCanSeeTableRecords([$paid])
+            ->assertCanNotSeeTableRecords([$canceled]);
     }
 
     public function test_order_items_can_be_managed_while_pending(): void

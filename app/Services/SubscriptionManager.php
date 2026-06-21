@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enums\SubscriptionIntent;
 use App\Enums\SubscriptionStatus;
 use App\Models\Plan;
 use App\Models\Subscription;
@@ -19,6 +20,36 @@ use Illuminate\Support\Carbon;
  */
 class SubscriptionManager
 {
+    public function startEvaluation(Tenant $tenant, Plan $plan, ?int $days = null): Subscription
+    {
+        $now = Carbon::now();
+        $evaluationDays = $days ?? (int) config('subscriptions.evaluation_days', 20);
+        $trialEnds = $now->copy()->addDays($evaluationDays);
+
+        return $tenant->subscriptions()->create([
+            'plan_id' => $plan->id,
+            'intent' => SubscriptionIntent::Evaluation,
+            'status' => SubscriptionStatus::Trialing,
+            'starts_at' => $now,
+            'trial_ends_at' => $trialEnds,
+            'next_billing_at' => $trialEnds,
+        ]);
+    }
+
+    /**
+     * Inicia assinatura comercial para loja que já fechou negócio. Ignora trial
+     * do plano e ativa o ciclo de cobrança imediatamente.
+     */
+    public function startCommercialSubscription(Tenant $tenant, Plan $plan): Subscription
+    {
+        $subscription = $tenant->subscriptions()->make([
+            'plan_id' => $plan->id,
+            'intent' => SubscriptionIntent::Commercial,
+        ]);
+
+        return $this->activate($subscription);
+    }
+
     /**
      * Cria uma assinatura iniciando o período de teste do plano. Se o plano não
      * tiver trial, a assinatura já nasce ativa.
@@ -28,26 +59,42 @@ class SubscriptionManager
         $now = Carbon::now();
 
         if ($plan->hasTrial()) {
+            $trialEnds = $now->copy()->addDays($plan->trial_days);
+
             return $tenant->subscriptions()->create([
                 'plan_id' => $plan->id,
+                'intent' => SubscriptionIntent::Commercial,
                 'status' => SubscriptionStatus::Trialing,
                 'starts_at' => $now,
-                'trial_ends_at' => $now->copy()->addDays($plan->trial_days),
+                'trial_ends_at' => $trialEnds,
+                'next_billing_at' => $trialEnds,
             ]);
         }
 
-        $subscription = $tenant->subscriptions()->make(['plan_id' => $plan->id]);
+        $subscription = $tenant->subscriptions()->make([
+            'plan_id' => $plan->id,
+            'intent' => SubscriptionIntent::Commercial,
+        ]);
 
         return $this->activate($subscription);
     }
 
-    /**
-     * Marca a assinatura como ativa e fecha o ciclo em 30 dias (ends_at recebe
-     * o mesmo valor da próxima cobrança). Assim, ao chegar a data sem renovação,
-     * o refreshState() leva a assinatura para atrasada e, depois da tolerância,
-     * para expirada — sem intervenção manual. Usado na contratação e na
-     * confirmação de pagamento.
-     */
+    public function convertEvaluationToCommercial(Subscription $subscription, Plan $plan): Subscription
+    {
+        $subscription->fill([
+            'plan_id' => $plan->id,
+            'intent' => SubscriptionIntent::Commercial,
+        ]);
+
+        $subscription->tenant?->update([
+            'te_data_retention_ends_at' => null,
+            'te_data_purged_at' => null,
+            'te_ativo' => true,
+        ]);
+
+        return $this->activate($subscription);
+    }
+
     public function activate(Subscription $subscription): Subscription
     {
         $now = Carbon::now();
@@ -60,15 +107,12 @@ class SubscriptionManager
             'grace_ends_at' => null,
             'canceled_at' => null,
             'next_billing_at' => $nextBilling,
+            'trial_ends_at' => null,
         ])->save();
 
         return $subscription;
     }
 
-    /**
-     * Próxima cobrança: sempre a data informada (ou hoje) somada ao ciclo fixo
-     * de cobrança. Fonte única usada pela ativação e pelo formulário do painel.
-     */
     public function nextBillingDate(?CarbonInterface $from = null): CarbonInterface
     {
         return ($from?->copy() ?? Carbon::now())->addDays($this->billingCycleDays());
@@ -79,10 +123,6 @@ class SubscriptionManager
         return (int) config('subscriptions.billing_cycle_days', 30);
     }
 
-    /**
-     * Marca a assinatura como atrasada e abre o período de tolerância a partir
-     * da data informada (vencimento do trial ou do ciclo pago).
-     */
     public function markPastDue(Subscription $subscription, ?Carbon $since = null): Subscription
     {
         $reference = $since ?? Carbon::now();
@@ -102,6 +142,10 @@ class SubscriptionManager
             'ends_at' => $subscription->ends_at ?? Carbon::now(),
         ])->save();
 
+        if ($subscription->intent === SubscriptionIntent::Evaluation) {
+            $this->scheduleEvaluationDataRetention($subscription);
+        }
+
         return $subscription;
     }
 
@@ -115,14 +159,18 @@ class SubscriptionManager
         return $subscription;
     }
 
-    /**
-     * Reavalia o estado de uma assinatura com base apenas na passagem do tempo.
-     * É a engrenagem que faz trial vencido e ciclo atrasado caminharem sozinhos
-     * em direção ao bloqueio, mesmo no fluxo manual.
-     */
     public function refreshState(Subscription $subscription): Subscription
     {
+        $this->ensureBillingDates($subscription);
+
         $now = Carbon::now();
+
+        if ($subscription->intent === SubscriptionIntent::Evaluation
+            && $subscription->status === SubscriptionStatus::Trialing
+            && $subscription->trial_ends_at !== null
+            && $subscription->trial_ends_at->isPast()) {
+            return $this->expire($subscription);
+        }
 
         if ($subscription->status === SubscriptionStatus::Trialing
             && $subscription->trial_ends_at !== null
@@ -142,6 +190,48 @@ class SubscriptionManager
         }
 
         return $subscription;
+    }
+
+    public function ensureBillingDates(Subscription $subscription): Subscription
+    {
+        if ($subscription->status === SubscriptionStatus::Trialing && $subscription->trial_ends_at !== null) {
+            if ($subscription->next_billing_at === null) {
+                $subscription->next_billing_at = $subscription->trial_ends_at;
+            }
+        }
+
+        if ($subscription->status === SubscriptionStatus::Active) {
+            $start = $subscription->starts_at ?? Carbon::now();
+
+            if ($subscription->ends_at === null) {
+                $subscription->ends_at = $this->nextBillingDate($start);
+            }
+
+            if ($subscription->next_billing_at === null) {
+                $subscription->next_billing_at = $subscription->ends_at;
+            }
+        }
+
+        if ($subscription->isDirty()) {
+            $subscription->save();
+        }
+
+        return $subscription;
+    }
+
+    private function scheduleEvaluationDataRetention(Subscription $subscription): void
+    {
+        $tenant = $subscription->tenant;
+
+        if (! $tenant instanceof Tenant || $tenant->te_data_purged_at !== null) {
+            return;
+        }
+
+        $retentionDays = (int) config('subscriptions.evaluation_data_retention_days', 60);
+
+        $tenant->update([
+            'te_data_retention_ends_at' => now()->addDays($retentionDays),
+        ]);
     }
 
     private function graceDays(): int

@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Enums\OrderOrigin;
 use App\Enums\OrderStatus;
+use App\Enums\TenantPortalRole;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Order;
@@ -13,18 +14,20 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\ProductVariation;
+use App\Models\Scopes\TenantMemberOperatorScope;
 use App\Models\Tenant;
+use App\Models\User;
 use App\Services\OrderLifecycleManager;
-use App\Services\OrderRefundManager;
+use App\Services\TenantOrderPurgeService;
 use App\Support\PgsqlTenantSearchPath;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Popula catálogo e vendas dentro do schema físico de cada loja ativa. O
- * search_path é apontado para o schema do tenant durante a carga e restaurado
- * ao final. É idempotente: lojas que já têm catálogo são ignoradas.
+ * Catálogo e vendas demo por loja. Vendas pagas são distribuídas entre vendedores
+ * ao longo dos últimos meses para alimentar os gráficos do dashboard.
  */
 class TenantDataSeeder extends Seeder
 {
@@ -52,12 +55,18 @@ class TenantDataSeeder extends Seeder
         }
 
         try {
-            if (Category::query()->exists()) {
+            $this->purgeForeignOperatorOrders($tenant);
+
+            $products = Category::query()->exists()
+                ? Product::query()->with('variations')->get()
+                : $this->seedCatalog();
+
+            if ($products->isEmpty()) {
                 return;
             }
 
-            $products = $this->seedCatalog();
-            $this->seedSales($tenant, $products);
+            $this->seedVendedorSales($tenant, $products);
+            $this->seedOperationalOrders($tenant, $products);
         } finally {
             if ($usesPgsql) {
                 PgsqlTenantSearchPath::reset();
@@ -85,7 +94,7 @@ class TenantDataSeeder extends Seeder
                     ->for($category)
                     ->create([
                         'title' => $productName,
-                        'stock' => $isSimpleProduct ? fake()->numberBetween(20, 80) : 0,
+                        'stock' => $isSimpleProduct ? fake()->numberBetween(50, 120) : 0,
                     ]);
 
                 if (! $isSimpleProduct) {
@@ -110,47 +119,137 @@ class TenantDataSeeder extends Seeder
     /**
      * @param  Collection<int, Product>  $products
      */
-    private function seedSales(Tenant $tenant, Collection $products): void
+    private function seedVendedorSales(Tenant $tenant, Collection $products): void
     {
-        $userId = $tenant->users()->first()?->id;
-        $customers = Customer::factory()->count(8)->create();
+        $vendedores = $this->vendedoresDoTenant($tenant);
+
+        if ($vendedores->isEmpty()) {
+            return;
+        }
+
+        $vendedoresSemVendas = $vendedores->reject(fn (User $vendedor): bool => $this->vendedorTemVendasPagas($vendedor));
+
+        if ($vendedoresSemVendas->isEmpty()) {
+            return;
+        }
+
+        $customers = Customer::query()->exists()
+            ? Customer::all()
+            : Customer::factory()->count(12)->create();
 
         $lifecycle = app(OrderLifecycleManager::class);
-        $refunds = app(OrderRefundManager::class);
+        $this->ensureStockForDemo($products);
 
-        $outcomes = [
-            'pending', 'pending',
-            'paid', 'paid', 'paid', 'paid',
-            'partial_refund', 'partial_refund',
-            'full_refund',
-            'canceled', 'canceled',
-        ];
+        for ($monthsAgo = 0; $monthsAgo < 10; $monthsAgo++) {
+            foreach ($vendedoresSemVendas as $vendedor) {
+                $ordersCount = match ($monthsAgo) {
+                    0 => fake()->numberBetween(3, 6),
+                    default => fake()->numberBetween(1, 4),
+                };
 
-        foreach ($outcomes as $outcome) {
-            $order = $this->makeOrder($products, $customers->random(), $userId);
+                for ($i = 0; $i < $ordersCount; $i++) {
+                    $soldAt = Carbon::now()
+                        ->subMonths($monthsAgo)
+                        ->startOfMonth()
+                        ->addDays(fake()->numberBetween(0, 25))
+                        ->setTime(fake()->numberBetween(9, 18), fake()->numberBetween(0, 59));
 
-            match ($outcome) {
-                'paid' => $order->update(['status' => OrderStatus::Paid]),
-                'partial_refund' => $this->partiallyRefund($order, $refunds, $userId),
-                'full_refund' => $this->fullyRefund($order, $refunds, $userId),
-                'canceled' => $lifecycle->cancel($order),
-                default => null,
-            };
+                    $order = $this->makeOrder(
+                        products: $products,
+                        customer: $customers->random(),
+                        userId: $vendedor->id,
+                        soldAt: $soldAt,
+                    );
+
+                    $lifecycle->recalculateTotal($order->refresh());
+                    $order->update(['status' => OrderStatus::Paid]);
+                }
+            }
         }
+    }
+
+    /**
+     * Pedidos pendentes e cancelados para badges e fluxos operacionais.
+     *
+     * @param  Collection<int, Product>  $products
+     */
+    private function seedOperationalOrders(Tenant $tenant, Collection $products): void
+    {
+        if (Order::withoutGlobalScope(TenantMemberOperatorScope::class)
+            ->where('status', OrderStatus::Pending)
+            ->exists()) {
+            return;
+        }
+
+        $operatorId = $tenant->users()->first()?->id;
+        $customers = Customer::query()->exists()
+            ? Customer::all()
+            : Customer::factory()->count(3)->create();
+
+        foreach (range(1, 3) as $_) {
+            $this->makeOrder(
+                products: $products,
+                customer: $customers->random(),
+                userId: $operatorId,
+                soldAt: now(),
+            );
+        }
+
+        $canceled = $this->makeOrder(
+            products: $products,
+            customer: $customers->random(),
+            userId: $operatorId,
+            soldAt: now()->subDays(2),
+        );
+
+        app(OrderLifecycleManager::class)->cancel($canceled);
+    }
+
+    private function purgeForeignOperatorOrders(Tenant $tenant): void
+    {
+        $memberIds = $tenant->users()->pluck('users.id');
+
+        Order::withoutGlobalScope(TenantMemberOperatorScope::class)
+            ->whereNotNull('user_id')
+            ->whereNotIn('user_id', $memberIds)
+            ->each(fn (Order $order) => app(TenantOrderPurgeService::class)->purge($order));
+    }
+
+    /** @return Collection<int, User> */
+    private function vendedoresDoTenant(Tenant $tenant): Collection
+    {
+        return $tenant->users()
+            ->wherePivot('tu_papel', TenantPortalRole::Vendedor->value)
+            ->get();
+    }
+
+    private function vendedorTemVendasPagas(User $vendedor): bool
+    {
+        return Order::withoutGlobalScope(TenantMemberOperatorScope::class)
+            ->where('user_id', $vendedor->id)
+            ->whereIn('status', OrderStatus::soldValues())
+            ->exists();
     }
 
     /**
      * @param  Collection<int, Product>  $products
      */
-    private function makeOrder(Collection $products, Customer $customer, ?int $userId): Order
-    {
+    private function makeOrder(
+        Collection $products,
+        Customer $customer,
+        ?int $userId,
+        Carbon $soldAt,
+    ): Order {
         $order = Order::create([
             'customer_id' => $customer->id,
             'user_id' => $userId,
             'origin' => fake()->randomElement(OrderOrigin::cases()),
             'total_amount' => 0,
+            'commission_amount' => 0,
             'payment_method' => fake()->randomElement(['dinheiro', 'pix', 'cartao_credito', 'cartao_debito']),
             'status' => OrderStatus::Pending,
+            'created_at' => $soldAt,
+            'updated_at' => $soldAt,
         ]);
 
         foreach ($products->random(fake()->numberBetween(1, 3)) as $product) {
@@ -175,33 +274,17 @@ class TenantDataSeeder extends Seeder
         return $order->refresh();
     }
 
-    private function partiallyRefund(Order $order, OrderRefundManager $refunds, ?int $userId): void
+    /** @param  Collection<int, Product>  $products */
+    private function ensureStockForDemo(Collection $products): void
     {
-        $order->update(['status' => OrderStatus::Paid]);
+        foreach ($products as $product) {
+            if ($product->variations->isEmpty()) {
+                $product->update(['stock' => 500]);
 
-        $firstItem = $order->items()->first();
+                continue;
+            }
 
-        if ($firstItem) {
-            $refunds->refund(
-                order: $order,
-                items: [$firstItem->id => 1],
-                reason: 'Cliente solicitou devolução parcial.',
-                restock: true,
-                userId: $userId,
-            );
+            $product->variations()->update(['stock' => 200]);
         }
-    }
-
-    private function fullyRefund(Order $order, OrderRefundManager $refunds, ?int $userId): void
-    {
-        $order->update(['status' => OrderStatus::Paid]);
-
-        $refunds->refund(
-            order: $order,
-            items: $refunds->refundableItemsMap($order),
-            reason: 'Pedido cancelado após pagamento.',
-            restock: true,
-            userId: $userId,
-        );
     }
 }

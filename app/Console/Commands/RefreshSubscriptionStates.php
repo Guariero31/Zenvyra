@@ -23,10 +23,20 @@ class RefreshSubscriptionStates extends Command
         );
 
         $processed = 0;
+        $backfilled = 0;
 
         Subscription::query()
             ->whereIn('status', $liveStatuses)
-            ->each(function (Subscription $subscription) use ($manager, &$processed): void {
+            ->each(function (Subscription $subscription) use ($manager, &$processed, &$backfilled): void {
+                $wasMissingDates = $subscription->next_billing_at === null
+                    || ($subscription->status === SubscriptionStatus::Active && $subscription->ends_at === null);
+
+                $manager->ensureBillingDates($subscription);
+
+                if ($wasMissingDates && $subscription->next_billing_at !== null) {
+                    $backfilled++;
+                }
+
                 $previous = $subscription->status;
                 $manager->refreshState($subscription);
 
@@ -36,6 +46,7 @@ class RefreshSubscriptionStates extends Command
             });
 
         $this->info("Assinaturas atualizadas: {$processed}.");
+        $this->info("Datas de cobrança preenchidas: {$backfilled}.");
 
         return self::SUCCESS;
     }

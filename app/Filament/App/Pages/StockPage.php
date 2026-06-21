@@ -39,7 +39,7 @@ class StockPage extends Page
             ->whereDoesntHave('variations')
             ->count();
 
-        return $count > 0 ? (string) $count : null;
+        return $count > 0 ? (string)$count : null;
     }
 
     public static function getNavigationBadgeColor(): string|array|null
@@ -51,6 +51,7 @@ class StockPage extends Page
     {
         return $schema->components([
             Tabs::make()
+                ->contained(false)
                 ->persistTabInQueryString('aba')
                 ->tabs([
                     Tab::make('Produtos')

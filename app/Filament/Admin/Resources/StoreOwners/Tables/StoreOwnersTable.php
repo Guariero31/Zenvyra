@@ -31,7 +31,8 @@ class StoreOwnersTable
             ])
             ->recordActions([
                 ToggleAdminStatusAction::make(),
-                EditAction::make(),
+                EditAction::make()
+                    ->label(false),
             ]);
     }
 }

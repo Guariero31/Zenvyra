@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\App\Widgets;
 
+use App\Models\Tenant;
 use App\Services\SalesReportService;
+use Filament\Facades\Filament;
 use Filament\Widgets\ChartWidget;
 
 class SellersPerformanceChart extends ChartWidget
@@ -13,9 +15,17 @@ class SellersPerformanceChart extends ChartWidget
 
     protected ?string $heading = 'Ranking de vendedores';
 
-    protected ?string $description = 'Faturamento bruto e comissão gerada nos últimos 12 meses.';
+    protected ?string $description = 'Faturamento bruto e comissão dos usuários com papel Vendedor nos últimos 12 meses.';
 
     protected int|string|array $columnSpan = 'full';
+
+    public static function canView(): bool
+    {
+        $tenant = Filament::getTenant();
+
+        return $tenant instanceof Tenant
+            && $tenant->gestaoSettings()->moduloVendedoresAtivo();
+    }
 
     protected function getData(): array
     {
@@ -26,14 +36,20 @@ class SellersPerformanceChart extends ChartWidget
                 [
                     'label' => 'Faturamento bruto (R$)',
                     'data' => $data['gross'],
-                    'backgroundColor' => 'rgba(99, 102, 241, 0.5)',
-                    'borderColor' => 'rgb(99, 102, 241)',
+                    'backgroundColor' => 'rgb(59, 130, 246)',
+                    'borderColor' => 'rgb(59, 130, 246)',
+                    'borderWidth' => 0,
+                    'borderRadius' => 4,
+                    'hoverBackgroundColor' => 'rgb(96, 165, 250)',
                 ],
                 [
                     'label' => 'Comissão (R$)',
                     'data' => $data['commission'],
-                    'backgroundColor' => 'rgba(245, 158, 11, 0.5)',
+                    'backgroundColor' => 'rgb(245, 158, 11)',
                     'borderColor' => 'rgb(245, 158, 11)',
+                    'borderWidth' => 0,
+                    'borderRadius' => 4,
+                    'hoverBackgroundColor' => 'rgb(251, 191, 36)',
                 ],
             ],
             'labels' => $data['labels'],
@@ -43,7 +59,23 @@ class SellersPerformanceChart extends ChartWidget
     protected function getOptions(): array
     {
         return [
-            'indexAxis' => 'y',
+            'plugins' => [
+                'legend' => [
+                    'position' => 'bottom',
+                    'labels' => ['usePointStyle' => true, 'padding' => 16],
+                ],
+            ],
+            'scales' => [
+                'x' => [
+                    'grid' => ['color' => 'rgba(255,255,255,0.04)'],
+                    'ticks' => ['color' => 'rgba(255,255,255,0.45)'],
+                ],
+                'y' => [
+                    'grid' => ['color' => 'rgba(255,255,255,0.04)'],
+                    'ticks' => ['color' => 'rgba(255,255,255,0.45)'],
+                    'beginAtZero' => true,
+                ],
+            ],
         ];
     }
 

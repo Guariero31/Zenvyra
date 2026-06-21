@@ -33,9 +33,6 @@ class TenantSchemaManager
 
         $original = config('database.connections.pgsql.search_path');
 
-        // Durante a migration o search_path aponta APENAS para o schema do
-        // tenant, garantindo que tanto as tabelas quanto a própria tabela de
-        // controle "migrations" sejam criadas dentro dele (e não no public).
         config(['database.connections.pgsql.search_path' => '"'.$this->quote($schemaName).'"']);
         DB::purge('pgsql');
 
@@ -57,16 +54,20 @@ class TenantSchemaManager
         $this->migrateSchema($schemaName);
     }
 
+    public function dropSchema(string $schemaName): void
+    {
+        if (! $this->usesPostgres()) {
+            return;
+        }
+
+        DB::statement('DROP SCHEMA IF EXISTS "'.$this->quote($schemaName).'" CASCADE');
+    }
+
     private function quote(string $schemaName): string
     {
         return preg_replace('/[^a-zA-Z0-9_]/', '', $schemaName) ?? '';
     }
 
-    /**
-     * O isolamento físico por schema é uma característica exclusiva do
-     * PostgreSQL. Em outros drivers (ex.: SQLite nos testes) o provisionamento
-     * é ignorado.
-     */
     private function usesPostgres(): bool
     {
         return DB::connection()->getDriverName() === 'pgsql';

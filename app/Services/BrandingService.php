@@ -8,9 +8,9 @@ use App\Models\IdentidadeVisual;
 use App\Models\Tenant;
 use App\Models\TenantTheme;
 use App\Support\ColorNormalizer;
+use App\Support\PublicSchema;
 use Filament\Support\Colors\Color;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
 use Throwable;
@@ -281,7 +281,7 @@ class BrandingService
     private function tabelaDisponivel(): bool
     {
         try {
-            return Schema::hasTable('identidade_visual');
+            return PublicSchema::hasTable('identidade_visual');
         } catch (Throwable) {
             return false;
         }

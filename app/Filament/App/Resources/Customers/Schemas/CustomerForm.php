@@ -2,6 +2,7 @@
 
 namespace App\Filament\App\Resources\Customers\Schemas;
 
+use App\Support\TenantGestaoSettings;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -22,10 +23,12 @@ class CustomerForm
                             ->required()
                             ->maxLength(255),
                         PhoneNumber::make('phone')
-                            ->label('Telefone'),
+                            ->label('Telefone')
+                            ->required(fn (): bool => TenantGestaoSettings::forCurrentTenant()->exigeTelefoneCliente()),
                         TextInput::make('email')
                             ->label('E-mail')
                             ->email()
+                            ->required(fn (): bool => TenantGestaoSettings::forCurrentTenant()->exigeEmailCliente())
                             ->maxLength(255),
                     ]),
             ]);

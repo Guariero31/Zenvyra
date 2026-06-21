@@ -13,7 +13,7 @@ class MonthlyRevenueChart extends ChartWidget
 
     protected ?string $heading = 'Faturamento mensal';
 
-    protected ?string $description = 'Valor bruto e líquido vendido por mês.';
+    protected ?string $description = 'Faturamento bruto e líquido por mês.';
 
     protected int|string|array $columnSpan = 'full';
 
@@ -36,14 +36,27 @@ class MonthlyRevenueChart extends ChartWidget
                 [
                     'label' => 'Faturamento bruto (R$)',
                     'data' => $series['gross'],
-                    'backgroundColor' => 'rgba(99, 102, 241, 0.5)',
-                    'borderColor' => 'rgb(99, 102, 241)',
+                    'borderColor' => 'rgb(59, 130, 246)',
+                    'backgroundColor' => 'rgba(59, 130, 246, 0.12)',
+                    'fill' => true,
+                    'tension' => 0.4,
+                    'pointRadius' => 4,
+                    'pointHoverRadius' => 6,
+                    'pointBackgroundColor' => 'rgb(59, 130, 246)',
+                    'borderWidth' => 2,
                 ],
                 [
                     'label' => 'Faturamento líquido (R$)',
                     'data' => $series['net'],
-                    'backgroundColor' => 'rgba(16, 185, 129, 0.5)',
-                    'borderColor' => 'rgb(16, 185, 129)',
+                    'borderColor' => 'rgba(255, 255, 255, 0.35)',
+                    'backgroundColor' => 'rgba(255, 255, 255, 0.03)',
+                    'fill' => true,
+                    'tension' => 0.4,
+                    'pointRadius' => 3,
+                    'pointHoverRadius' => 5,
+                    'pointBackgroundColor' => 'rgba(255, 255, 255, 0.5)',
+                    'borderWidth' => 1.5,
+                    'borderDash' => [6, 4],
                 ],
             ],
             'labels' => $series['labels'],
@@ -52,6 +65,29 @@ class MonthlyRevenueChart extends ChartWidget
 
     protected function getType(): string
     {
-        return 'bar';
+        return 'line';
+    }
+
+    protected function getOptions(): array
+    {
+        return [
+            'plugins' => [
+                'legend' => [
+                    'position' => 'bottom',
+                    'labels' => ['usePointStyle' => true, 'padding' => 16],
+                ],
+            ],
+            'scales' => [
+                'x' => [
+                    'grid' => ['color' => 'rgba(255,255,255,0.04)'],
+                    'ticks' => ['color' => 'rgba(255,255,255,0.45)'],
+                ],
+                'y' => [
+                    'grid' => ['color' => 'rgba(255,255,255,0.04)'],
+                    'ticks' => ['color' => 'rgba(255,255,255,0.45)'],
+                    'beginAtZero' => true,
+                ],
+            ],
+        ];
     }
 }

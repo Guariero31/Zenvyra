@@ -9,6 +9,8 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductVariation;
 use App\Models\StockMovement;
+use App\Models\Tenant;
+use App\Support\TenantContext;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -123,7 +125,24 @@ class StockManager
             return;
         }
 
-        $target->decrement('stock', abs($signedQuantity));
+        $quantidade = abs($signedQuantity);
+
+        if (! $this->permiteEstoqueNegativo() && (int) $target->stock < $quantidade) {
+            throw ValidationException::withMessages([
+                'quantity' => 'Estoque insuficiente. Esta loja não permite saldo negativo.',
+            ]);
+        }
+
+        $target->decrement('stock', $quantidade);
+    }
+
+    private function permiteEstoqueNegativo(): bool
+    {
+        $tenant = TenantContext::current();
+
+        return $tenant instanceof Tenant
+            ? $tenant->gestaoSettings()->permitirEstoqueNegativo()
+            : false;
     }
 
     private function record(int $productId, ?int $variationId, StockMovementType $type, int $quantity, ?int $orderId, ?string $reason, ?int $userId): StockMovement

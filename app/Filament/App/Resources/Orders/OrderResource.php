@@ -12,7 +12,6 @@ use App\Filament\App\Resources\Orders\RelationManagers\RefundsRelationManager;
 use App\Filament\App\Resources\Orders\Schemas\OrderForm;
 use App\Filament\App\Resources\Orders\Tables\OrdersTable;
 use App\Models\Order;
-use App\Models\Seller;
 use App\Models\Tenant;
 use BackedEnum;
 use Filament\Facades\Filament;
@@ -66,21 +65,13 @@ class OrderResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $query = parent::getEloquentQuery()->with('seller');
+        $query = parent::getEloquentQuery()->with('operator');
 
-        if (self::currentUserManagesOrders()) {
+        if (self::userManagesOrders()) {
             return $query;
         }
 
-        $sellerId = Seller::linkedToUser(auth()->id())->value('id');
-
-        return $query->where(function (Builder $query) use ($sellerId): void {
-            if ($sellerId) {
-                $query->where('seller_id', $sellerId);
-            }
-
-            $query->orWhere('user_id', auth()->id());
-        });
+        return $query->where('user_id', auth()->id());
     }
 
     public static function getRelations(): array
@@ -100,7 +91,7 @@ class OrderResource extends Resource
         ];
     }
 
-    private static function currentUserManagesOrders(): bool
+    public static function userManagesOrders(): bool
     {
         $tenant = Filament::getTenant();
 

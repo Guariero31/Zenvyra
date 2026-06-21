@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Concerns\NormalizaCoresHex;
+use App\Support\PublicSchema;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Schema;
 
 class IdentidadeVisual extends Model
 {
@@ -53,7 +53,7 @@ class IdentidadeVisual extends Model
     /** Returns the singleton master record, or null when the table does not exist yet. */
     public static function obterOuCriar(): self
     {
-        if (! Schema::hasTable('identidade_visual')) {
+        if (! PublicSchema::hasTable('identidade_visual')) {
             return (new self)->forceFill(self::defaults());
         }
 

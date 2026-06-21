@@ -184,18 +184,19 @@ class AdminResourcesTest extends TestCase
             ->assertActionHidden('toggleAdmin');
     }
 
-    public function test_creating_tenant_starts_trial_with_default_plan(): void
+    public function test_creating_tenant_starts_evaluation_by_default(): void
     {
-        Plan::factory()->create(['slug' => 'starter', 'trial_days' => 7]);
+        Plan::factory()->create(['slug' => 'avaliacao', 'trial_days' => 0]);
 
         Livewire::test(CreateTenant::class)
-            ->fillForm(['te_name' => 'Loja Nova Trial'])
+            ->fillForm(['te_name' => 'Loja Nova Avaliacao'])
             ->call('create')
             ->assertHasNoFormErrors();
 
-        $tenant = Tenant::firstWhere('te_name', 'Loja Nova Trial');
+        $tenant = Tenant::firstWhere('te_name', 'Loja Nova Avaliacao');
 
         $this->assertNotNull($tenant);
         $this->assertTrue($tenant->hasActiveSubscription());
+        $this->assertTrue($tenant->gestaoSettings()->moduloVendedoresAtivo());
     }
 }

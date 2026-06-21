@@ -34,7 +34,7 @@ class ProductResource extends Resource
 
     protected static \UnitEnum|string|null $navigationGroup = null;
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 4;
 
     protected static ?string $recordTitleAttribute = 'title';
 

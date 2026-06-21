@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\TenantPortalRole;
+use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
@@ -21,7 +22,7 @@ use Illuminate\Support\Collection;
  */
 class User extends Authenticatable implements FilamentUser, HasTenants
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
     protected $fillable = [
@@ -48,7 +49,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     public function tenants(): BelongsToMany
     {
         return $this->belongsToMany(Tenant::class, 'tu_vinculos')
-            ->withPivot(['tu_papel', 'tu_rotulo_setor'])
+            ->withPivot(['tu_papel', 'tu_rotulo_setor', 'tu_commission_rate'])
             ->withTimestamps();
     }
 
@@ -83,5 +84,15 @@ class User extends Authenticatable implements FilamentUser, HasTenants
         }
 
         return TenantPortalRole::from($pivot->tu_papel);
+    }
+
+    public function commissionRateInTenant(Tenant $tenant): string
+    {
+        $pivot = $this->tenants()
+            ->where('te_tenants.id', $tenant->getKey())
+            ->first()
+            ?->pivot;
+
+        return (string) ($pivot->tu_commission_rate ?? 0);
     }
 }

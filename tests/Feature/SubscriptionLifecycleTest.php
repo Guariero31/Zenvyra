@@ -60,7 +60,60 @@ class SubscriptionLifecycleTest extends TestCase
 
         $this->assertSame(SubscriptionStatus::Trialing, $subscription->status);
         $this->assertNotNull($subscription->trial_ends_at);
+        $this->assertNotNull($subscription->next_billing_at);
+        $this->assertEquals($subscription->trial_ends_at, $subscription->next_billing_at);
         $this->assertTrue($subscription->onTrial());
+    }
+
+    public function test_resolve_next_billing_at_falls_back_when_column_is_null(): void
+    {
+        $subscription = Subscription::factory()->evaluation()->create([
+            'next_billing_at' => null,
+            'trial_ends_at' => now()->addDays(5),
+        ]);
+
+        $this->assertEquals(
+            $subscription->trial_ends_at?->toDateString(),
+            $subscription->resolveNextBillingAt()?->toDateString(),
+        );
+    }
+
+    public function test_resolve_next_billing_at_falls_back_to_starts_at_plus_cycle_for_active(): void
+    {
+        $startsAt = now()->subDays(3);
+
+        $subscription = Subscription::factory()->create([
+            'status' => SubscriptionStatus::Active,
+            'starts_at' => $startsAt,
+            'ends_at' => null,
+            'next_billing_at' => null,
+        ]);
+
+        $this->assertEqualsWithDelta(
+            $startsAt->copy()->addDays(30)->timestamp,
+            $subscription->resolveNextBillingAt()?->timestamp,
+            5,
+        );
+    }
+
+    public function test_ensure_billing_dates_backfills_active_subscription(): void
+    {
+        $startsAt = now()->subDays(3);
+
+        $subscription = Subscription::factory()->create([
+            'status' => SubscriptionStatus::Active,
+            'starts_at' => $startsAt,
+            'ends_at' => null,
+            'next_billing_at' => null,
+        ]);
+
+        $this->manager()->ensureBillingDates($subscription->fresh());
+
+        $subscription->refresh();
+
+        $this->assertNotNull($subscription->ends_at);
+        $this->assertNotNull($subscription->next_billing_at);
+        $this->assertEquals($subscription->ends_at, $subscription->next_billing_at);
     }
 
     public function test_start_subscription_activates_directly_without_trial(): void

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Filament\Admin\Pages\Dashboard;
+use App\Filament\Admin\Widgets\ExpiringEvaluationsWidget;
 use App\Filament\Admin\Widgets\PlatformOverviewWidget;
 use App\Filament\Admin\Widgets\QuickActionsWidget;
 use App\Filament\Admin\Widgets\StoresByPlanChart;
@@ -71,5 +72,34 @@ class AdminDashboardTest extends TestCase
         Livewire::test(TenantsGrowthChart::class)->assertOk();
         Livewire::test(SubscriptionStatusChart::class)->assertOk();
         Livewire::test(StoresByPlanChart::class)->assertOk();
+    }
+
+    public function test_expiring_evaluations_widget_lists_evaluations_within_alert_window(): void
+    {
+        $plan = Plan::factory()->create(['slug' => 'avaliacao']);
+        $expiringTenant = Tenant::factory()->create(['te_name' => 'Loja Expirando']);
+        $laterTenant = Tenant::factory()->create(['te_name' => 'Loja Depois']);
+
+        Subscription::factory()->evaluation()->create([
+            'tenant_id' => $expiringTenant->id,
+            'plan_id' => $plan->id,
+            'trial_ends_at' => now()->addDays(3),
+        ]);
+
+        Subscription::factory()->evaluation()->create([
+            'tenant_id' => $laterTenant->id,
+            'plan_id' => $plan->id,
+            'trial_ends_at' => now()->addDays(12),
+        ]);
+
+        Livewire::test(ExpiringEvaluationsWidget::class)
+            ->assertOk()
+            ->assertSee('Loja Expirando')
+            ->assertDontSee('Loja Depois');
+    }
+
+    public function test_expiring_evaluations_widget_is_hidden_when_empty(): void
+    {
+        $this->assertFalse(ExpiringEvaluationsWidget::canView());
     }
 }

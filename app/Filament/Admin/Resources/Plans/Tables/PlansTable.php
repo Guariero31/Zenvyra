@@ -53,7 +53,8 @@ class PlansTable
             ])
             ->recordActions([
                 TogglePlanStatusAction::make(),
-                EditAction::make(),
+                EditAction::make()
+                    ->label(false),
             ])
             ->toolbarActions([
                 //

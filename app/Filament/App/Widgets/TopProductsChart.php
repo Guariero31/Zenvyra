@@ -13,7 +13,7 @@ class TopProductsChart extends ChartWidget
 
     protected ?string $heading = 'Top produtos por receita';
 
-    protected ?string $description = 'Cinco produtos que mais faturaram (12 meses).';
+    protected ?string $description = 'Cinco produtos que mais faturaram nos últimos 12 meses.';
 
     protected int|string|array $columnSpan = 'full';
 
@@ -26,8 +26,11 @@ class TopProductsChart extends ChartWidget
                 [
                     'label' => 'Receita (R$)',
                     'data' => $data['data'],
-                    'backgroundColor' => 'rgba(16, 185, 129, 0.5)',
-                    'borderColor' => 'rgb(16, 185, 129)',
+                    'backgroundColor' => 'rgb(59, 130, 246)',
+                    'borderColor' => 'rgb(59, 130, 246)',
+                    'borderWidth' => 0,
+                    'borderRadius' => 4,
+                    'hoverBackgroundColor' => 'rgb(96, 165, 250)',
                 ],
             ],
             'labels' => $data['labels'],
@@ -39,8 +42,17 @@ class TopProductsChart extends ChartWidget
         return [
             'indexAxis' => 'y',
             'plugins' => [
-                'legend' => [
-                    'display' => false,
+                'legend' => ['display' => false],
+            ],
+            'scales' => [
+                'x' => [
+                    'grid' => ['color' => 'rgba(255,255,255,0.04)'],
+                    'ticks' => ['color' => 'rgba(255,255,255,0.45)'],
+                    'beginAtZero' => true,
+                ],
+                'y' => [
+                    'grid' => ['color' => 'rgba(255,255,255,0.04)'],
+                    'ticks' => ['color' => 'rgba(255,255,255,0.45)'],
                 ],
             ],
         ];

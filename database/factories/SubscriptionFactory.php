@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\SubscriptionIntent;
 use App\Enums\SubscriptionStatus;
 use App\Models\Plan;
 use App\Models\Subscription;
@@ -26,6 +27,7 @@ class SubscriptionFactory extends Factory
             'tenant_id' => Tenant::factory(),
             'plan_id' => Plan::factory(),
             'status' => SubscriptionStatus::Active,
+            'intent' => SubscriptionIntent::Commercial,
             'starts_at' => $start,
             'trial_ends_at' => null,
             'ends_at' => $cycleEnd,
@@ -39,8 +41,19 @@ class SubscriptionFactory extends Factory
     {
         return $this->state(fn (): array => [
             'status' => SubscriptionStatus::Trialing,
-            'trial_ends_at' => now()->addDays((int) config('subscriptions.default_trial_days')),
-            'next_billing_at' => null,
+            'intent' => SubscriptionIntent::Commercial,
+            'trial_ends_at' => $trialEnds = now()->addDays((int) config('subscriptions.default_trial_days')),
+            'next_billing_at' => $trialEnds,
+        ]);
+    }
+
+    public function evaluation(): static
+    {
+        return $this->state(fn (): array => [
+            'status' => SubscriptionStatus::Trialing,
+            'intent' => SubscriptionIntent::Evaluation,
+            'trial_ends_at' => $trialEnds = now()->addDays((int) config('subscriptions.evaluation_days', 20)),
+            'next_billing_at' => $trialEnds,
         ]);
     }
 

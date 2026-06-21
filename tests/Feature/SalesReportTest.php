@@ -16,7 +16,6 @@ use App\Models\Category;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
-use App\Models\Seller;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Services\SalesReportService;
@@ -125,17 +124,31 @@ class SalesReportTest extends TestCase
 
     public function test_sellers_performance_groups_revenue_and_commission(): void
     {
-        $seller = Seller::factory()->create(['name' => 'Maria Vendas', 'commission_rate' => 10]);
+        $sellerUser = User::factory()->create(['name' => 'Maria Vendas']);
+        $tenant = Tenant::create(['te_name' => 'Loja Ranking']);
+        $tenant->users()->attach($sellerUser, [
+            'tu_papel' => TenantPortalRole::Vendedor->value,
+            'tu_commission_rate' => 10,
+        ]);
+
+        $this->actingAs($sellerUser);
+        Filament::setCurrentPanel('app');
+        Filament::setTenant($tenant);
+        Filament::bootCurrentPanel();
+
         $product = $this->createProduct('Produto Comissionado');
         $order = Order::factory()->create([
-            'seller_id' => $seller->id,
+            'user_id' => $sellerUser->id,
             'status' => OrderStatus::Paid,
         ]);
         OrderItem::factory()->for($order)->create([
             'product_id' => $product->id,
             'quantity' => 2,
             'price_at_sale' => 100,
+            'commission_rate' => 10,
+            'commission_amount' => 20,
         ]);
+        $order->update(['total_amount' => 200, 'commission_amount' => 20]);
 
         $data = $this->reports->sellersPerformance();
 
@@ -143,6 +156,80 @@ class SalesReportTest extends TestCase
         $this->assertSame(200.0, $data['gross'][0]);
         $this->assertSame(20.0, $data['commission'][0]);
         $this->assertSame(1, $data['salesCount'][0]);
+    }
+
+    public function test_sellers_performance_excludes_non_vendedor_users(): void
+    {
+        $tenant = Tenant::create(['te_name' => 'Loja Filtro']);
+        $admin = User::factory()->create(['name' => 'Admin Loja']);
+        $seller = User::factory()->create(['name' => 'Vendedor Real']);
+
+        $tenant->users()->attach($admin, [
+            'tu_papel' => TenantPortalRole::AdministradorCliente->value,
+        ]);
+        $tenant->users()->attach($seller, [
+            'tu_papel' => TenantPortalRole::Vendedor->value,
+        ]);
+
+        $product = $this->createProduct('Produto');
+
+        $adminOrder = Order::factory()->create([
+            'user_id' => $admin->id,
+            'status' => OrderStatus::Paid,
+            'total_amount' => 500,
+            'commission_amount' => 50,
+        ]);
+        OrderItem::factory()->for($adminOrder)->create([
+            'product_id' => $product->id,
+            'quantity' => 1,
+            'price_at_sale' => 500,
+        ]);
+
+        $sellerOrder = Order::factory()->create([
+            'user_id' => $seller->id,
+            'status' => OrderStatus::Paid,
+        ]);
+        OrderItem::factory()->for($sellerOrder)->create([
+            'product_id' => $product->id,
+            'quantity' => 1,
+            'price_at_sale' => 100,
+        ]);
+        $sellerOrder->update(['total_amount' => 100, 'commission_amount' => 10]);
+
+        $data = $this->reports->sellersPerformance(tenant: $tenant);
+
+        $this->assertSame(['Vendedor Real'], $data['labels']);
+        $this->assertSame([100.0], $data['gross']);
+        $this->assertSame([10.0], $data['commission']);
+    }
+
+    public function test_sellers_performance_lists_all_vendedores_even_without_sales(): void
+    {
+        $tenant = Tenant::create(['te_name' => 'Loja Equipe']);
+        $withSales = User::factory()->create(['name' => 'Com Vendas']);
+        $withoutSales = User::factory()->create(['name' => 'Sem Vendas']);
+
+        $tenant->users()->attach($withSales, ['tu_papel' => TenantPortalRole::Vendedor->value]);
+        $tenant->users()->attach($withoutSales, ['tu_papel' => TenantPortalRole::Vendedor->value]);
+
+        $product = $this->createProduct('Produto');
+
+        $order = Order::factory()->create([
+            'user_id' => $withSales->id,
+            'status' => OrderStatus::Paid,
+        ]);
+        OrderItem::factory()->for($order)->create([
+            'product_id' => $product->id,
+            'quantity' => 1,
+            'price_at_sale' => 150,
+        ]);
+        $order->update(['total_amount' => 150, 'commission_amount' => 15]);
+
+        $data = $this->reports->sellersPerformance(tenant: $tenant);
+
+        $this->assertSame(['Com Vendas', 'Sem Vendas'], $data['labels']);
+        $this->assertSame([150.0, 0.0], $data['gross']);
+        $this->assertSame([15.0, 0.0], $data['commission']);
     }
 
     public function test_dashboard_widgets_render_for_tenant(): void

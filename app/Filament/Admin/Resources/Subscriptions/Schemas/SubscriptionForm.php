@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\Subscriptions\Schemas;
 
+use App\Enums\SubscriptionIntent;
 use App\Enums\SubscriptionStatus;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -42,6 +43,12 @@ class SubscriptionForm
                             ->required()
                             ->default(SubscriptionStatus::Active->value)
                             ->hintIcon(Heroicon::OutlinedQuestionMarkCircle, 'Situação atual do ciclo: em teste, ativa, atrasada, cancelada ou expirada.'),
+                        Select::make('intent')
+                            ->label('Intenção')
+                            ->options(SubscriptionIntent::options())
+                            ->required()
+                            ->default(SubscriptionIntent::Commercial->value)
+                            ->hintIcon(Heroicon::OutlinedQuestionMarkCircle, 'Avaliação: ambiente reduzido sem tolerância após o prazo. Comercial: assinatura paga com ciclo normal.'),
                         DatePicker::make('trial_ends_at')
                             ->label('Fim do teste')
                             ->default(now()->addDays((int) config('subscriptions.default_trial_days')))

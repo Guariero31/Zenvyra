@@ -27,7 +27,8 @@ class AdministratorsTable
             ])
             ->recordActions([
                 ToggleAdminStatusAction::make(),
-                EditAction::make(),
+                EditAction::make()
+                    ->label(false),
             ]);
     }
 }

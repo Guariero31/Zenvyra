@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enums\OrderStatus;
+use App\Enums\TenantPortalRole;
 use App\Models\Order;
+use App\Models\Tenant;
 use Carbon\CarbonImmutable;
+use Filament\Facades\Filament;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -141,21 +144,46 @@ class SalesReportService
     }
 
     /**
-     * Ranking de vendedores por faturamento bruto e comissão linear no período.
+     * Ranking de vendedores (papel Vendedor na loja) por faturamento bruto e comissão.
      *
      * @return array{labels: array<int, string>, gross: array<int, float>, commission: array<int, float>, salesCount: array<int, int>}
      */
-    public function sellersPerformance(int $limit = 5, int $months = 12): array
+    public function sellersPerformance(int $limit = 5, int $months = 12, ?Tenant $tenant = null): array
     {
+        $tenant ??= Filament::getTenant();
+
+        if (! $tenant instanceof Tenant) {
+            return [
+                'labels' => [],
+                'gross' => [],
+                'commission' => [],
+                'salesCount' => [],
+            ];
+        }
+
         $since = CarbonImmutable::now()->startOfMonth()->subMonths($months - 1);
 
-        $rows = DB::table('orders')
-            ->leftJoin('sellers', 'sellers.id', '=', 'orders.seller_id')
-            ->whereIn('orders.status', OrderStatus::soldValues())
-            ->where('orders.created_at', '>=', $since)
-            ->selectRaw('COALESCE(sellers.name, ?) as seller_name, COALESCE(SUM(orders.total_amount), 0) as gross, COALESCE(SUM(orders.commission_amount), 0) as commission, COUNT(*) as sales_count', ['Sem vendedor'])
-            ->groupBy('orders.seller_id', 'sellers.name')
+        $vinculosTable = DB::connection()->getDriverName() === 'pgsql'
+            ? 'public.tu_vinculos'
+            : 'tu_vinculos';
+
+        $usersTable = DB::connection()->getDriverName() === 'pgsql'
+            ? 'public.users'
+            : 'users';
+
+        $rows = DB::table($vinculosTable.' as tu_vinculos')
+            ->join($usersTable.' as users', 'users.id', '=', 'tu_vinculos.user_id')
+            ->leftJoin('orders', function ($join) use ($since): void {
+                $join->on('orders.user_id', '=', 'users.id')
+                    ->whereIn('orders.status', OrderStatus::soldValues())
+                    ->where('orders.created_at', '>=', $since);
+            })
+            ->where('tu_vinculos.tenant_id', $tenant->getKey())
+            ->where('tu_vinculos.tu_papel', TenantPortalRole::Vendedor->value)
+            ->selectRaw('users.name as seller_name, COALESCE(SUM(orders.total_amount), 0) as gross, COALESCE(SUM(orders.commission_amount), 0) as commission, COUNT(orders.id) as sales_count')
+            ->groupBy('users.id', 'users.name')
             ->orderByDesc('gross')
+            ->orderBy('users.name')
             ->limit($limit)
             ->get();
 

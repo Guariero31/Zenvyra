@@ -4,7 +4,8 @@ namespace App\Filament\App\Resources\Orders\Schemas;
 
 use App\Enums\OrderOrigin;
 use App\Enums\OrderStatus;
-use App\Models\Seller;
+use App\Filament\App\Resources\Orders\OrderResource;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Section;
@@ -31,14 +32,20 @@ class OrderForm
                             ->options(OrderOrigin::class)
                             ->default(OrderOrigin::Balcao->value)
                             ->required(),
-                        Select::make('seller_id')
+                        Select::make('user_id')
                             ->label('Vendedor')
-                            ->relationship('seller', 'name', modifyQueryUsing: fn ($query) => $query->active()->orderBy('name'))
-                            ->default(fn (): ?int => Seller::active()->linkedToUser(auth()->id())->value('id'))
+                            ->options(fn (): array => Filament::getTenant()?->users()
+                                ->orderBy('name')
+                                ->pluck('name', 'users.id')
+                                ->all() ?? [])
+                            ->default(fn (): ?int => auth()->id())
                             ->searchable()
                             ->preload()
                             ->required()
-                            ->helperText('Vendedor responsável pela comissão.'),
+                            ->disabled(fn (): bool => ! OrderResource::userManagesOrders())
+                            ->helperText(fn (): ?string => OrderResource::userManagesOrders()
+                                ? 'Usuário logado responsável pela venda e comissão.'
+                                : 'A venda será registrada em seu usuário.'),
                         Money::make('total_amount')
                             ->label('Total')
                             ->disabled()

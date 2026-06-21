@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Support\TenantGestaoSettings;
 use Database\Factories\TenantFactory;
 use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -43,6 +44,8 @@ class Tenant extends Model implements HasName
         'te_slug',
         'te_schema',
         'te_ativo',
+        'te_data_retention_ends_at',
+        'te_data_purged_at',
         'te_gestao_settings',
         'brand_name',
         'brand_primary_color',
@@ -53,6 +56,8 @@ class Tenant extends Model implements HasName
     {
         return [
             'te_ativo' => 'boolean',
+            'te_data_retention_ends_at' => 'datetime',
+            'te_data_purged_at' => 'datetime',
             'te_gestao_settings' => 'array',
         ];
     }
@@ -60,7 +65,7 @@ class Tenant extends Model implements HasName
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'tu_vinculos')
-            ->withPivot(['tu_papel', 'tu_rotulo_setor'])
+            ->withPivot(['tu_papel', 'tu_rotulo_setor', 'tu_commission_rate'])
             ->withTimestamps();
     }
 
@@ -89,6 +94,17 @@ class Tenant extends Model implements HasName
     public function hasActiveSubscription(): bool
     {
         return $this->activeSubscription() !== null;
+    }
+
+    public function hasRetainedEvaluationData(): bool
+    {
+        return $this->te_data_retention_ends_at !== null
+            && $this->te_data_purged_at === null;
+    }
+
+    public function gestaoSettings(): TenantGestaoSettings
+    {
+        return TenantGestaoSettings::from($this->te_gestao_settings);
     }
 
     /**

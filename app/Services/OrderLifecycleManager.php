@@ -19,7 +19,7 @@ class OrderLifecycleManager
 
     public function recalculateTotal(Order $order): void
     {
-        $order->loadMissing('seller');
+        $order->loadMissing('operator');
         $items = $order->items()->with('product')->get();
         $total = '0.00';
         $commissionAmount = '0.00';

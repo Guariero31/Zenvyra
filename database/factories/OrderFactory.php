@@ -22,7 +22,6 @@ class OrderFactory extends Factory
         return [
             'customer_id' => Customer::factory(),
             'user_id' => null,
-            'seller_id' => null,
             'origin' => fake()->randomElement(OrderOrigin::cases()),
             'total_amount' => 0,
             'commission_amount' => 0,

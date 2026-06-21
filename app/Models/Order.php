@@ -6,12 +6,15 @@ namespace App\Models;
 
 use App\Enums\OrderOrigin;
 use App\Enums\OrderStatus;
+use App\Models\Scopes\TenantMemberOperatorScope;
 use Database\Factories\OrderFactory;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[ScopedBy([TenantMemberOperatorScope::class])]
 class Order extends Model
 {
     /** @use HasFactory<OrderFactory> */
@@ -20,7 +23,6 @@ class Order extends Model
     protected $fillable = [
         'customer_id',
         'user_id',
-        'seller_id',
         'origin',
         'total_amount',
         'commission_amount',
@@ -50,16 +52,11 @@ class Order extends Model
     }
 
     /**
-     * Usuário que registrou a venda. Vive no schema central (public.users).
+     * Usuário responsável pela venda. Vive no schema central (public.users).
      */
     public function operator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function seller(): BelongsTo
-    {
-        return $this->belongsTo(Seller::class);
     }
 
     public function items(): HasMany

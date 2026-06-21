@@ -52,8 +52,10 @@ class VariationsRelationManager extends RelationManager
                 CreateAction::make(),
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+                EditAction::make()
+                    ->label(false),
+                DeleteAction::make()
+                    ->label(false),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

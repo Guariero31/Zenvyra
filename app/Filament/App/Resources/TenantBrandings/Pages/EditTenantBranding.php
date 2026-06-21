@@ -9,8 +9,11 @@ use App\Models\IdentidadeVisualHistorico;
 use App\Models\Tenant;
 use App\Models\TenantTheme;
 use App\Services\BrandingService;
+use Filament\Actions\Action;
 use Filament\Facades\Filament;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Support\Icons\Heroicon;
 
 class EditTenantBranding extends EditRecord
 {
@@ -29,7 +32,62 @@ class EditTenantBranding extends EditRecord
 
         $theme = TenantTheme::obterOuCriarParaTenant((int) $tenant->getKey());
 
+        abort_unless($theme->exists && $theme->getKey() !== null, 503);
+
         parent::mount($theme->getKey());
+    }
+
+    public function getSubheading(): ?string
+    {
+        return 'Personalize nome, logo e cores do painel da sua loja para toda a equipe.';
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('restaurar_padroes')
+                ->label('Restaurar cores padrão')
+                ->icon(Heroicon::OutlinedArrowPath)
+                ->color('gray')
+                ->requiresConfirmation()
+                ->modalHeading('Restaurar cores padrão?')
+                ->modalDescription('Nome, logo e favicon serão mantidos. Somente as cores voltam ao padrão do sistema.')
+                ->modalSubmitActionLabel('Sim, restaurar')
+                ->action(function (): void {
+                    $defaults = TenantTheme::defaults();
+                    unset(
+                        $defaults['tenant_id'],
+                        $defaults['nome_loja'],
+                        $defaults['logo_path'],
+                        $defaults['favicon_path'],
+                    );
+
+                    $this->form->fill(array_merge($this->form->getState(), $defaults));
+
+                    Notification::make()
+                        ->title('Cores restauradas')
+                        ->body('Clique em Salvar para aplicar as cores padrão.')
+                        ->info()
+                        ->send();
+                }),
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        if (blank($data['nome_loja'] ?? null)) {
+            $tenant = Filament::getTenant();
+
+            if ($tenant instanceof Tenant) {
+                $data['nome_loja'] = $tenant->te_name;
+            }
+        }
+
+        return $data;
     }
 
     protected function beforeSave(): void
@@ -61,6 +119,6 @@ class EditTenantBranding extends EditRecord
 
     protected function getSavedNotificationBody(): ?string
     {
-        return 'As alterações serão aplicadas na próxima requisição.';
+        return 'As alterações já estão valendo para quem recarregar o painel.';
     }
 }

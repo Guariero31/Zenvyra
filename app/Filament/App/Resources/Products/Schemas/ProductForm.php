@@ -103,8 +103,7 @@ class ProductForm
                                 'draft' => 'Rascunho',
                             ])
                             ->default('active')
-                            ->required()
-                            ->native(false),
+                            ->required(),
                     ]),
             ]);
     }

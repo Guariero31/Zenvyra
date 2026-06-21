@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Concerns\NormalizaCoresHex;
+use App\Support\PublicSchema;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Schema;
 
 class TenantTheme extends Model
 {
@@ -58,7 +58,7 @@ class TenantTheme extends Model
      */
     public static function obterOuCriarParaTenant(int|string $tenantId): self
     {
-        if (! Schema::hasTable('tenant_themes')) {
+        if (! PublicSchema::hasTable('tenant_themes')) {
             return (new self)->forceFill(['tenant_id' => $tenantId, ...self::defaults($tenantId)]);
         }
 

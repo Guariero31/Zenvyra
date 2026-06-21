@@ -9,6 +9,7 @@ use App\Http\Middleware\EnsureSubscriptionIsActive;
 use App\Http\Middleware\SetTenantSearchPath;
 use App\Models\Tenant;
 use App\Services\BrandingService;
+use App\Services\SubscriptionRenewalNoticeService;
 use Filament\Facades\Filament;
 use Filament\FontProviders\GoogleFontProvider;
 use Filament\Http\Middleware\Authenticate;
@@ -52,6 +53,26 @@ class AppPanelProvider extends PanelProvider
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
                 fn (): View => view('filament.hooks.branding-head-tenant'),
+            )
+            ->renderHook(
+                PanelsRenderHook::CONTENT_START,
+                function (): ?View {
+                    $tenant = Filament::getTenant();
+
+                    if (! $tenant instanceof Tenant) {
+                        return null;
+                    }
+
+                    $notice = app(SubscriptionRenewalNoticeService::class)->forTenant($tenant);
+
+                    if ($notice === null) {
+                        return null;
+                    }
+
+                    return view('filament.app.components.subscription-renewal-notice', [
+                        'notice' => $notice,
+                    ]);
+                },
             )
             ->discoverResources(in: app_path('Filament/App/Resources'), for: 'App\Filament\App\Resources')
             ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\Filament\App\Pages')

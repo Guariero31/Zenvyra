@@ -16,6 +16,17 @@ class PlanSeeder extends Seeder
     {
         $plans = [
             [
+                'slug' => 'avaliacao',
+                'name' => 'Avaliação',
+                'description' => 'Ambiente reduzido para testes comerciais sem compromisso.',
+                'price' => 0,
+                'billing_period' => 'monthly',
+                'trial_days' => 0,
+                'max_products' => 25,
+                'max_users' => 1,
+                'features' => ['usuarios' => '1', 'produtos' => '25', 'suporte' => 'Avaliação'],
+            ],
+            [
                 'slug' => 'starter',
                 'name' => 'Starter',
                 'description' => 'Plano inicial para quem está começando.',

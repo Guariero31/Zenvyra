@@ -9,6 +9,8 @@ use App\Models\OrderItem;
 
 class CommissionCalculator
 {
+    public function __construct(private readonly UserCommissionResolver $userCommission) {}
+
     public function effectiveRate(OrderItem $item, Order $order): string
     {
         $productRate = $item->product?->commission_rate;
@@ -17,7 +19,7 @@ class CommissionCalculator
             return (string) $productRate;
         }
 
-        return (string) ($order->seller?->commission_rate ?? 0);
+        return $this->userCommission->defaultRateForOrder($order);
     }
 
     /**

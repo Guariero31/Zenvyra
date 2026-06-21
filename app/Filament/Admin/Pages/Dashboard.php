@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Pages;
 
+use App\Filament\Admin\Widgets\ExpiringEvaluationsWidget;
 use App\Filament\Admin\Widgets\PlatformOverviewWidget;
 use App\Filament\Admin\Widgets\QuickActionsWidget;
 use App\Filament\Admin\Widgets\StoresByPlanChart;
@@ -29,6 +30,7 @@ class Dashboard extends BaseDashboard
     {
         return [
             PlatformOverviewWidget::class,
+            ExpiringEvaluationsWidget::class,
             QuickActionsWidget::class,
             TenantsGrowthChart::class,
             SubscriptionStatusChart::class,

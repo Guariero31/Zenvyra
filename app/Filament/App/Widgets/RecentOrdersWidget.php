@@ -40,8 +40,7 @@ class RecentOrdersWidget extends BaseWidget
 
                 TextColumn::make('customer.name')
                     ->label('Cliente')
-                    ->placeholder('Sem cliente')
-                    ->searchable(),
+                    ->placeholder('Sem cliente'),
 
                 TextColumn::make('total_amount')
                     ->label('Valor')

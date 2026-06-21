@@ -86,7 +86,11 @@ class TenantBrandingResource extends Resource
         $theme = TenantTheme::where('tenant_id', $tenantAtual->getKey())->first()
             ?? TenantTheme::obterOuCriarParaTenant((int) $tenantAtual->getKey());
 
-        return static::getUrl('edit', ['record' => $theme], $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);
+        if (! $theme->exists || $theme->getKey() === null) {
+            return '#';
+        }
+
+        return static::getUrl('edit', ['record' => $theme->getKey()], $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);
     }
 
     public static function getIndexUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null, bool $shouldGuessMissingParameters = false): string
@@ -100,7 +104,11 @@ class TenantBrandingResource extends Resource
         $theme = TenantTheme::where('tenant_id', $tenantAtual->getKey())->first()
             ?? TenantTheme::obterOuCriarParaTenant((int) $tenantAtual->getKey());
 
-        return static::getUrl('edit', ['record' => $theme, ...$parameters], $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);
+        if (! $theme->exists || $theme->getKey() === null) {
+            return '#';
+        }
+
+        return static::getUrl('edit', ['record' => $theme->getKey(), ...$parameters], $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);
     }
 
     public static function canAccess(): bool

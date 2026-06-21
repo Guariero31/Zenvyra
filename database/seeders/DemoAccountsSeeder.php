@@ -10,17 +10,19 @@ use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\Tenant;
 use App\Models\User;
+use Database\Seeders\Concerns\SeedsTenantVendedores;
 use Illuminate\Database\Seeder;
 
 /**
- * Cria contas iniciais para os testes manuais: um administrador master da
- * plataforma e uma loja demo com um lojista vinculado. Idempotente.
+ * Contas iniciais: admin master, Loja Demo com lojista e equipe de vendedores.
  */
 class DemoAccountsSeeder extends Seeder
 {
+    use SeedsTenantVendedores;
+
     public function run(): void
     {
-        $master = User::updateOrCreate(
+        User::updateOrCreate(
             ['email' => 'master@zenvyra.com.br'],
             [
                 'name' => 'Admin Master',
@@ -34,7 +36,7 @@ class DemoAccountsSeeder extends Seeder
             ['te_name' => 'Loja Demo'],
         );
 
-        $plan = Plan::firstWhere('slug', 'starter');
+        $plan = Plan::firstWhere('slug', 'pro');
 
         if ($plan) {
             $cycleEnd = now()->addDays((int) config('subscriptions.billing_cycle_days'));
@@ -64,7 +66,14 @@ class DemoAccountsSeeder extends Seeder
             $lojista->id => [
                 'tu_papel' => TenantPortalRole::AdministradorCliente->value,
                 'tu_rotulo_setor' => 'Gerência',
+                'tu_commission_rate' => 0,
             ],
+        ]);
+
+        $this->attachVendedores($tenant, [
+            ['name' => 'Maria Vendas', 'email' => 'maria.vendas@loja-demo.test', 'commission' => 8],
+            ['name' => 'João Balcão', 'email' => 'joao.vendas@loja-demo.test', 'commission' => 5],
+            ['name' => 'Ana Promotora', 'email' => 'ana.vendas@loja-demo.test', 'commission' => 10],
         ]);
     }
 }

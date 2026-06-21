@@ -18,7 +18,7 @@ class OrderObserver
 
     public function updated(Order $order): void
     {
-        if ($order->wasChanged('seller_id')) {
+        if ($order->wasChanged('user_id')) {
             $this->orders->recalculateTotal($order);
         }
 

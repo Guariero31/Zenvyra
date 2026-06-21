@@ -75,14 +75,22 @@ class IdentidadeVisualResource extends Resource
     {
         $registro = IdentidadeVisual::obterOuCriar();
 
-        return static::getUrl('edit', ['record' => $registro], $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);
+        if (! $registro->exists || $registro->getKey() === null) {
+            return '#';
+        }
+
+        return static::getUrl('edit', ['record' => $registro->getKey()], $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);
     }
 
     public static function getIndexUrl(array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null, bool $shouldGuessMissingParameters = false): string
     {
         $registro = IdentidadeVisual::obterOuCriar();
 
-        return static::getUrl('edit', ['record' => $registro, ...$parameters], $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);
+        if (! $registro->exists || $registro->getKey() === null) {
+            return '#';
+        }
+
+        return static::getUrl('edit', ['record' => $registro->getKey(), ...$parameters], $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters);
     }
 
     public static function canAccess(): bool

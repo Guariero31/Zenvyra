@@ -15,11 +15,19 @@ class PgsqlTenantSearchPath
 {
     public static function apply(string $schema): void
     {
+        if (DB::getDriverName() !== 'pgsql') {
+            return;
+        }
+
         DB::statement('SET search_path TO "'.self::sanitize($schema).'", public');
     }
 
     public static function reset(): void
     {
+        if (DB::getDriverName() !== 'pgsql') {
+            return;
+        }
+
         DB::statement('SET search_path TO public');
     }
 

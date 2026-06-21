@@ -25,7 +25,7 @@ class OrdersTable
                     ->label('Cliente')
                     ->searchable()
                     ->placeholder('Sem cliente'),
-                TextColumn::make('seller.name')
+                TextColumn::make('operator.name')
                     ->label('Vendedor')
                     ->searchable()
                     ->placeholder('Sem vendedor'),
@@ -69,14 +69,15 @@ class OrdersTable
                         'BALCAO' => 'Balcão',
                         'CATALOGO_WHATSAPP' => 'Catálogo WhatsApp',
                     ]),
-                SelectFilter::make('seller_id')
+                SelectFilter::make('user_id')
                     ->label('Vendedor')
-                    ->relationship('seller', 'name')
+                    ->relationship('operator', 'name')
                     ->searchable()
                     ->preload(),
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->label(false),
                 RefundOrderAction::make(),
                 CancelOrderAction::make(),
             ])

@@ -40,7 +40,8 @@ class CustomersTable
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->label(false),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

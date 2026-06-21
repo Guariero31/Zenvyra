@@ -146,8 +146,10 @@ class ProductsTable
             ->recordActions([
                 StockEntryAction::make(),
                 ToggleProductStatusAction::make(),
-                EditAction::make(),
-                DeleteAction::make(),
+                EditAction::make()
+                    ->hiddenLabel(),
+                DeleteAction::make()
+                    ->hiddenLabel(),
             ])
             ->bulkActions([
                 BulkActionGroup::make([

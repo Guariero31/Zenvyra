@@ -20,21 +20,21 @@ class DashboardOverviewWidget extends BaseWidget
 
     protected function getStats(): array
     {
-        $todayRevenue = Order::whereIn('status', OrderStatus::soldValues())
+        $todayRevenue = Order::query()->whereIn('status', OrderStatus::soldValues())
             ->whereDate('created_at', Carbon::today())
             ->sum('total_amount');
 
-        $pendingOrders = Order::where('status', OrderStatus::Pending)
+        $pendingOrders = Order::query()->where('status', OrderStatus::Pending)
             ->count();
 
-        $activeProducts = Product::where('status', 'active')
+        $activeProducts = Product::query()->where('status', 'active')
             ->count();
 
-        $newCustomersThisMonth = Customer::whereMonth('created_at', Carbon::now()->month)
+        $newCustomersThisMonth = Customer::query()->whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', Carbon::now()->year)
             ->count();
 
-        $newCustomersLastMonth = Customer::whereMonth('created_at', Carbon::now()->subMonth()->month)
+        $newCustomersLastMonth = Customer::query()->whereMonth('created_at', Carbon::now()->subMonth()->month)
             ->whereYear('created_at', Carbon::now()->subMonth()->year)
             ->count();
 

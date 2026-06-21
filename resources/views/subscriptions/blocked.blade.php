@@ -92,17 +92,31 @@
     <main class="card">
         <span class="badge">Assinatura {{ $subscription?->status?->getLabel() ?? 'pendente' }}</span>
 
-        <h1>Acesso temporariamente indisponível</h1>
+        @if ($isEvaluation)
+            <h1>Período de avaliação encerrado</h1>
 
-        <p>
-            A loja <span class="store">{{ $tenant->te_name }}</span> está com a assinatura
-            pendente e o painel de gestão ficou bloqueado até a regularização.
-        </p>
+            <p>
+                A avaliação da loja <span class="store">{{ $tenant->te_name }}</span> terminou
+                e o painel ficou bloqueado.
+            </p>
 
-        <p>
-            Para reativar o acesso, entre em contato com a equipe responsável e
-            confirme o pagamento da sua assinatura.
-        </p>
+            <p>
+                Gostou do que viu? Entre em contato para contratar um plano e continuar
+                usando a plataforma com os dados que você cadastrou.
+            </p>
+        @else
+            <h1>Acesso temporariamente indisponível</h1>
+
+            <p>
+                A loja <span class="store">{{ $tenant->te_name }}</span> está com a assinatura
+                pendente e o painel de gestão ficou bloqueado até a regularização.
+            </p>
+
+            <p>
+                Para reativar o acesso, entre em contato com a equipe responsável e
+                confirme o pagamento da sua assinatura.
+            </p>
+        @endif
 
         @if ($otherTenants->isNotEmpty())
             <hr class="divider">

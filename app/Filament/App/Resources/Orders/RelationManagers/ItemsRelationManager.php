@@ -117,6 +117,7 @@ class ItemsRelationManager extends RelationManager
             ])
             ->recordActions([
                 EditAction::make()
+                    ->label(false)
                     ->visible(fn (): bool => ! $this->isLocked()),
                 DeleteAction::make()
                     ->visible(fn (): bool => ! $this->isLocked()),

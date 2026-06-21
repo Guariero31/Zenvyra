@@ -19,6 +19,8 @@ use App\Filament\App\Resources\Products\Pages\CreateProduct;
 use App\Filament\App\Resources\Products\Pages\EditProduct;
 use App\Filament\App\Resources\Products\Pages\ListProducts;
 use App\Filament\App\Resources\Products\RelationManagers\ImagesRelationManager;
+use App\Filament\App\Resources\TeamMembers\Pages\CreateTeamMember;
+use App\Filament\App\Resources\TeamMembers\Pages\ListTeamMembers;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Order;
@@ -156,6 +158,12 @@ class AppResourcesTest extends TestCase
         Livewire::test(ListCustomers::class)->assertOk();
         Livewire::test(CreateCustomer::class)->assertOk();
         Livewire::test(EditCustomer::class, ['record' => $customer->id])->assertOk();
+    }
+
+    public function test_app_team_resource_pages_can_load(): void
+    {
+        Livewire::test(ListTeamMembers::class)->assertOk();
+        Livewire::test(CreateTeamMember::class)->assertOk();
     }
 
     public function test_app_order_resource_pages_can_load(): void

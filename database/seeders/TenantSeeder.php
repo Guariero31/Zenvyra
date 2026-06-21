@@ -10,20 +10,39 @@ use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\Tenant;
 use App\Models\User;
+use Database\Seeders\Concerns\SeedsTenantVendedores;
 use Illuminate\Database\Seeder;
 
 /**
- * Cria lojas adicionais (além da Loja Demo), cada uma com um lojista vinculado
- * e uma assinatura. Ao criar o Tenant, o TenantObserver provisiona o schema
- * físico da loja no PostgreSQL. Idempotente por slug/e-mail.
+ * Lojas adicionais com lojista e equipe de vendedores. Idempotente por slug/e-mail.
  */
 class TenantSeeder extends Seeder
 {
+    use SeedsTenantVendedores;
+
     public function run(): void
     {
         $stores = [
-            ['name' => 'Moda Urbana', 'slug' => 'moda-urbana', 'plan' => 'pro', 'email' => 'contato@modaurbana.com.br'],
-            ['name' => 'Tech House', 'slug' => 'tech-house', 'plan' => 'enterprise', 'email' => 'contato@techhouse.com.br'],
+            [
+                'name' => 'Moda Urbana',
+                'slug' => 'moda-urbana',
+                'plan' => 'pro',
+                'email' => 'contato@modaurbana.com.br',
+                'vendedores' => [
+                    ['name' => 'Carla Moda', 'email' => 'carla.vendas@moda-urbana.test', 'commission' => 6],
+                    ['name' => 'Pedro Showroom', 'email' => 'pedro.vendas@moda-urbana.test', 'commission' => 9],
+                ],
+            ],
+            [
+                'name' => 'Tech House',
+                'slug' => 'tech-house',
+                'plan' => 'enterprise',
+                'email' => 'contato@techhouse.com.br',
+                'vendedores' => [
+                    ['name' => 'Lucas Tech', 'email' => 'lucas.vendas@tech-house.test', 'commission' => 7],
+                    ['name' => 'Julia Gadgets', 'email' => 'julia.vendas@tech-house.test', 'commission' => 11],
+                ],
+            ],
         ];
 
         foreach ($stores as $store) {
@@ -62,8 +81,11 @@ class TenantSeeder extends Seeder
                 $owner->id => [
                     'tu_papel' => TenantPortalRole::AdministradorCliente->value,
                     'tu_rotulo_setor' => 'Gerência',
+                    'tu_commission_rate' => 0,
                 ],
             ]);
+
+            $this->attachVendedores($tenant, $store['vendedores']);
         }
     }
 }

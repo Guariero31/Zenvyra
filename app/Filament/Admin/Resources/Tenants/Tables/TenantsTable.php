@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\Tenants\Tables;
 
+use App\Filament\Admin\Resources\Tenants\Actions\PurgeEvaluationDataAction;
 use App\Filament\Admin\Resources\Tenants\Actions\ToggleTenantStatusAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
@@ -21,9 +22,29 @@ class TenantsTable
                 TextColumn::make('te_slug')
                     ->label('Slug')
                     ->searchable(),
+                TextColumn::make('plan_name')
+                    ->label('Plano')
+                    ->state(fn ($record) => $record->subscriptions()->latest('id')->first()?->plan?->name)
+                    ->placeholder('-'),
+                TextColumn::make('subscription_intent')
+                    ->label('Intenção')
+                    ->badge()
+                    ->state(fn ($record) => $record->subscriptions()->latest('id')->first()?->intent)
+                    ->placeholder('-'),
+                TextColumn::make('subscription_status')
+                    ->label('Assinatura')
+                    ->badge()
+                    ->state(fn ($record) => $record->subscriptions()->latest('id')->first()?->status)
+                    ->placeholder('-'),
+                TextColumn::make('te_data_retention_ends_at')
+                    ->label('Retenção até')
+                    ->date()
+                    ->placeholder('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('te_schema')
                     ->label('Schema')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('te_ativo')
                     ->label('Ativa')
                     ->boolean(),
@@ -44,7 +65,9 @@ class TenantsTable
             ])
             ->recordActions([
                 ToggleTenantStatusAction::make(),
-                EditAction::make(),
+                PurgeEvaluationDataAction::make(),
+                EditAction::make()
+                    ->label(false),
             ])
             ->toolbarActions([
                 //

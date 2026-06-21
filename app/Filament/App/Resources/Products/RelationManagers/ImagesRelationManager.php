@@ -114,6 +114,7 @@ class ImagesRelationManager extends RelationManager
                             ->send();
                     }),
                 EditAction::make()
+                    ->label(false)
                     ->iconButton(),
                 DeleteAction::make()
                     ->iconButton(),

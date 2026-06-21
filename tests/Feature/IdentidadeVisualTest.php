@@ -11,6 +11,7 @@ use App\Filament\App\Resources\TenantBrandings\Pages\EditTenantBranding;
 use App\Filament\App\Resources\TenantBrandings\TenantBrandingResource;
 use App\Models\IdentidadeVisual;
 use App\Models\Tenant;
+use App\Models\TenantTheme;
 use App\Models\User;
 use App\Services\BrandingService;
 use Filament\Facades\Filament;
@@ -91,6 +92,20 @@ class IdentidadeVisualTest extends TestCase
         ]);
     }
 
+    public function test_master_page_shows_preview_and_history(): void
+    {
+        Filament::setCurrentPanel('admin');
+        $this->actingAs(User::factory()->platformAdmin()->create());
+
+        $registro = IdentidadeVisual::obterOuCriar();
+
+        Livewire::test(EditIdentidadeVisual::class, ['record' => $registro->id])
+            ->assertOk()
+            ->assertSee('Pré-visualização do painel')
+            ->assertSee('Histórico de alterações')
+            ->assertSee('Marca do painel master');
+    }
+
     public function test_tenant_resource_renders_and_persists_branding(): void
     {
         $this->artisan('migrate', [
@@ -148,5 +163,67 @@ class IdentidadeVisualTest extends TestCase
         Filament::bootCurrentPanel();
 
         $this->assertFalse(TenantBrandingResource::canAccess());
+    }
+
+    public function test_tenant_restore_defaults_updates_form_without_saving(): void
+    {
+        $this->artisan('migrate', [
+            '--path' => 'database/migrations/tenant',
+        ]);
+
+        $tenant = Tenant::create(['te_name' => 'Loja Cores']);
+        $user = User::factory()->create();
+        $tenant->users()->attach($user, [
+            'tu_papel' => TenantPortalRole::AdministradorCliente->value,
+        ]);
+
+        $theme = TenantTheme::obterOuCriarParaTenant($tenant->id);
+        $theme->update([
+            'nome_loja' => 'Marca Protegida',
+            'cor_primaria_light' => '#000000',
+            'cor_sucesso_light' => '#111111',
+        ]);
+
+        $this->actingAs($user);
+        Filament::setCurrentPanel('app');
+        Filament::setTenant($tenant);
+        Filament::bootCurrentPanel();
+
+        Livewire::test(EditTenantBranding::class, ['record' => $theme->id])
+            ->callAction('restaurar_padroes')
+            ->assertSet('data.cor_primaria_light', TenantTheme::defaults()['cor_primaria_light'])
+            ->assertSet('data.nome_loja', 'Marca Protegida');
+
+        $this->assertDatabaseHas('tenant_themes', [
+            'tenant_id' => $tenant->id,
+            'nome_loja' => 'Marca Protegida',
+            'cor_primaria_light' => '#000000',
+        ]);
+    }
+
+    public function test_tenant_page_shows_preview_and_history(): void
+    {
+        $this->artisan('migrate', [
+            '--path' => 'database/migrations/tenant',
+        ]);
+
+        $tenant = Tenant::create(['te_name' => 'Loja Preview']);
+        $user = User::factory()->create();
+        $tenant->users()->attach($user, [
+            'tu_papel' => TenantPortalRole::Leader->value,
+        ]);
+
+        $theme = TenantTheme::obterOuCriarParaTenant($tenant->id);
+
+        $this->actingAs($user);
+        Filament::setCurrentPanel('app');
+        Filament::setTenant($tenant);
+        Filament::bootCurrentPanel();
+
+        Livewire::test(EditTenantBranding::class, ['record' => $theme->id])
+            ->assertOk()
+            ->assertSee('Pré-visualização do painel')
+            ->assertSee('Histórico de alterações')
+            ->assertSee('Marca da loja');
     }
 }

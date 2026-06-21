@@ -3,11 +3,14 @@
 namespace App\Filament\Admin\Resources\Tenants\RelationManagers;
 
 use App\Enums\TenantPortalRole;
+use App\Models\Tenant;
+use App\Services\PlanLimitService;
 use Filament\Actions\AttachAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DetachAction;
 use Filament\Actions\DetachBulkAction;
 use Filament\Forms\Components\Select;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -49,6 +52,24 @@ class UsersRelationManager extends RelationManager
             ->headerActions([
                 AttachAction::make()
                     ->label('Vincular usuário')
+                    ->before(function (AttachAction $action): void {
+                        $tenant = $action->getLivewire()->getOwnerRecord();
+
+                        if (! $tenant instanceof Tenant) {
+                            return;
+                        }
+
+                        try {
+                            app(PlanLimitService::class)->assertCanAddUser($tenant);
+                        } catch (\RuntimeException $exception) {
+                            Notification::make()
+                                ->title($exception->getMessage())
+                                ->danger()
+                                ->send();
+
+                            $action->halt();
+                        }
+                    })
                     ->schema(fn (AttachAction $action): array => [
                         $action->getRecordSelect()
                             ->label('Usuário')

@@ -11,7 +11,7 @@ class MonthlySalesCountChart extends ChartWidget
 {
     protected static ?int $sort = 5;
 
-    protected ?string $heading = 'Número de vendas por mês';
+    protected ?string $heading = 'Crescimento de pedidos';
 
     protected ?string $description = 'Quantidade de pedidos efetivados por mês.';
 
@@ -32,12 +32,16 @@ class MonthlySalesCountChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Vendas',
+                    'label' => 'Pedidos',
                     'data' => $series['count'],
-                    'backgroundColor' => 'rgba(99, 102, 241, 0.2)',
-                    'borderColor' => 'rgb(99, 102, 241)',
+                    'borderColor' => 'rgb(34, 197, 94)',
+                    'backgroundColor' => 'rgba(34, 197, 94, 0.10)',
                     'fill' => true,
-                    'tension' => 0.3,
+                    'tension' => 0.4,
+                    'pointRadius' => 4,
+                    'pointHoverRadius' => 6,
+                    'pointBackgroundColor' => 'rgb(34, 197, 94)',
+                    'borderWidth' => 2,
                 ],
             ],
             'labels' => $series['labels'],
@@ -47,5 +51,28 @@ class MonthlySalesCountChart extends ChartWidget
     protected function getType(): string
     {
         return 'line';
+    }
+
+    protected function getOptions(): array
+    {
+        return [
+            'plugins' => [
+                'legend' => [
+                    'position' => 'bottom',
+                    'labels' => ['usePointStyle' => true, 'padding' => 16],
+                ],
+            ],
+            'scales' => [
+                'x' => [
+                    'grid' => ['color' => 'rgba(255,255,255,0.04)'],
+                    'ticks' => ['color' => 'rgba(255,255,255,0.45)'],
+                ],
+                'y' => [
+                    'grid' => ['color' => 'rgba(255,255,255,0.04)'],
+                    'ticks' => ['color' => 'rgba(255,255,255,0.45)'],
+                    'beginAtZero' => true,
+                ],
+            ],
+        ];
     }
 }

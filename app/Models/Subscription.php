@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\SubscriptionIntent;
 use App\Enums\SubscriptionStatus;
+use App\Services\SubscriptionManager;
 use Database\Factories\SubscriptionFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 class Subscription extends Model
 {
@@ -19,6 +23,7 @@ class Subscription extends Model
         'tenant_id',
         'plan_id',
         'status',
+        'intent',
         'trial_ends_at',
         'starts_at',
         'ends_at',
@@ -34,6 +39,7 @@ class Subscription extends Model
     {
         return [
             'status' => SubscriptionStatus::class,
+            'intent' => SubscriptionIntent::class,
             'trial_ends_at' => 'datetime',
             'starts_at' => 'datetime',
             'ends_at' => 'datetime',
@@ -81,5 +87,68 @@ class Subscription extends Model
     public function grantsAccess(): bool
     {
         return $this->onTrial() || $this->isActive() || $this->onGracePeriod();
+    }
+
+    public function isEvaluation(): bool
+    {
+        return $this->intent === SubscriptionIntent::Evaluation;
+    }
+
+    /**
+     * Data exibida como próxima cobrança. Usa next_billing_at quando persistido;
+     * caso contrário, infere a partir do ciclo ou do fim do teste/avaliação.
+     */
+    public function resolveNextBillingAt(): ?Carbon
+    {
+        if ($this->next_billing_at !== null) {
+            return $this->next_billing_at;
+        }
+
+        $resolved = match ($this->status) {
+            SubscriptionStatus::Trialing => $this->trial_ends_at,
+            SubscriptionStatus::Active => $this->ends_at,
+            SubscriptionStatus::PastDue => $this->grace_ends_at ?? $this->ends_at,
+            default => null,
+        };
+
+        if ($resolved !== null) {
+            return $resolved;
+        }
+
+        if ($this->starts_at === null) {
+            return null;
+        }
+
+        return match ($this->status) {
+            SubscriptionStatus::Trialing,
+            SubscriptionStatus::Active,
+            SubscriptionStatus::PastDue => app(SubscriptionManager::class)->nextBillingDate($this->starts_at),
+            default => null,
+        };
+    }
+
+    /**
+     * @param  Builder<Subscription>  $query
+     * @return Builder<Subscription>
+     */
+    public function scopeExpiringEvaluations(Builder $query, ?int $withinDays = null): Builder
+    {
+        $days = $withinDays ?? (int) config('subscriptions.evaluation_expiring_alert_days', 7);
+
+        return $query
+            ->where('intent', SubscriptionIntent::Evaluation)
+            ->where('status', SubscriptionStatus::Trialing)
+            ->whereNotNull('trial_ends_at')
+            ->whereBetween('trial_ends_at', [now(), now()->addDays($days)])
+            ->orderBy('trial_ends_at');
+    }
+
+    public function daysUntilTrialEnds(): ?int
+    {
+        if ($this->trial_ends_at === null) {
+            return null;
+        }
+
+        return (int) now()->diffInDays($this->trial_ends_at, false);
     }
 }

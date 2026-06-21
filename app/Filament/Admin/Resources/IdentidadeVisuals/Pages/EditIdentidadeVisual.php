@@ -26,31 +26,36 @@ class EditIdentidadeVisual extends EditRecord
     {
         $registro = IdentidadeVisual::obterOuCriar();
 
+        abort_unless($registro->exists && $registro->getKey() !== null, 503);
+
         parent::mount($registro->getKey());
+    }
+
+    public function getSubheading(): ?string
+    {
+        return 'Personalize nome, logo e cores do painel administrativo da plataforma.';
     }
 
     protected function getHeaderActions(): array
     {
         return [
             Action::make('restaurar_padroes')
-                ->label('Restaurar padrões')
+                ->label('Restaurar cores padrão')
                 ->icon(Heroicon::OutlinedArrowPath)
                 ->color('gray')
                 ->requiresConfirmation()
-                ->modalHeading('Restaurar identidade visual padrão?')
-                ->modalDescription('Todas as cores serão redefinidas para os valores padrão do sistema.')
+                ->modalHeading('Restaurar cores padrão?')
+                ->modalDescription('Nome, logo e favicon serão mantidos. Somente as cores voltam ao padrão do sistema.')
                 ->modalSubmitActionLabel('Sim, restaurar')
                 ->action(function (): void {
                     $defaults = IdentidadeVisual::defaults();
                     unset($defaults['logo_path'], $defaults['favicon_path'], $defaults['nome_sistema']);
 
-                    $atual = $this->form->getState();
-
-                    $this->form->fill(array_merge($atual, $defaults));
+                    $this->form->fill(array_merge($this->form->getState(), $defaults));
 
                     Notification::make()
                         ->title('Cores restauradas')
-                        ->body('Salve para aplicar as cores padrão.')
+                        ->body('Clique em Salvar para aplicar as cores padrão.')
                         ->info()
                         ->send();
                 }),
@@ -84,6 +89,6 @@ class EditIdentidadeVisual extends EditRecord
 
     protected function getSavedNotificationBody(): ?string
     {
-        return 'As alterações serão aplicadas na próxima requisição.';
+        return 'As alterações já estão valendo para quem recarregar o painel.';
     }
 }

@@ -10,8 +10,9 @@ use App\Models\Tenant;
 use App\Observers\OrderItemObserver;
 use App\Observers\OrderObserver;
 use App\Observers\TenantObserver;
-use App\Support\PgsqlTenantSearchPath;
-use Filament\Facades\Filament;
+use App\Support\TenantContext;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 
@@ -24,6 +25,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        Select::configureUsing(fn (Select $select): Select => $select->native(false));
+        SelectFilter::configureUsing(fn (SelectFilter $filter): SelectFilter => $filter->native(false));
+
         Order::observe(OrderObserver::class);
         OrderItem::observe(OrderItemObserver::class);
         Tenant::observe(TenantObserver::class);
@@ -32,13 +36,7 @@ class AppServiceProvider extends ServiceProvider
         // o evento real disparado na re-hidratação assíncrona é 'hydrate'. O guard
         // pelo tenant ativo evita reaplicar o schema fora do painel do lojista.
         Livewire::listen('hydrate', function (): void {
-            if (! Filament::getTenant() instanceof Tenant) {
-                return;
-            }
-
-            if ($schema = session('tenant_schema')) {
-                PgsqlTenantSearchPath::apply($schema);
-            }
+            TenantContext::applySearchPathForAppPanel();
         });
     }
 }

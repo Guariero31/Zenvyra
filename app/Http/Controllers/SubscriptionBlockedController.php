@@ -17,6 +17,7 @@ class SubscriptionBlockedController extends Controller
             'tenant' => $tenant,
             'subscription' => $tenant->subscriptions()->latest('id')->first(),
             'otherTenants' => $this->accessibleTenants($tenant),
+            'isEvaluation' => $tenant->subscriptions()->latest('id')->first()?->isEvaluation() ?? false,
         ]);
     }
 

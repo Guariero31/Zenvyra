@@ -2,7 +2,6 @@
 
 namespace App\Filament\App\Resources\Orders\Tables;
 
-use App\Enums\OrderStatus;
 use App\Filament\App\Resources\Orders\Actions\CancelOrderAction;
 use App\Filament\App\Resources\Orders\Actions\RefundOrderAction;
 use Filament\Actions\BulkActionGroup;
@@ -60,9 +59,6 @@ class OrdersTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('status')
-                    ->label('Status')
-                    ->options(OrderStatus::class),
                 SelectFilter::make('origin')
                     ->label('Origem')
                     ->options([

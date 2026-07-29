@@ -13,11 +13,30 @@ use Filament\Facades\Filament;
  */
 final class TenantContext
 {
+    /** Sobreposição manual — usada em testes e jobs de console. */
+    private static ?Tenant $override = null;
+
     public static function current(): ?Tenant
     {
+        if (self::$override !== null) {
+            return self::$override;
+        }
+
         $tenant = Filament::getTenant();
 
         return $tenant instanceof Tenant ? $tenant : null;
+    }
+
+    /** Define um tenant manualmente (testes / jobs de console). */
+    public static function set(Tenant $tenant): void
+    {
+        self::$override = $tenant;
+    }
+
+    /** Remove a sobreposição manual. */
+    public static function clear(): void
+    {
+        self::$override = null;
     }
 
     public static function applySearchPath(): void

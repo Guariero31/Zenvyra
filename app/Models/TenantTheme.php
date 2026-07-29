@@ -29,6 +29,7 @@ class TenantTheme extends Model
         'nome_loja',
         'logo_path',
         'favicon_path',
+        'store_config',
         'cor_primaria_light',
         'cor_sucesso_light',
         'cor_alerta_light',
@@ -46,6 +47,21 @@ class TenantTheme extends Model
         'bg_sidebar_dark',
         'bg_topbar_dark',
     ];
+
+    protected $casts = [
+        'store_config' => 'array',
+    ];
+
+    /**
+     * Helper: returns a store_config key with a default.
+     *
+     * @param  mixed  $default
+     * @return mixed
+     */
+    public function storeConfig(string $key, mixed $default = null): mixed
+    {
+        return data_get($this->store_config ?? [], $key, $default);
+    }
 
     public function tenant(): BelongsTo
     {
@@ -76,6 +92,7 @@ class TenantTheme extends Model
             'nome_loja' => null,
             'logo_path' => null,
             'favicon_path' => null,
+            'store_config' => null,
             'cor_primaria_light' => '#4F46E5',
             'cor_sucesso_light' => '#10B981',
             'cor_alerta_light' => '#F59E0B',

@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enums\TenantPortalRole;
+use App\Mail\WelcomeMail;
 use App\Models\Tenant;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 
 class TenantTeamService
@@ -58,6 +60,8 @@ class TenantTeamService
         }
 
         $tenant->users()->attach($user, $this->pivotAttributes($data));
+
+        $this->sendWelcomeIfAdmin($tenant, $user, $data['tu_papel']);
 
         return $user;
     }
@@ -141,6 +145,22 @@ class TenantTeamService
             'tu_rotulo_setor' => $data['tu_rotulo_setor'] ?? null,
             'tu_commission_rate' => (float) ($data['tu_commission_rate'] ?? 0),
         ];
+    }
+
+    /** Envia e-mail de boas-vindas quando o usuário é vinculado como AdministradorCliente. */
+    private function sendWelcomeIfAdmin(Tenant $tenant, User $user, TenantPortalRole|string $role): void
+    {
+        if ($this->resolveRole($role) !== TenantPortalRole::AdministradorCliente) {
+            return;
+        }
+
+        $panelUrl = url("/app/{$tenant->te_slug}");
+
+        Mail::to($user->email)->send(new WelcomeMail(
+            userName:  $user->name,
+            storeName: $tenant->displayName(),
+            panelUrl:  $panelUrl,
+        ));
     }
 
     private function resolveRole(TenantPortalRole|string $role): TenantPortalRole

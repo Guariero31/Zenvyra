@@ -151,7 +151,7 @@ class ProductsTable
                 DeleteAction::make()
                     ->hiddenLabel(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkActionGroup::make([
                     BulkAction::make('activate')
                         ->label('Ativar selecionados')

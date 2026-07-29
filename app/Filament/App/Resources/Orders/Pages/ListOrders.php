@@ -4,7 +4,9 @@ namespace App\Filament\App\Resources\Orders\Pages;
 
 use App\Enums\OrderStatus;
 use App\Filament\App\Resources\Orders\OrderResource;
+use App\Filament\Exports\OrderExporter;
 use Filament\Actions\CreateAction;
+use Filament\Actions\ExportAction;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder;
@@ -35,6 +37,12 @@ class ListOrders extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            ExportAction::make('export')
+                ->exporter(OrderExporter::class)
+                ->label('Exportar')
+                ->color('gray')
+                ->outlined(),
+
             CreateAction::make(),
         ];
     }

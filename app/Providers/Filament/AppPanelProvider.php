@@ -48,6 +48,7 @@ class AppPanelProvider extends PanelProvider
             ->brandName(fn (): string => $this->resolverNomeTenant($branding))
             ->brandLogo(fn (): ?HtmlString => $this->resolverLogoTenant($branding))
             ->login()
+            ->passwordReset()
             ->tenant(Tenant::class, slugAttribute: 'te_slug')
             ->colors(fn (): array => $this->resolverCoresTenant($branding))
             ->renderHook(

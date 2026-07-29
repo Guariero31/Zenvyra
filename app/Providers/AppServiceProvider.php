@@ -13,6 +13,7 @@ use App\Observers\TenantObserver;
 use App\Support\TenantContext;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 
@@ -25,6 +26,11 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Registra views/emails como anonymous components acessíveis via <x-emails.layout>.
+        // Necessário porque Livewire v4 compila todas as views e x-mail::layout
+        // (namespace do Laravel Markdown Mail) não está disponível fora do contexto de e-mail.
+        Blade::anonymousComponentPath(resource_path('views/emails'), 'emails');
+
         Select::configureUsing(fn (Select $select): Select => $select->native(false));
         SelectFilter::configureUsing(fn (SelectFilter $filter): SelectFilter => $filter->native(false));
 

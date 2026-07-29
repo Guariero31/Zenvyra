@@ -6,11 +6,15 @@ namespace App\Services;
 
 use App\Enums\SubscriptionIntent;
 use App\Enums\SubscriptionStatus;
+use App\Enums\TenantPortalRole;
+use App\Mail\SubscriptionExpiredMail;
 use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\Tenant;
+use App\Models\User;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * Centraliza as transições de estado de uma assinatura. Hoje (Fase 1) é acionado
@@ -146,6 +150,8 @@ class SubscriptionManager
             $this->scheduleEvaluationDataRetention($subscription);
         }
 
+        $this->notifySubscriptionExpired($subscription);
+
         return $subscription;
     }
 
@@ -217,6 +223,30 @@ class SubscriptionManager
         }
 
         return $subscription;
+    }
+
+    /** Notifica os administradores da loja quando a assinatura expira. */
+    private function notifySubscriptionExpired(Subscription $subscription): void
+    {
+        $tenant = $subscription->tenant;
+        $plan   = $subscription->plan;
+
+        if (! $tenant instanceof Tenant || ! $plan) {
+            return;
+        }
+
+        $expiredAt = ($subscription->ends_at ?? Carbon::now())->format('d/m/Y');
+
+        $tenant->users()
+            ->wherePivot('tu_papel', TenantPortalRole::AdministradorCliente->value)
+            ->get()
+            ->each(function (User $admin) use ($tenant, $plan, $expiredAt): void {
+                Mail::to($admin->email)->send(new SubscriptionExpiredMail(
+                    storeName:  $tenant->displayName(),
+                    planName:   $plan->name,
+                    expiredAt:  $expiredAt,
+                ));
+            });
     }
 
     private function scheduleEvaluationDataRetention(Subscription $subscription): void

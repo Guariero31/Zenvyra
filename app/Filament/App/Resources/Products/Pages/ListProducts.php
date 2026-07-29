@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Filament\App\Resources\Products\Pages;
 
 use App\Filament\App\Resources\Products\ProductResource;
+use App\Filament\Exports\ProductExporter;
 use App\Models\Category;
 use App\Models\Product;
 use Filament\Actions\Action;
+use Filament\Actions\ExportAction;
 use Filament\Resources\Pages\Page;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -98,6 +100,13 @@ class ListProducts extends Page
     protected function getHeaderActions(): array
     {
         return [
+            ExportAction::make('export')
+                ->exporter(ProductExporter::class)
+                ->label('Exportar')
+                ->icon(Heroicon::OutlinedArrowDownTray)
+                ->color('gray')
+                ->outlined(),
+
             Action::make('create')
                 ->label('Novo Produto')
                 ->icon(Heroicon::OutlinedPlus)

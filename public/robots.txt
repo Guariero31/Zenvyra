@@ -1,2 +1,4 @@
 User-agent: *
-Disallow:
+Disallow: /app/
+Disallow: /admin/
+Disallow: /assinatura-pendente/

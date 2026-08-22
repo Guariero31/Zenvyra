@@ -37,9 +37,9 @@ class OrderResource extends Resource
 
     protected static ?string $navigationLabel = 'Pedidos';
 
-    protected static \UnitEnum|string|null $navigationGroup = null;
+    protected static \UnitEnum|string|null $navigationGroup = 'Vendas';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 10;
 
     public static function getNavigationBadge(): ?string
     {

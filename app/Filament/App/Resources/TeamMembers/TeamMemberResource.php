@@ -33,9 +33,9 @@ class TeamMemberResource extends Resource
 
     protected static ?string $navigationLabel = 'Equipe';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Configurações';
+    protected static \UnitEnum|string|null $navigationGroup = 'Pessoas';
 
-    protected static ?int $navigationSort = 91;
+    protected static ?int $navigationSort = 31;
 
     protected static ?string $slug = 'configuracoes/equipe';
 

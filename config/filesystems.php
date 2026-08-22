@@ -39,12 +39,25 @@ return [
         ],
 
         'public' => [
-            'driver' => 'local',
+            // Em produção, a Laravel Cloud injeta AWS_BUCKET (e demais credenciais AWS_*)
+            // quando um bucket de Object Storage é anexado ao ambiente com o disk name "public".
+            // Localmente, sem AWS_BUCKET definida, cai de volta para o disco local de sempre.
+            'driver' => env('AWS_BUCKET') ? 's3' : 'local',
             'root' => storage_path('app/public'),
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
-            'visibility' => 'public',
+            'url' => env('AWS_URL', rtrim(env('APP_URL', 'http://localhost'), '/').'/storage'),
+            // Cloudflare R2 (usado pelo Laravel Object Storage) não suporta ACL por objeto:
+            // definir visibility aqui faria o Flysystem tentar aplicar "public-read" em cada
+            // upload e o R2 rejeitaria com erro NotImplemented. A visibilidade do bucket já
+            // foi definida como "Public" na criação — isso basta.
+            'visibility' => env('AWS_BUCKET') ? null : 'public',
             'throw' => false,
             'report' => false,
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_BUCKET'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
         ],
 
         's3' => [

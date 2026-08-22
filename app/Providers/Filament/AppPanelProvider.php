@@ -19,7 +19,6 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Support\Enums\MaxWidth;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Contracts\View\View;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -48,7 +47,7 @@ class AppPanelProvider extends PanelProvider
             ->font('Inter', provider: GoogleFontProvider::class)
             ->brandName(fn (): string => $this->resolverNomeTenant($branding))
             ->brandLogo(fn (): ?HtmlString => $this->resolverLogoTenant($branding))
-            ->maxContentWidth(MaxWidth::Full)
+            ->maxContentWidth('full')
             ->login()
             ->passwordReset()
             ->tenant(Tenant::class, slugAttribute: 'te_slug')

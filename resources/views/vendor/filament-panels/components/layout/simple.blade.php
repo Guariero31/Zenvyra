@@ -127,6 +127,7 @@
             background: #f8fafc;
             overflow-y: auto;
             color-scheme: light;
+            color: #000000;
         }
 
         .zv-login-right-inner {
@@ -153,10 +154,29 @@
             padding: 0 !important;
         }
 
-        /* Ensure the card itself uses light palette */
-        .zv-login-right [data-theme],
-        .zv-login-right {
-            --fi-color-scheme: light;
+        /* Force black text in all Filament form elements */
+        .zv-login-right,
+        .zv-login-right *,
+        .zv-login-right label,
+        .zv-login-right input,
+        .zv-login-right a,
+        .zv-login-right p,
+        .zv-login-right span,
+        .zv-login-right h1,
+        .zv-login-right h2,
+        .zv-login-right h3,
+        .zv-login-right [class*="fi-"] {
+            color: #000000 !important;
+        }
+
+        /* Keep placeholder text lighter */
+        .zv-login-right input::placeholder {
+            color: #9ca3af !important;
+        }
+
+        /* Keep link and action colors readable */
+        .zv-login-right a:hover {
+            color: #1a56db !important;
         }
 
         /* topbar (logged-in state) */

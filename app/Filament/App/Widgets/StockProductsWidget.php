@@ -41,14 +41,14 @@ class StockProductsWidget extends TableWidget
                     ->placeholder('-'),
                 TextColumn::make('effective_stock')
                     ->label('Saldo')
-                    ->state(fn(Product $record): int => $record->effectiveStock())
+                    ->state(fn (Product $record): int => $record->effectiveStock())
                     ->badge()
-                    ->color(fn(Product $record): string => match (true) {
+                    ->color(fn (Product $record): string => match (true) {
                         $record->effectiveStock() <= 0 => 'danger',
                         $record->isLowStock() => 'warning',
                         default => 'success',
                     })
-                    ->sortable(query: fn(Builder $query, string $direction): Builder => $query->orderBy('stock', $direction)),
+                    ->sortable(query: fn (Builder $query, string $direction): Builder => $query->orderBy('stock', $direction)),
                 TextColumn::make('low_stock_threshold')
                     ->label('Limiar baixo')
                     ->sortable()
@@ -62,12 +62,12 @@ class StockProductsWidget extends TableWidget
                     ->preload(),
                 Filter::make('low_stock')
                     ->label('Estoque baixo')
-                    ->query(fn(Builder $query): Builder => $query->where(function (Builder $query): void {
+                    ->query(fn (Builder $query): Builder => $query->where(function (Builder $query): void {
                         $query
-                            ->where(fn(Builder $q) => $q
+                            ->where(fn (Builder $q) => $q
                                 ->whereDoesntHave('variations')
                                 ->whereColumn('stock', '<=', 'low_stock_threshold'))
-                            ->orWhere(fn(Builder $q) => $q
+                            ->orWhere(fn (Builder $q) => $q
                                 ->whereHas('variations')
                                 ->whereRaw('(select coalesce(sum(stock), 0) from product_variations where product_variations.product_id = products.id) <= products.low_stock_threshold'));
                     })),

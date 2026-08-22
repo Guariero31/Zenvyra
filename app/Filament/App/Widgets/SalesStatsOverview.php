@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Filament\App\Widgets;
 
+use App\Enums\OrderStatus;
+use App\Models\Order;
+use App\Models\Product;
 use App\Services\SalesReportService;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class SalesStatsOverview extends BaseWidget
 {
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 1;
 
-    protected int|array|null $columns = 5;
+    protected int|array|null $columns = 4;
 
     protected ?string $pollingInterval = null;
 
@@ -20,24 +23,34 @@ class SalesStatsOverview extends BaseWidget
     {
         $kpis = app(SalesReportService::class)->currentMonthKpis();
 
+        $pendingCount = Order::query()
+            ->where('status', OrderStatus::Pending)
+            ->count();
+
+        $lowStockCount = Product::query()
+            ->where('status', 'active')
+            ->whereRaw('stock <= low_stock_threshold AND low_stock_threshold > 0')
+            ->count();
+
         return [
-            Stat::make('Faturamento líquido (mês)', $this->money($kpis['net']))
+            Stat::make('Vendas do mês', $this->money($kpis['net']))
                 ->description($this->netDescription($kpis['netDeltaPercent']))
                 ->descriptionIcon($this->trendIcon($kpis['netDeltaPercent']))
                 ->color($this->trendColor($kpis['netDeltaPercent'])),
-            Stat::make('Vendas no mês', (string) $kpis['salesCount'])
-                ->description($this->countDescription($kpis['countDelta']))
-                ->descriptionIcon($this->trendIcon($kpis['countDelta']))
-                ->color($this->trendColor($kpis['countDelta'])),
+
             Stat::make('Ticket médio', $this->money($kpis['averageTicket']))
                 ->description('Faturamento líquido por venda')
-                ->color('info'),
-            Stat::make('Comissões no mês', $this->money($kpis['commission']))
-                ->description('Valor bruto comissionado')
-                ->color('warning'),
-            Stat::make('Estornos no mês', $this->money($kpis['refunds']))
-                ->description('Valor devolvido aos clientes')
-                ->color($kpis['refunds'] > 0 ? 'danger' : 'gray'),
+                ->color('primary'),
+
+            Stat::make('Pedidos pendentes', (string) $pendingCount)
+                ->description($pendingCount > 0 ? 'Requer atenção' : 'Nenhum pendente')
+                ->descriptionIcon($pendingCount > 0 ? 'heroicon-m-exclamation-triangle' : 'heroicon-m-check-circle')
+                ->color($pendingCount > 0 ? 'warning' : 'success'),
+
+            Stat::make('Estoque baixo', $lowStockCount.' '.($lowStockCount === 1 ? 'item' : 'itens'))
+                ->description($lowStockCount > 0 ? 'Reposição urgente' : 'Estoque saudável')
+                ->descriptionIcon($lowStockCount > 0 ? 'heroicon-m-exclamation-circle' : 'heroicon-m-check-circle')
+                ->color($lowStockCount > 0 ? 'danger' : 'success'),
         ];
     }
 

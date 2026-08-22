@@ -14,12 +14,15 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductVariation;
 use App\Models\Tenant;
+use App\Services\StockManager;
 use Filament\Facades\Filament;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Computed;
 
 class PdvPage extends Page
@@ -328,60 +331,82 @@ class PdvPage extends Page
         $userId = auth()->id();
         $total  = $this->cartTotal;
 
-        DB::transaction(function () use ($userId, $total): void {
-            $totalCommission = '0.00';
+        try {
+            DB::transaction(function () use ($userId, $total): void {
+                $totalCommission = '0.00';
 
-            $itemsData = array_map(function (array $item) use (&$totalCommission): array {
-                $lineTotal       = bcmul($item['price'], (string) $item['quantity'], 2);
-                $commissionAmount = bcmul($lineTotal, bcdiv($item['commission_rate'], '100', 4), 2);
-                $totalCommission  = bcadd($totalCommission, $commissionAmount, 2);
+                $products = Product::whereIn('id', array_column($this->cart, 'product_id'))
+                    ->get()
+                    ->keyBy('id');
 
-                return [
-                    'product_id'           => $item['product_id'],
-                    'variation_id'         => $item['variation_id'],
-                    'quantity'             => $item['quantity'],
-                    'price'                => $item['price'],
-                    'commission_rate'      => $item['commission_rate'],
-                    'commission_amount'    => $commissionAmount,
-                ];
-            }, $this->cart);
+                $itemsData = array_map(function (array $item) use (&$totalCommission, $products): array {
+                    $lineTotal        = bcmul($item['price'], (string) $item['quantity'], 2);
+                    $commissionAmount = bcmul($lineTotal, bcdiv($item['commission_rate'], '100', 4), 2);
+                    $totalCommission  = bcadd($totalCommission, $commissionAmount, 2);
 
-            $order = Order::create([
-                'customer_id'           => $this->selectedCustomerId,
-                'user_id'               => $userId,
-                'origin'                => OrderOrigin::Balcao,
-                'status'                => OrderStatus::Paid,
-                'total_amount'          => $total,
-                'commission_amount'     => $totalCommission,
-                'payment_method'        => $this->paymentMethod,
-                'refunded_amount'       => '0.00',
-                'inventory_deducted_at' => now(),
-            ]);
+                    /** @var Product|null $product */
+                    $product = $products->get($item['product_id']);
 
-            foreach ($itemsData as $item) {
-                OrderItem::create([
-                    'order_id'             => $order->id,
-                    'product_id'           => $item['product_id'],
-                    'product_variation_id' => $item['variation_id'],
-                    'quantity'             => $item['quantity'],
-                    'price_at_sale'        => $item['price'],
-                    'cost_at_sale'         => '0.00',
-                    'commission_rate'      => $item['commission_rate'],
-                    'commission_amount'    => $item['commission_amount'],
+                    return [
+                        'product_id'        => $item['product_id'],
+                        'variation_id'      => $item['variation_id'],
+                        'quantity'          => $item['quantity'],
+                        'price'             => $item['price'],
+                        'cost_price'        => (string) ($product?->cost_price ?? '0.00'),
+                        'commission_rate'   => $item['commission_rate'],
+                        'commission_amount' => $commissionAmount,
+                    ];
+                }, $this->cart);
+
+                // Discounts are not yet modeled on the `orders` table, so the
+                // total is computed here (subtotal minus discount) instead of
+                // via OrderLifecycleManager::recalculateTotal(), which would
+                // silently discard the discount.
+                $order = Order::create([
+                    'customer_id'           => $this->selectedCustomerId,
+                    'user_id'               => $userId,
+                    'origin'                => OrderOrigin::Balcao,
+                    'status'                => OrderStatus::Paid,
+                    'total_amount'          => $total,
+                    'commission_amount'     => $totalCommission,
+                    'payment_method'        => $this->paymentMethod,
+                    'refunded_amount'       => '0.00',
+                    'inventory_deducted_at' => null,
                 ]);
 
-                if ($item['variation_id']) {
-                    ProductVariation::where('id', $item['variation_id'])
-                        ->decrement('stock', $item['quantity']);
-                } else {
-                    Product::where('id', $item['product_id'])
-                        ->decrement('stock', $item['quantity']);
-                }
-            }
+                $stockManager = app(StockManager::class);
 
-            $this->lastOrderId    = $order->id;
-            $this->lastOrderTotal = $total;
-        });
+                foreach ($itemsData as $item) {
+                    $orderItem = OrderItem::create([
+                        'order_id'             => $order->id,
+                        'product_id'           => $item['product_id'],
+                        'product_variation_id' => $item['variation_id'],
+                        'quantity'             => $item['quantity'],
+                        'price_at_sale'        => $item['price'],
+                        'cost_at_sale'         => $item['cost_price'],
+                        'commission_rate'      => $item['commission_rate'],
+                        'commission_amount'    => $item['commission_amount'],
+                    ]);
+
+                    // Handles negative-stock policy, atomic decrement and the
+                    // StockMovement audit trail — same path used elsewhere.
+                    $stockManager->registerSale($orderItem);
+                }
+
+                $order->update(['inventory_deducted_at' => now()]);
+
+                $this->lastOrderId    = $order->id;
+                $this->lastOrderTotal = $total;
+            });
+        } catch (ValidationException $e) {
+            Notification::make()
+                ->danger()
+                ->title('Não foi possível concluir a venda')
+                ->body(collect($e->errors())->flatten()->implode(' '))
+                ->send();
+
+            return;
+        }
 
         $this->showSuccessModal = true;
         $this->cancelSale();

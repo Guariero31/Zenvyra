@@ -3,7 +3,8 @@
 @source '../../../../app/Filament/App/**/*';
 @source '../../../../resources/views/filament/app/**/*';
 
-/* ── Zenvyra Brand Tokens ─────────────────────────────────────────────────── */
+/* ── Zenvyra Design System ────────────────────────────────────────────────── */
+/* Based on DESIGN.md — Modern Corporate, Inter, Indigo primary               */
 
 :root {
     /* Font */
@@ -12,111 +13,217 @@
     --default-font-family-weight-medium: 500;
     --default-font-family-weight-bold: 600;
 
-    /* Warm gray overrides (replaces Filament's cool gray palette) */
-    --color-gray-50:  #FAFAF8;
-    --color-gray-100: #F4F3F0;
-    --color-gray-200: #E8E6E1;
-    --color-gray-300: #D6D3CC;
-    --color-gray-400: #A8A49B;
-    --color-gray-500: #78746A;
-    --color-gray-600: #57534A;
-    --color-gray-700: #3D3A33;
-    --color-gray-800: #292621;
-    --color-gray-900: #0F0E0C;
-    --color-gray-950: #0A0908;
+    /* ── Gray palette (from DESIGN.md surface tokens) */
+    --color-gray-50:  #f9f9ff;   /* surface / background */
+    --color-gray-100: #f0f3ff;   /* surface-container-low */
+    --color-gray-200: #e7eefe;   /* surface-container */
+    --color-gray-300: #dce2f3;   /* surface-container-highest / surface-variant */
+    --color-gray-400: #c7c4d7;   /* outline-variant */
+    --color-gray-500: #767586;   /* outline */
+    --color-gray-600: #464554;   /* on-surface-variant */
+    --color-gray-700: #2a313d;   /* inverse-surface */
+    --color-gray-800: #1e2533;
+    --color-gray-900: #151c27;   /* on-surface */
+    --color-gray-950: #0d1119;
 
-    /* Border radius — slightly softer than default */
-    --radius-sm: 4px;
-    --radius:    6px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
-    --radius-xl: 16px;
+    /* ── Border radius (8px grid) */
+    --radius-sm:  0.25rem;   /* 4px  — checkboxes, inner tags */
+    --radius:     0.5rem;    /* 8px  — buttons, inputs, cards (default) */
+    --radius-md:  0.75rem;   /* 12px */
+    --radius-lg:  1rem;      /* 16px */
+    --radius-xl:  1.5rem;    /* 24px */
 }
 
-/* ── Typography — apply Inter globally ───────────────────────────────────── */
+/* ── Base typography ─────────────────────────────────────────────────────── */
 
-html,
-body,
-.fi-body {
+html, body, .fi-body {
     font-family: var(--default-font-family);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: #f9f9ff;
+    color: #151c27;
 }
 
-/* ── Sidebar — warm background ───────────────────────────────────────────── */
+/* ── Layout dimensions ───────────────────────────────────────────────────── */
 
+/* Sidebar: 220px fixed */
 .fi-sidebar {
-    background-color: #FFFFFF;
-    border-right: 1px solid #E8E6E1;
+    width: 220px !important;
+    background-color: #ffffff;
+    border-right: 1px solid #e2e8f8;
 }
 
 .dark .fi-sidebar {
-    background-color: #13151A;
-    border-right-color: #23262F;
+    background-color: #1a1f2e;
+    border-right-color: #2a313d;
 }
 
-/* ── Topbar / Header ─────────────────────────────────────────────────────── */
-
+/* Header: 64px */
 .fi-topbar {
-    background-color: #FFFFFF;
-    border-bottom: 1px solid #E8E6E1;
+    height: 64px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e2e8f8;
 }
 
 .dark .fi-topbar {
-    background-color: #13151A;
-    border-bottom-color: #23262F;
+    background-color: #1a1f2e;
+    border-bottom-color: #2a313d;
 }
 
-/* ── Main content background ─────────────────────────────────────────────── */
+/* ── Main content area ───────────────────────────────────────────────────── */
 
 .fi-main {
-    background-color: #FAFAF8;
+    background-color: #f9f9ff;
 }
 
 .dark .fi-main {
-    background-color: #0C0E12;
+    background-color: #0d1119;
 }
 
-/* ── Cards / Sections ────────────────────────────────────────────────────── */
+/* ── Cards / Sections — Level 1 elevation ───────────────────────────────── */
+/* White card, 1px solid border #e2e8f8, 8px radius                          */
 
 .fi-section,
 .fi-wi-stats-overview-stat,
-.fi-ta-ctn {
-    border-color: #E8E6E1;
+.fi-ta-ctn,
+.fi-card {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f8;
+    border-radius: 0.5rem;
 }
 
 .dark .fi-section,
 .dark .fi-wi-stats-overview-stat,
-.dark .fi-ta-ctn {
-    border-color: #23262F;
+.dark .fi-ta-ctn,
+.dark .fi-card {
+    background-color: #1a1f2e;
+    border-color: #2a313d;
 }
 
-/* ── Nav items — active state uses Indigo tint ───────────────────────────── */
+/* ── Sidebar navigation items ────────────────────────────────────────────── */
+/* Active: Indigo text + 2px left border; Hover: #f0f3ff bg                  */
+
+.fi-sidebar-item-button {
+    height: 40px;
+    border-radius: 0.5rem;
+    transition: background-color 0.15s;
+}
+
+.fi-sidebar-item-button:hover {
+    background-color: #f0f3ff;
+}
 
 .fi-sidebar-item-button.fi-active {
-    background-color: #EEF2FF;
-    color: #4338CA;
+    background-color: #e7eefe;
+    color: #4648d4;
+    border-left: 2px solid #4648d4;
+    font-weight: 600;
+}
+
+.dark .fi-sidebar-item-button:hover {
+    background-color: rgba(70, 72, 212, 0.08);
 }
 
 .dark .fi-sidebar-item-button.fi-active {
-    background-color: rgba(99, 102, 241, 0.12);
-    color: #C7D2FE;
+    background-color: rgba(70, 72, 212, 0.15);
+    color: #c0c1ff;
+    border-left-color: #c0c1ff;
 }
 
-/* ── Table header ────────────────────────────────────────────────────────── */
+/* ── Data tables ─────────────────────────────────────────────────────────── */
+/* Header: #f0f3ff bg, label-sm uppercase; Row: 52px height                  */
 
 .fi-ta-header-cell {
-    background-color: #F4F3F0;
+    background-color: #f0f3ff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #464554;
 }
 
 .dark .fi-ta-header-cell {
-    background-color: #13151A;
+    background-color: #1a1f2e;
+    color: #767586;
 }
 
-/* ── Input focus ring — Indigo ───────────────────────────────────────────── */
+.fi-ta-row {
+    min-height: 52px;
+}
+
+/* ── Status badge / chips ────────────────────────────────────────────────── */
+/* Height 24px, pill shape, 10% opacity bg, 100% opacity text                */
+
+.fi-badge {
+    height: 24px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+/* Primary: Indigo #4648d4, white text, 8px radius                           */
+
+.fi-btn {
+    border-radius: 0.5rem;
+    font-weight: 600;
+}
+
+.fi-btn-color-primary {
+    background-color: #4648d4;
+    color: #ffffff;
+}
+
+.fi-btn-color-primary:hover {
+    background-color: #3a3cb8;
+}
+
+/* ── Form fields ─────────────────────────────────────────────────────────── */
+/* 1px border #e2e8f8, 8px radius, 12px horizontal padding                   */
+/* Focus: 1px Indigo border + 3px halo at 10% opacity                        */
+
+.fi-input,
+.fi-select-input,
+.fi-textarea {
+    border: 1px solid #e2e8f8;
+    border-radius: 0.5rem;
+    padding-left: 12px;
+    padding-right: 12px;
+    color: #151c27;
+    background-color: #ffffff;
+}
 
 .fi-input:focus,
-.fi-select-input:focus {
-    --tw-ring-color: rgba(79, 70, 229, 0.2);
-    border-color: #4F46E5;
+.fi-select-input:focus,
+.fi-textarea:focus {
+    border-color: #4648d4;
+    --tw-ring-color: rgba(70, 72, 212, 0.1);
+    --tw-ring-width: 3px;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(70, 72, 212, 0.1);
+}
+
+.dark .fi-input,
+.dark .fi-select-input,
+.dark .fi-textarea {
+    border-color: #2a313d;
+    background-color: #1a1f2e;
+    color: #dce2f3;
+}
+
+/* ── Popovers / Dropdowns — Level 2 elevation ────────────────────────────── */
+
+.fi-dropdown-panel,
+.fi-popover-panel {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f8;
+    border-radius: 0.5rem;
+    box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dark .fi-dropdown-panel,
+.dark .fi-popover-panel {
+    background-color: #1a1f2e;
+    border-color: #2a313d;
 }

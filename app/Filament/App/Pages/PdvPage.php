@@ -388,10 +388,19 @@ class PdvPage extends Page
                         'commission_amount'    => $item['commission_amount'],
                     ]);
 
+                    // OrderItemObserver::created() fires OrderLifecycleManager::
+                    // recalculateTotal() on every insert above, which overwrites
+                    // total_amount back to the undiscounted subtotal. Restored
+                    // below, after all items exist.
+
                     // Handles negative-stock policy, atomic decrement and the
                     // StockMovement audit trail — same path used elsewhere.
                     $stockManager->registerSale($orderItem);
                 }
+
+                // Re-apply the discounted total that recalculateTotal() clobbered
+                // above. saveQuietly() avoids re-entering the observer chain.
+                $order->forceFill(['total_amount' => $total])->saveQuietly();
 
                 $order->update(['inventory_deducted_at' => now()]);
 

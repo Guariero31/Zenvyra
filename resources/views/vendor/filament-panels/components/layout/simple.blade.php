@@ -19,6 +19,8 @@
 
     <style>
         /* ── SPLIT LOGIN ───────────────────────────────────────────── */
+        html, body { height: 100%; margin: 0; padding: 0; }
+
         .zv-login-wrap {
             display: flex;
             min-height: 100dvh;
@@ -46,7 +48,6 @@
             pointer-events: none;
         }
 
-        /* decorative circles */
         .zv-login-left::after {
             content: '';
             position: absolute;
@@ -116,30 +117,50 @@
             font-family: system-ui, -apple-system, sans-serif;
         }
 
-        /* RIGHT PANEL */
+        /* RIGHT PANEL — force light mode so Filament renders corretamente */
         .zv-login-right {
             flex: 1;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 2.5rem 2rem;
-            background: #ffffff;
+            background: #f8fafc;
             overflow-y: auto;
+            color-scheme: light;
         }
 
         .zv-login-right-inner {
             width: 100%;
-            max-width: 420px;
+            max-width: 440px;
         }
 
-        /* override Filament simple main centering */
-        .fi-simple-main-ctn { display: contents !important; }
-        .fi-simple-main { max-width: 100% !important; width: 100% !important; }
-        .fi-simple-layout { display: contents !important; }
+        /*
+         * Filament renders fi-simple-main-ctn / fi-simple-main as a full-viewport
+         * centering wrapper inside the slot. We reset those so they don't fight
+         * our flex centering above — only touch these two classes, leave everything
+         * inside the card (fi-simple-card, fi-form, etc.) untouched.
+         */
+        .zv-login-right .fi-simple-main-ctn {
+            display: block !important;
+            min-height: unset !important;
+            padding: 0 !important;
+        }
+
+        .zv-login-right .fi-simple-main {
+            max-width: 100% !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        /* Ensure the card itself uses light palette */
+        .zv-login-right [data-theme],
+        .zv-login-right {
+            --fi-color-scheme: light;
+        }
 
         /* topbar (logged-in state) */
-        .fi-simple-layout-header {
+        .zv-topbar {
             position: fixed;
             top: 1rem;
             right: 1rem;
@@ -158,7 +179,7 @@
         <a href="#fi-main-content" class="fi-skip-link fi-sr-only">
             {{ __('filament-panels::layout.skip_to_content.label') }}
         </a>
-        <div class="fi-simple-layout-header">
+        <div class="zv-topbar">
             @if (filament()->hasDatabaseNotifications())
                 @livewire(filament()->getDatabaseNotificationsLivewireComponent(), [
                     'lazy' => filament()->hasLazyLoadedDatabaseNotifications(),
@@ -189,7 +210,7 @@
             </div>
         </div>
 
-        {{-- RIGHT: form --}}
+        {{-- RIGHT: Filament form --}}
         <div class="zv-login-right">
             <div class="zv-login-right-inner">
                 <main id="fi-main-content" tabindex="-1">

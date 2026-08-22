@@ -3,12 +3,14 @@
 namespace App\Filament\App\Resources\Orders\Pages;
 
 use App\Enums\OrderStatus;
+use App\Filament\App\Pages\PdvPage;
 use App\Filament\App\Resources\Orders\OrderResource;
 use App\Filament\Exports\OrderExporter;
-use Filament\Actions\CreateAction;
+use Filament\Actions\Action;
 use Filament\Actions\ExportAction;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Builder;
 
 class ListOrders extends ListRecords
@@ -43,7 +45,12 @@ class ListOrders extends ListRecords
                 ->color('gray')
                 ->outlined(),
 
-            CreateAction::make(),
+            Action::make('open_pdv')
+                ->label('Abrir PDV')
+                ->icon(Heroicon::OutlinedShoppingCart)
+                ->color('success')
+                ->url(fn (): string => PdvPage::getUrl(panel: 'app'))
+                ->openUrlInNewTab(),
         ];
     }
 

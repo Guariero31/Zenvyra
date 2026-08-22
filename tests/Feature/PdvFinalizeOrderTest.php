@@ -60,10 +60,10 @@ class PdvFinalizeOrderTest extends TestCase
         $this->actingAsSeller();
         $product = $this->createProduct(stock: 10, price: '100.00');
 
-        Livewire::test(PdvPage::class)
-            ->set('cart', [$this->cartItem($product, quantity: 2)])
-            ->set('discountAmount', '20')
-            ->call('finalizeOrder');
+        $page                 = new PdvPage();
+        $page->cart           = [$this->cartItem($product, quantity: 2)];
+        $page->discountAmount = '20';
+        $page->finalizeOrder();
 
         $order = Order::query()->latest('id')->first();
 

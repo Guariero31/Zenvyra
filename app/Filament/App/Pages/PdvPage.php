@@ -79,7 +79,7 @@ class PdvPage extends Page
     public static function canAccess(): bool
     {
         /** @var Authenticatable|FilamentUser|null $user */
-        $user   = auth()->user();
+        $user = auth()->user();
         $tenant = Filament::getTenant();
 
         if (! $user || ! $tenant instanceof Tenant) {
@@ -149,10 +149,25 @@ class PdvPage extends Page
     #[Computed]
     public function cartTotal(): string
     {
-        $discount = is_numeric($this->discountAmount) ? (float) $this->discountAmount : 0;
-        $discount = min($discount, (float) $this->cartSubtotal);
+        return $this->calculateCartTotal();
+    }
 
-        return bcsub($this->cartSubtotal, number_format($discount, 2, '.', ''), 2);
+    /**
+     * Same calculation as the cartTotal computed property, but bypassing
+     * Livewire's per-render memoization. Used wherever the fresh, current
+     * value is required regardless of what was cached earlier in the
+     * request cycle — namely finalizeOrder(), which persists this value.
+     */
+    private function calculateCartTotal(): string
+    {
+        $subtotal = array_reduce($this->cart, function (string $carry, array $item): string {
+            return bcadd($carry, bcmul($item['price'], (string) $item['quantity'], 2), 2);
+        }, '0.00');
+
+        $discount = is_numeric($this->discountAmount) ? (float) $this->discountAmount : 0;
+        $discount = min($discount, (float) $subtotal);
+
+        return bcsub($subtotal, number_format($discount, 2, '.', ''), 2);
     }
 
     #[Computed]
@@ -196,7 +211,7 @@ class PdvPage extends Page
 
         if ($product->hasVariations()) {
             $this->variationProductId = $productId;
-            $this->showVariationModal  = true;
+            $this->showVariationModal = true;
 
             return;
         }
@@ -219,19 +234,19 @@ class PdvPage extends Page
         }
 
         $this->pushToCart($product, $variation);
-        $this->showVariationModal  = false;
-        $this->variationProductId  = null;
+        $this->showVariationModal = false;
+        $this->variationProductId = null;
     }
 
     public function closeVariationModal(): void
     {
-        $this->showVariationModal  = false;
-        $this->variationProductId  = null;
+        $this->showVariationModal = false;
+        $this->variationProductId = null;
     }
 
     private function pushToCart(Product $product, ?ProductVariation $variation): void
     {
-        $key = $product->id . '-' . ($variation?->id ?? '0');
+        $key = $product->id.'-'.($variation?->id ?? '0');
 
         foreach ($this->cart as $index => $item) {
             if ($item['key'] === $key) {
@@ -248,16 +263,16 @@ class PdvPage extends Page
         $stock = $variation ? (int) $variation->stock : (int) $product->stock;
 
         $this->cart[] = [
-            'key'             => $key,
-            'product_id'      => $product->id,
-            'variation_id'    => $variation?->id,
-            'name'            => $product->title,
-            'variation_name'  => $variation?->name,
-            'sku'             => $product->sku,
-            'price'           => (string) $product->price,
+            'key' => $key,
+            'product_id' => $product->id,
+            'variation_id' => $variation?->id,
+            'name' => $product->title,
+            'variation_name' => $variation?->name,
+            'sku' => $product->sku,
+            'price' => (string) $product->price,
             'commission_rate' => (string) ($product->commission_rate ?? '0'),
-            'quantity'        => 1,
-            'stock'           => $stock,
+            'quantity' => 1,
+            'stock' => $stock,
         ];
     }
 
@@ -289,9 +304,9 @@ class PdvPage extends Page
 
     public function cancelSale(): void
     {
-        $this->cart           = [];
+        $this->cart = [];
         $this->discountAmount = '0';
-        $this->cashGiven      = '';
+        $this->cashGiven = '';
         $this->clearCustomer();
     }
 
@@ -305,19 +320,19 @@ class PdvPage extends Page
             return;
         }
 
-        $this->selectedCustomerId   = $customer->id;
+        $this->selectedCustomerId = $customer->id;
         $this->selectedCustomerName = $customer->name;
         $this->selectedCustomerPhone = (string) ($customer->phone ?? '');
-        $this->customerSearch       = '';
-        $this->showCustomerResults  = false;
+        $this->customerSearch = '';
+        $this->showCustomerResults = false;
     }
 
     public function clearCustomer(): void
     {
-        $this->selectedCustomerId    = null;
-        $this->selectedCustomerName  = '';
+        $this->selectedCustomerId = null;
+        $this->selectedCustomerName = '';
         $this->selectedCustomerPhone = '';
-        $this->customerSearch        = '';
+        $this->customerSearch = '';
     }
 
     // ── Finalize ──────────────────────────────────────────────────────────────
@@ -329,7 +344,12 @@ class PdvPage extends Page
         }
 
         $userId = auth()->id();
-        $total  = $this->cartTotal;
+        // Computed fresh here rather than reading the cached #[Computed]
+        // cartTotal property: Livewire may have memoized it during an
+        // earlier render in this request cycle, before discountAmount's
+        // latest value was applied, which would silently charge the
+        // undiscounted subtotal.
+        $total = $this->calculateCartTotal();
 
         try {
             DB::transaction(function () use ($userId, $total): void {
@@ -340,20 +360,20 @@ class PdvPage extends Page
                     ->keyBy('id');
 
                 $itemsData = array_map(function (array $item) use (&$totalCommission, $products): array {
-                    $lineTotal        = bcmul($item['price'], (string) $item['quantity'], 2);
+                    $lineTotal = bcmul($item['price'], (string) $item['quantity'], 2);
                     $commissionAmount = bcmul($lineTotal, bcdiv($item['commission_rate'], '100', 4), 2);
-                    $totalCommission  = bcadd($totalCommission, $commissionAmount, 2);
+                    $totalCommission = bcadd($totalCommission, $commissionAmount, 2);
 
                     /** @var Product|null $product */
                     $product = $products->get($item['product_id']);
 
                     return [
-                        'product_id'        => $item['product_id'],
-                        'variation_id'      => $item['variation_id'],
-                        'quantity'          => $item['quantity'],
-                        'price'             => $item['price'],
-                        'cost_price'        => (string) ($product?->cost_price ?? '0.00'),
-                        'commission_rate'   => $item['commission_rate'],
+                        'product_id' => $item['product_id'],
+                        'variation_id' => $item['variation_id'],
+                        'quantity' => $item['quantity'],
+                        'price' => $item['price'],
+                        'cost_price' => (string) ($product?->cost_price ?? '0.00'),
+                        'commission_rate' => $item['commission_rate'],
                         'commission_amount' => $commissionAmount,
                     ];
                 }, $this->cart);
@@ -363,14 +383,14 @@ class PdvPage extends Page
                 // via OrderLifecycleManager::recalculateTotal(), which would
                 // silently discard the discount.
                 $order = Order::create([
-                    'customer_id'           => $this->selectedCustomerId,
-                    'user_id'               => $userId,
-                    'origin'                => OrderOrigin::Balcao,
-                    'status'                => OrderStatus::Paid,
-                    'total_amount'          => $total,
-                    'commission_amount'     => $totalCommission,
-                    'payment_method'        => $this->paymentMethod,
-                    'refunded_amount'       => '0.00',
+                    'customer_id' => $this->selectedCustomerId,
+                    'user_id' => $userId,
+                    'origin' => OrderOrigin::Balcao,
+                    'status' => OrderStatus::Paid,
+                    'total_amount' => $total,
+                    'commission_amount' => $totalCommission,
+                    'payment_method' => $this->paymentMethod,
+                    'refunded_amount' => '0.00',
                     'inventory_deducted_at' => null,
                 ]);
 
@@ -378,14 +398,14 @@ class PdvPage extends Page
 
                 foreach ($itemsData as $item) {
                     $orderItem = OrderItem::create([
-                        'order_id'             => $order->id,
-                        'product_id'           => $item['product_id'],
+                        'order_id' => $order->id,
+                        'product_id' => $item['product_id'],
                         'product_variation_id' => $item['variation_id'],
-                        'quantity'             => $item['quantity'],
-                        'price_at_sale'        => $item['price'],
-                        'cost_at_sale'         => $item['cost_price'],
-                        'commission_rate'      => $item['commission_rate'],
-                        'commission_amount'    => $item['commission_amount'],
+                        'quantity' => $item['quantity'],
+                        'price_at_sale' => $item['price'],
+                        'cost_at_sale' => $item['cost_price'],
+                        'commission_rate' => $item['commission_rate'],
+                        'commission_amount' => $item['commission_amount'],
                     ]);
 
                     // OrderItemObserver::created() fires OrderLifecycleManager::
@@ -399,12 +419,18 @@ class PdvPage extends Page
                 }
 
                 // Re-apply the discounted total that recalculateTotal() clobbered
-                // above. saveQuietly() avoids re-entering the observer chain.
+                // above. The observer chain saved through a separate Order
+                // instance (loaded via the OrderItem's `order` relation), so
+                // this $order object's in-memory total_amount never actually
+                // changed — refresh() picks up the clobbered DB value first,
+                // otherwise forceFill() below is a no-op (same value already
+                // in memory) and saveQuietly() has nothing dirty to persist.
+                $order->refresh();
                 $order->forceFill(['total_amount' => $total])->saveQuietly();
 
                 $order->update(['inventory_deducted_at' => now()]);
 
-                $this->lastOrderId    = $order->id;
+                $this->lastOrderId = $order->id;
                 $this->lastOrderTotal = $total;
             });
         } catch (ValidationException $e) {
@@ -424,7 +450,7 @@ class PdvPage extends Page
     public function closeSuccessModal(): void
     {
         $this->showSuccessModal = false;
-        $this->lastOrderId      = null;
-        $this->lastOrderTotal   = '';
+        $this->lastOrderId = null;
+        $this->lastOrderTotal = '';
     }
 }

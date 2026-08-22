@@ -23,9 +23,9 @@ class StockPage extends Page
 
     protected static ?string $title = 'Estoque';
 
-    protected static \UnitEnum|string|null $navigationGroup = null;
+    protected static \UnitEnum|string|null $navigationGroup = 'Catálogo';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 22;
 
     protected static ?string $slug = 'estoque';
 

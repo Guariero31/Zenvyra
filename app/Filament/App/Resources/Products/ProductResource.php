@@ -32,9 +32,9 @@ class ProductResource extends Resource
 
     protected static ?string $navigationLabel = 'Catálogo';
 
-    protected static \UnitEnum|string|null $navigationGroup = null;
+    protected static \UnitEnum|string|null $navigationGroup = 'Catálogo';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 20;
 
     protected static ?string $recordTitleAttribute = 'title';
 

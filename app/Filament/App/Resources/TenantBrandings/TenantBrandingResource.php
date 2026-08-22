@@ -34,7 +34,7 @@ class TenantBrandingResource extends Resource
 
     protected static \UnitEnum|string|null $navigationGroup = 'Configurações';
 
-    protected static ?int $navigationSort = 90;
+    protected static ?int $navigationSort = 82;
 
     protected static ?string $slug = 'configuracoes/identidade-visual';
 

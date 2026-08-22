@@ -28,9 +28,9 @@ class CategoryResource extends Resource
 
     protected static ?string $navigationLabel = 'Categorias';
 
-    protected static \UnitEnum|string|null $navigationGroup = null;
+    protected static \UnitEnum|string|null $navigationGroup = 'Catálogo';
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 21;
 
     protected static ?string $recordTitleAttribute = 'name';
 

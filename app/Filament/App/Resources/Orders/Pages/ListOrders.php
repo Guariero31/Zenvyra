@@ -49,8 +49,7 @@ class ListOrders extends ListRecords
                 ->label('Abrir PDV')
                 ->icon(Heroicon::OutlinedShoppingCart)
                 ->color('success')
-                ->url(fn (): string => PdvPage::getUrl(panel: 'app'))
-                ->openUrlInNewTab(),
+                ->url(fn (): string => PdvPage::getUrl(panel: 'app')),
         ];
     }
 

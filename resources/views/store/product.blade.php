@@ -183,7 +183,7 @@
 @section('content')
 
 <div class="breadcrumb">
-    <a href="{{ route('store.home', $tenant->te_slug) }}">Home</a>
+    <a href="{{ route('store.home', $tenant->te_slug) }}">Início</a>
     <span>›</span>
     <a href="{{ route('store.catalog', $tenant->te_slug) }}">Catálogo</a>
     @if($product->category)
@@ -324,7 +324,7 @@
 <footer class="footer">
     <span class="footer__brand">© {{ date('Y') }} {{ $theme->nome_loja ?? $tenant->te_name }}</span>
     <div class="footer__links">
-        <a href="{{ route('store.home', $tenant->te_slug) }}" class="footer__link">Home</a>
+        <a href="{{ route('store.home', $tenant->te_slug) }}" class="footer__link">Início</a>
         <a href="{{ route('store.catalog', $tenant->te_slug) }}" class="footer__link">Catálogo</a>
         <a href="{{ route('store.contact', $tenant->te_slug) }}" class="footer__link">Contato</a>
     </div>

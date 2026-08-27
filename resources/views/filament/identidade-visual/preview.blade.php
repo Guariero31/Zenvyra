@@ -62,7 +62,7 @@
                         </header>
                         <main class="pi-preview-content">
                             <span class="pi-preview-chip pi-preview-chip-success">Ativo</span>
-                            <span class="pi-preview-chip pi-preview-chip-warning">Trial</span>
+                            <span class="pi-preview-chip pi-preview-chip-warning">Em teste</span>
                             <span class="pi-preview-chip pi-preview-chip-danger">Inadimplente</span>
                         </main>
                     </div>

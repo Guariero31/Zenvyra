@@ -96,7 +96,8 @@ class ImagesRelationManager extends RelationManager
                                 'image_path' => $path,
                             ]);
                         }
-                    }),
+                    })
+                    ->successNotificationTitle('Imagens adicionadas com sucesso'),
             ])
             ->recordActions([
                 Action::make('setPrimary')

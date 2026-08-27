@@ -6,6 +6,7 @@ namespace Tests\Feature;
 
 use App\Enums\OrderStatus;
 use App\Enums\TenantPortalRole;
+use App\Filament\App\Pages\PdvPage;
 use App\Filament\App\Resources\Categories\Pages\CreateCategory;
 use App\Filament\App\Resources\Categories\Pages\EditCategory;
 use App\Filament\App\Resources\Categories\Pages\ListCategories;
@@ -217,7 +218,11 @@ class AppResourcesTest extends TestCase
         ]);
 
         Livewire::test(ListOrders::class)->assertOk();
-        Livewire::test(CreateOrder::class)->assertOk();
+
+        // Order creation is done exclusively through the PDV; CreateOrder::
+        // mount() always redirects there instead of rendering the form.
+        Livewire::test(CreateOrder::class)->assertRedirect(PdvPage::getUrl(panel: 'app'));
+
         Livewire::test(ViewOrder::class, ['record' => $order->id])->assertOk();
         Livewire::test(EditOrder::class, ['record' => $order->id])->assertOk();
     }

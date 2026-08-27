@@ -20,6 +20,8 @@ class UsersRelationManager extends RelationManager
 {
     protected static string $relationship = 'users';
 
+    protected static ?string $title = 'Usuários';
+
     public function form(Schema $schema): Schema
     {
         return $schema
@@ -55,7 +57,7 @@ class UsersRelationManager extends RelationManager
                     ->before(function (AttachAction $action): void {
                         $tenant = $action->getLivewire()->getOwnerRecord();
 
-                        if (! $tenant instanceof Tenant) {
+                        if (!$tenant instanceof Tenant) {
                             return;
                         }
 
@@ -70,7 +72,7 @@ class UsersRelationManager extends RelationManager
                             $action->halt();
                         }
                     })
-                    ->schema(fn (AttachAction $action): array => [
+                    ->schema(fn(AttachAction $action): array => [
                         $action->getRecordSelect()
                             ->label('Usuário')
                             ->searchable()

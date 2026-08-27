@@ -159,6 +159,7 @@ class ProductsTable
                         ->color('success')
                         ->requiresConfirmation()
                         ->action(fn (Collection $records) => $records->each->update(['status' => 'active']))
+                        ->successNotificationTitle('Produtos ativados com sucesso')
                         ->deselectRecordsAfterCompletion(),
 
                     BulkAction::make('deactivate')
@@ -167,6 +168,7 @@ class ProductsTable
                         ->color('warning')
                         ->requiresConfirmation()
                         ->action(fn (Collection $records) => $records->each->update(['status' => 'inactive']))
+                        ->successNotificationTitle('Produtos pausados com sucesso')
                         ->deselectRecordsAfterCompletion(),
 
                     DeleteBulkAction::make(),

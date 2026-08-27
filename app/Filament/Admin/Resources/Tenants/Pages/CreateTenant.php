@@ -64,4 +64,9 @@ class CreateTenant extends CreateRecord
 
         return $data;
     }
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Loja criada';
+    }
 }

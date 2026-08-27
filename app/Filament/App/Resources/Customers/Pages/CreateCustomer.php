@@ -11,4 +11,9 @@ class CreateCustomer extends CreateRecord
     use RedirectsToIndexAfterCreate;
 
     protected static string $resource = CustomerResource::class;
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Cliente adicionado';
+    }
 }

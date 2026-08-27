@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Enums\TenantPortalRole;
+use App\Filament\Admin\Resources\StoreOwners\Pages\CreateStoreOwner;
 use App\Filament\App\Resources\Categories\Pages\CreateCategory;
 use App\Filament\App\Resources\Products\Pages\EditProduct;
 use App\Filament\App\Resources\Products\RelationManagers\ImagesRelationManager;
@@ -78,5 +79,24 @@ class NotificationSmokeTest extends TestCase
 
         $this->assertNotNull($action);
         $this->assertSame('Imagens adicionadas com sucesso', $action->getSuccessNotificationTitle());
+    }
+
+    public function test_creating_a_store_owner_shows_a_contextual_notification_title(): void
+    {
+        $admin = User::factory()->create(['is_platform_admin' => true]);
+        $this->actingAs($admin);
+        Filament::setCurrentPanel('admin');
+        Filament::bootCurrentPanel();
+
+        Livewire::test(CreateStoreOwner::class)
+            ->fillForm([
+                'name' => 'Lojista Teste',
+                'email' => 'lojista.teste@example.com',
+                'password' => 'password',
+            ])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        Notification::assertNotified('Lojista adicionado');
     }
 }

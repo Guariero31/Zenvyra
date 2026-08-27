@@ -11,4 +11,9 @@ class CreateCategory extends CreateRecord
     use RedirectsToIndexAfterCreate;
 
     protected static string $resource = CategoryResource::class;
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Categoria adicionada';
+    }
 }

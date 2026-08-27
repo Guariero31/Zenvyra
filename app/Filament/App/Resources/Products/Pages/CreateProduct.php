@@ -35,4 +35,9 @@ class CreateProduct extends CreateRecord
             $this->halt();
         }
     }
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Produto adicionado';
+    }
 }

@@ -21,4 +21,9 @@ class CreateSubscription extends CreateRecord
 
         return $data;
     }
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Assinatura criada';
+    }
 }

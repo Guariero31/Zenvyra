@@ -11,4 +11,9 @@ class CreatePlan extends CreateRecord
     use RedirectsToIndexAfterCreate;
 
     protected static string $resource = PlanResource::class;
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Plano adicionado';
+    }
 }

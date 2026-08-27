@@ -18,4 +18,9 @@ class CreateStoreOwner extends CreateRecord
 
         return $data;
     }
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Lojista adicionado';
+    }
 }

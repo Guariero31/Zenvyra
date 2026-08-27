@@ -52,4 +52,9 @@ class CreateTeamMember extends CreateRecord
 
         return app(TenantTeamService::class)->addMember($tenant, $data);
     }
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Membro adicionado';
+    }
 }

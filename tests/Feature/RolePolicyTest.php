@@ -6,7 +6,6 @@ namespace Tests\Feature;
 
 use App\Enums\TenantPortalRole;
 use App\Models\ActivityLog;
-use App\Models\Customer;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Policies\ActivityLogPolicy;
@@ -42,15 +41,15 @@ class RolePolicyTest extends TestCase
         $this->tenant = Tenant::create(['te_name' => 'Loja Role Test']);
 
         $attach = fn (User $user, TenantPortalRole $role) => $this->tenant->users()->attach($user, [
-            'tu_papel'          => $role->value,
+            'tu_papel' => $role->value,
             'tu_commission_rate' => 0,
         ]);
 
-        $this->admin    = tap(User::factory()->create(), fn ($u) => $attach($u, TenantPortalRole::AdministradorCliente));
-        $this->leader   = tap(User::factory()->create(), fn ($u) => $attach($u, TenantPortalRole::Leader));
+        $this->admin = tap(User::factory()->create(), fn ($u) => $attach($u, TenantPortalRole::AdministradorCliente));
+        $this->leader = tap(User::factory()->create(), fn ($u) => $attach($u, TenantPortalRole::Leader));
         $this->vendedor = tap(User::factory()->create(), fn ($u) => $attach($u, TenantPortalRole::Vendedor));
-        $this->rh       = tap(User::factory()->create(), fn ($u) => $attach($u, TenantPortalRole::Rh));
-        $this->member   = tap(User::factory()->create(), fn ($u) => $attach($u, TenantPortalRole::Member));
+        $this->rh = tap(User::factory()->create(), fn ($u) => $attach($u, TenantPortalRole::Rh));
+        $this->member = tap(User::factory()->create(), fn ($u) => $attach($u, TenantPortalRole::Member));
 
         $this->actingAs($this->admin);
 
@@ -63,7 +62,7 @@ class RolePolicyTest extends TestCase
     public function test_only_admin_and_leader_can_view_activity_logs(): void
     {
         $policy = new ActivityLogPolicy;
-        $log    = new ActivityLog;
+        $log = new ActivityLog;
 
         $this->assertTrue($policy->viewAny($this->admin));
         $this->assertTrue($policy->viewAny($this->leader));
@@ -76,7 +75,7 @@ class RolePolicyTest extends TestCase
     public function test_nobody_can_create_or_delete_activity_logs(): void
     {
         $policy = new ActivityLogPolicy;
-        $log    = new ActivityLog;
+        $log = new ActivityLog;
 
         foreach ([$this->admin, $this->leader, $this->vendedor, $this->rh, $this->member] as $user) {
             $this->assertFalse($policy->create($user));

@@ -61,23 +61,23 @@ class OrderObserver
             return;
         }
 
-        $tenant    = TenantContext::current();
+        $tenant = TenantContext::current();
         $storeName = $tenant?->displayName() ?? config('app.name');
 
         $items = $order->items->map(fn (OrderItem $item): array => [
-            'name'      => $item->product?->title ?? '—',
+            'name' => $item->product?->title ?? '—',
             'variation' => $item->variation?->name ?? null,
-            'quantity'  => $item->quantity,
-            'subtotal'  => bcmul((string) $item->quantity, (string) $item->price_at_sale, 2),
+            'quantity' => $item->quantity,
+            'subtotal' => bcmul((string) $item->quantity, (string) $item->price_at_sale, 2),
         ])->all();
 
         Mail::to($customer->email)->send(new OrderPaidMail(
-            customerName:  $customer->name,
-            orderId:       $order->getKey(),
-            storeName:     $storeName,
+            customerName: $customer->name,
+            orderId: $order->getKey(),
+            storeName: $storeName,
             paymentMethod: $order->payment_method,
-            items:         $items,
-            totalAmount:   (string) $order->total_amount,
+            items: $items,
+            totalAmount: (string) $order->total_amount,
         ));
     }
 
@@ -123,11 +123,11 @@ class OrderObserver
 
             $admins->each(function (User $admin) use ($storeName, $product, $item, $currentStock): void {
                 Mail::to($admin->email)->send(new LowStockAlertMail(
-                    storeName:     $storeName,
-                    productName:   $product->title,
+                    storeName: $storeName,
+                    productName: $product->title,
                     variationName: $item->variation?->name,
-                    currentStock:  (int) $currentStock,
-                    threshold:     (int) $product->low_stock_threshold,
+                    currentStock: (int) $currentStock,
+                    threshold: (int) $product->low_stock_threshold,
                 ));
             });
         });

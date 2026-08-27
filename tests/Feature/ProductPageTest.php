@@ -6,7 +6,6 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\ProductImage;
 use App\Models\ProductVariation;
 use App\Models\Tenant;
 use App\Models\TenantTheme;
@@ -68,7 +67,7 @@ class ProductPageTest extends TestCase
     public function test_product_page_shows_description(): void
     {
         $product = Product::factory()->create([
-            'status'      => 'active',
+            'status' => 'active',
             'description' => 'Descrição detalhada do produto para teste.',
         ]);
 
@@ -92,7 +91,7 @@ class ProductPageTest extends TestCase
     public function test_product_page_shows_category_breadcrumb(): void
     {
         $category = Category::factory()->create(['name' => 'Roupas']);
-        $product  = Product::factory()->create(['status' => 'active', 'category_id' => $category->id]);
+        $product = Product::factory()->create(['status' => 'active', 'category_id' => $category->id]);
 
         $this->get("/{$this->tenant->te_slug}/produto/{$product->id}")
             ->assertOk()
@@ -124,8 +123,8 @@ class ProductPageTest extends TestCase
     public function test_related_products_shown_from_same_category(): void
     {
         $category = Category::factory()->create();
-        $product  = Product::factory()->create(['status' => 'active', 'category_id' => $category->id]);
-        $related  = Product::factory()->create(['status' => 'active', 'category_id' => $category->id, 'title' => 'Produto Relacionado']);
+        $product = Product::factory()->create(['status' => 'active', 'category_id' => $category->id]);
+        $related = Product::factory()->create(['status' => 'active', 'category_id' => $category->id, 'title' => 'Produto Relacionado']);
 
         $this->get("/{$this->tenant->te_slug}/produto/{$product->id}")
             ->assertOk()
@@ -135,7 +134,7 @@ class ProductPageTest extends TestCase
     public function test_inactive_tenant_returns_404(): void
     {
         $inactive = Tenant::factory()->create(['te_slug' => 'loja-off', 'te_ativo' => false]);
-        $product  = Product::factory()->create(['status' => 'active']);
+        $product = Product::factory()->create(['status' => 'active']);
 
         $this->get("/{$inactive->te_slug}/produto/{$product->id}")
             ->assertNotFound();

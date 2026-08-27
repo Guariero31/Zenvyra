@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\TenantPortalRole;
 use App\Mail\WelcomeMail;
 use App\Models\Plan;
 use App\Models\Tenant;
+use App\Models\User;
 use App\Services\SubscriptionManager;
-use App\Services\TenantTeamService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -40,19 +41,19 @@ class RegisterController extends Controller
     {
         $validated = $request->validate([
             'store_name' => ['required', 'string', 'max:255'],
-            'name'       => ['required', 'string', 'max:255'],
-            'email'      => ['required', 'email', 'max:255'],
-            'password'   => ['required', 'string', 'min:8', 'confirmed'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ], [
             'store_name.required' => 'Informe o nome da sua loja.',
-            'name.required'       => 'Informe seu nome completo.',
-            'email.required'      => 'Informe seu e-mail.',
-            'password.required'   => 'Crie uma senha.',
-            'password.min'        => 'A senha deve ter pelo menos 8 caracteres.',
-            'password.confirmed'  => 'As senhas não conferem.',
+            'name.required' => 'Informe seu nome completo.',
+            'email.required' => 'Informe seu e-mail.',
+            'password.required' => 'Crie uma senha.',
+            'password.min' => 'A senha deve ter pelo menos 8 caracteres.',
+            'password.confirmed' => 'As senhas não conferem.',
         ]);
 
-        if (\App\Models\User::where('email', $validated['email'])->exists()) {
+        if (User::where('email', $validated['email'])->exists()) {
             return back()
                 ->withInput()
                 ->withErrors(['email' => 'Este e-mail já está cadastrado. Tente fazer login.']);
@@ -63,21 +64,21 @@ class RegisterController extends Controller
         $tenant = DB::transaction(function () use ($validated, $evaluationPlan): Tenant {
             /** @var Tenant $tenant */
             $tenant = Tenant::create([
-                'te_name'  => $validated['store_name'],
+                'te_name' => $validated['store_name'],
                 'te_ativo' => true,
             ]);
 
             // Create the admin user and link to tenant
-            $user = \App\Models\User::create([
-                'name'     => $validated['name'],
-                'email'    => $validated['email'],
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
                 'password' => Hash::make($validated['password']),
             ]);
 
             $tenant->users()->attach($user->getKey(), [
-                'tu_papel'            => \App\Enums\TenantPortalRole::AdministradorCliente->value,
-                'tu_rotulo_setor'     => null,
-                'tu_commission_rate'  => null,
+                'tu_papel' => TenantPortalRole::AdministradorCliente->value,
+                'tu_rotulo_setor' => null,
+                'tu_commission_rate' => null,
             ]);
 
             if ($evaluationPlan instanceof Plan) {
@@ -87,9 +88,9 @@ class RegisterController extends Controller
             $panelUrl = url("/app/{$tenant->te_slug}");
 
             Mail::to($user->email)->queue(new WelcomeMail(
-                userName:  $user->name,
+                userName: $user->name,
                 storeName: $tenant->te_name,
-                panelUrl:  $panelUrl,
+                panelUrl: $panelUrl,
             ));
 
             return $tenant;

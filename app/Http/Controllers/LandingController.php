@@ -17,15 +17,15 @@ class LandingController extends Controller
         $stats = Cache::remember('landing.stats', 300, function (): array {
             try {
                 $tenantCount = Tenant::count();
-                $orderCount  = $this->countOrdersAcrossAllSchemas();
+                $orderCount = $this->countOrdersAcrossAllSchemas();
             } catch (\Throwable) {
                 $tenantCount = 0;
-                $orderCount  = 0;
+                $orderCount = 0;
             }
 
             return [
                 'tenants' => $tenantCount,
-                'orders'  => $orderCount,
+                'orders' => $orderCount,
             ];
         });
 

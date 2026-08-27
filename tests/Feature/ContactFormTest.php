@@ -18,6 +18,7 @@ class ContactFormTest extends TestCase
     use RefreshDatabase;
 
     private Tenant $tenant;
+
     private User $admin;
 
     protected function setUp(): void
@@ -50,13 +51,13 @@ class ContactFormTest extends TestCase
         Mail::fake();
 
         $this->post("/{$this->tenant->te_slug}/contato", [
-            'name'    => 'João Silva',
-            'email'   => 'joao@example.com',
+            'name' => 'João Silva',
+            'email' => 'joao@example.com',
             'message' => 'Gostaria de saber mais sobre os produtos.',
         ])->assertRedirect("/{$this->tenant->te_slug}/contato");
 
         Mail::assertSent(ContactFormMail::class, function (ContactFormMail $mail) {
-            return $mail->senderName  === 'João Silva'
+            return $mail->senderName === 'João Silva'
                 && $mail->senderEmail === 'joao@example.com'
                 && str_contains($mail->message, 'Gostaria de saber');
         });
@@ -71,13 +72,12 @@ class ContactFormTest extends TestCase
         $theme->update(['store_config' => ['email' => 'contato@lojateste.com']]);
 
         $this->post("/{$this->tenant->te_slug}/contato", [
-            'name'    => 'Maria',
-            'email'   => 'maria@example.com',
+            'name' => 'Maria',
+            'email' => 'maria@example.com',
             'message' => 'Preciso de informações sobre entrega.',
         ]);
 
-        Mail::assertSent(ContactFormMail::class, fn (ContactFormMail $m) =>
-            in_array('contato@lojateste.com', array_column($m->to, 'address'), true)
+        Mail::assertSent(ContactFormMail::class, fn (ContactFormMail $m) => in_array('contato@lojateste.com', array_column($m->to, 'address'), true)
         );
     }
 
@@ -86,13 +86,12 @@ class ContactFormTest extends TestCase
         Mail::fake();
 
         $this->post("/{$this->tenant->te_slug}/contato", [
-            'name'    => 'Carlos',
-            'email'   => 'carlos@example.com',
+            'name' => 'Carlos',
+            'email' => 'carlos@example.com',
             'message' => 'Tenho uma dúvida sobre pagamento.',
         ]);
 
-        Mail::assertSent(ContactFormMail::class, fn (ContactFormMail $m) =>
-            in_array('admin@loja.com', array_column($m->to, 'address'), true)
+        Mail::assertSent(ContactFormMail::class, fn (ContactFormMail $m) => in_array('admin@loja.com', array_column($m->to, 'address'), true)
         );
     }
 
@@ -111,8 +110,8 @@ class ContactFormTest extends TestCase
         Mail::fake();
 
         $this->post("/{$this->tenant->te_slug}/contato", [
-            'name'    => 'Ana',
-            'email'   => 'ana@example.com',
+            'name' => 'Ana',
+            'email' => 'ana@example.com',
             'message' => 'Oi',
         ])->assertSessionHasErrors(['message']);
 
@@ -124,8 +123,8 @@ class ContactFormTest extends TestCase
         Mail::fake();
 
         $this->post("/{$this->tenant->te_slug}/contato", [
-            'name'    => 'Ana',
-            'email'   => 'nao-e-email',
+            'name' => 'Ana',
+            'email' => 'nao-e-email',
             'message' => 'Mensagem suficientemente longa para passar na validação.',
         ])->assertSessionHasErrors(['email']);
 
@@ -138,8 +137,8 @@ class ContactFormTest extends TestCase
 
         $this->followingRedirects()
             ->post("/{$this->tenant->te_slug}/contato", [
-                'name'    => 'Pedro',
-                'email'   => 'pedro@example.com',
+                'name' => 'Pedro',
+                'email' => 'pedro@example.com',
                 'message' => 'Mensagem de teste do formulário de contato.',
             ])
             ->assertSee('Mensagem enviada');
@@ -150,8 +149,8 @@ class ContactFormTest extends TestCase
         Mail::fake();
 
         $this->post("/{$this->tenant->te_slug}/contato", [
-            'name'    => 'Lucia',
-            'email'   => 'lucia@example.com',
+            'name' => 'Lucia',
+            'email' => 'lucia@example.com',
             'message' => 'Quero saber sobre disponibilidade dos produtos.',
         ]);
 
@@ -165,8 +164,8 @@ class ContactFormTest extends TestCase
         $inactive = Tenant::factory()->create(['te_slug' => 'loja-inativa', 'te_ativo' => false]);
 
         $this->post("/{$inactive->te_slug}/contato", [
-            'name'    => 'X',
-            'email'   => 'x@x.com',
+            'name' => 'X',
+            'email' => 'x@x.com',
             'message' => 'teste',
         ])->assertNotFound();
     }

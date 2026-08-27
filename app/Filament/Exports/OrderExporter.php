@@ -39,11 +39,11 @@ class OrderExporter extends Exporter
             ExportColumn::make('payment_method')
                 ->label('Pagamento')
                 ->formatStateUsing(fn (?string $state): string => match ($state) {
-                    'dinheiro'       => 'Dinheiro',
-                    'pix'            => 'Pix',
+                    'dinheiro' => 'Dinheiro',
+                    'pix' => 'Pix',
                     'cartao_credito' => 'Cartão de Crédito',
-                    'cartao_debito'  => 'Cartão de Débito',
-                    default          => $state ?? '',
+                    'cartao_debito' => 'Cartão de Débito',
+                    default => $state ?? '',
                 }),
 
             ExportColumn::make('total_amount')
@@ -61,7 +61,7 @@ class OrderExporter extends Exporter
     {
         $count = number_format($export->successful_rows);
 
-        return "Exportação de pedidos concluída: {$count} " . ($export->successful_rows === 1 ? 'registro' : 'registros') . ' exportados.';
+        return "Exportação de pedidos concluída: {$count} ".($export->successful_rows === 1 ? 'registro' : 'registros').' exportados.';
     }
 
     public static function getCompletedNotificationTitle(Export $export): string

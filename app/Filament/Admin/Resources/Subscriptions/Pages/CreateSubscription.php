@@ -3,12 +3,15 @@
 namespace App\Filament\Admin\Resources\Subscriptions\Pages;
 
 use App\Filament\Admin\Resources\Subscriptions\SubscriptionResource;
+use App\Filament\Concerns\RedirectsToIndexAfterCreate;
 use App\Services\SubscriptionManager;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Carbon;
 
 class CreateSubscription extends CreateRecord
 {
+    use RedirectsToIndexAfterCreate;
+
     protected static string $resource = SubscriptionResource::class;
 
     protected function mutateFormDataBeforeCreate(array $data): array

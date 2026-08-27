@@ -3,6 +3,7 @@
 namespace App\Filament\App\Resources\Products\Pages;
 
 use App\Filament\App\Resources\Products\ProductResource;
+use App\Filament\Concerns\RedirectsToIndexAfterCreate;
 use App\Services\PlanLimitService;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
@@ -11,6 +12,8 @@ use RuntimeException;
 
 class CreateProduct extends CreateRecord
 {
+    use RedirectsToIndexAfterCreate;
+
     protected static string $resource = ProductResource::class;
 
     protected function beforeCreate(): void

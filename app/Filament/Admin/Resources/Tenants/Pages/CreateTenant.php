@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\Tenants\Pages;
 
 use App\Enums\SubscriptionIntent;
 use App\Filament\Admin\Resources\Tenants\TenantResource;
+use App\Filament\Concerns\RedirectsToIndexAfterCreate;
 use App\Models\Plan;
 use App\Services\SubscriptionManager;
 use App\Support\TenantGestaoSettings;
@@ -11,6 +12,8 @@ use Filament\Resources\Pages\CreateRecord;
 
 class CreateTenant extends CreateRecord
 {
+    use RedirectsToIndexAfterCreate;
+
     protected static string $resource = TenantResource::class;
 
     private SubscriptionIntent $provisioningType = SubscriptionIntent::Evaluation;

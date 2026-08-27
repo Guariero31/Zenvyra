@@ -15,9 +15,9 @@ use Illuminate\Mail\Mailables\Envelope;
 class WelcomeMail extends Mailable
 {
     /**
-     * @param  string  $userName   Nome do usuário destinatário
+     * @param  string  $userName  Nome do usuário destinatário
      * @param  string  $storeName  Nome de exibição da loja
-     * @param  string  $panelUrl   URL do painel da loja (/{slug})
+     * @param  string  $panelUrl  URL do painel da loja (/{slug})
      */
     public function __construct(
         public readonly string $userName,
@@ -37,10 +37,10 @@ class WelcomeMail extends Mailable
         return new Content(
             view: 'emails.welcome',
             with: [
-                'subject'   => "Bem-vindo ao {$this->storeName} — sua loja está pronta!",
-                'userName'  => $this->userName,
+                'subject' => "Bem-vindo ao {$this->storeName} — sua loja está pronta!",
+                'userName' => $this->userName,
                 'storeName' => $this->storeName,
-                'panelUrl'  => $this->panelUrl,
+                'panelUrl' => $this->panelUrl,
             ],
         );
     }

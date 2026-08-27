@@ -18,28 +18,28 @@ class SitemapController extends StoreController
 
         $urls = collect([
             [
-                'loc'     => route('store.home', $slug),
+                'loc' => route('store.home', $slug),
                 'lastmod' => now()->toDateString(),
                 'priority' => '1.0',
                 'changefreq' => 'daily',
             ],
             [
-                'loc'     => route('store.catalog', $slug),
+                'loc' => route('store.catalog', $slug),
                 'lastmod' => now()->toDateString(),
                 'priority' => '0.9',
                 'changefreq' => 'daily',
             ],
             [
-                'loc'     => route('store.contact', $slug),
+                'loc' => route('store.contact', $slug),
                 'lastmod' => now()->toDateString(),
                 'priority' => '0.5',
                 'changefreq' => 'monthly',
             ],
         ])->concat(
             $products->map(fn (Product $p) => [
-                'loc'        => route('store.product', [$slug, $p->id]),
-                'lastmod'    => $p->updated_at->toDateString(),
-                'priority'   => '0.8',
+                'loc' => route('store.product', [$slug, $p->id]),
+                'lastmod' => $p->updated_at->toDateString(),
+                'priority' => '0.8',
                 'changefreq' => 'weekly',
             ])
         );

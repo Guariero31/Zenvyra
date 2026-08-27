@@ -6,7 +6,6 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\ProductImage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

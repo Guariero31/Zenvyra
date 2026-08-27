@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         $plans = [
-            'avaliacao'  => json_encode(['Suporte por e-mail']),
-            'starter'    => json_encode(['Suporte por e-mail']),
-            'pro'        => json_encode(['Suporte prioritário', 'Relatórios avançados']),
+            'avaliacao' => json_encode(['Suporte por e-mail']),
+            'starter' => json_encode(['Suporte por e-mail']),
+            'pro' => json_encode(['Suporte prioritário', 'Relatórios avançados']),
             'enterprise' => json_encode([
                 'Suporte dedicado',
                 'SLA garantido em contrato',

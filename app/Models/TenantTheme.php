@@ -54,9 +54,6 @@ class TenantTheme extends Model
 
     /**
      * Helper: returns a store_config key with a default.
-     *
-     * @param  mixed  $default
-     * @return mixed
      */
     public function storeConfig(string $key, mixed $default = null): mixed
     {

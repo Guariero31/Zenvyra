@@ -60,8 +60,8 @@ class PdvFinalizeOrderTest extends TestCase
         $this->actingAsSeller();
         $product = $this->createProduct(stock: 10, price: '100.00');
 
-        $page                 = new PdvPage();
-        $page->cart           = [$this->cartItem($product, quantity: 2)];
+        $page = new PdvPage;
+        $page->cart = [$this->cartItem($product, quantity: 2)];
         $page->discountAmount = '20';
         $page->finalizeOrder();
 
@@ -85,7 +85,7 @@ class PdvFinalizeOrderTest extends TestCase
             ->call('finalizeOrder');
 
         $order = Order::query()->latest('id')->first();
-        $item  = $order->items()->first();
+        $item = $order->items()->first();
 
         $this->assertSame('42.50', $item->cost_at_sale);
     }
@@ -109,7 +109,7 @@ class PdvFinalizeOrderTest extends TestCase
     private function actingAsSeller(): void
     {
         $tenant = Tenant::create(['te_name' => 'Loja PDV Teste']);
-        $user   = User::factory()->create();
+        $user = User::factory()->create();
         $tenant->users()->attach($user, ['tu_papel' => TenantPortalRole::AdministradorCliente->value]);
 
         $this->actingAs($user);
@@ -123,17 +123,17 @@ class PdvFinalizeOrderTest extends TestCase
     {
         $category = Category::create([
             'name' => 'Categoria PDV',
-            'slug' => 'categoria-pdv-' . uniqid(),
+            'slug' => 'categoria-pdv-'.uniqid(),
         ]);
 
         return Product::create([
             'category_id' => $category->id,
-            'title'       => 'Produto PDV',
-            'sku'         => 'PDV-' . uniqid(),
-            'price'       => $price,
-            'cost_price'  => $costPrice,
-            'stock'       => $stock,
-            'status'      => 'active',
+            'title' => 'Produto PDV',
+            'sku' => 'PDV-'.uniqid(),
+            'price' => $price,
+            'cost_price' => $costPrice,
+            'stock' => $stock,
+            'status' => 'active',
         ]);
     }
 
@@ -141,16 +141,16 @@ class PdvFinalizeOrderTest extends TestCase
     private function cartItem(Product $product, int $quantity): array
     {
         return [
-            'key'             => $product->id . '-0',
-            'product_id'      => $product->id,
-            'variation_id'    => null,
-            'name'            => $product->title,
-            'variation_name'  => null,
-            'sku'             => $product->sku,
-            'price'           => (string) $product->price,
+            'key' => $product->id.'-0',
+            'product_id' => $product->id,
+            'variation_id' => null,
+            'name' => $product->title,
+            'variation_name' => null,
+            'sku' => $product->sku,
+            'price' => (string) $product->price,
             'commission_rate' => '0',
-            'quantity'        => $quantity,
-            'stock'           => $product->stock,
+            'quantity' => $quantity,
+            'stock' => $product->stock,
         ];
     }
 }

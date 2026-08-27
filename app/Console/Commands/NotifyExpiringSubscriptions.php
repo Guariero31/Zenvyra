@@ -29,7 +29,7 @@ class NotifyExpiringSubscriptions extends Command
     public function handle(): int
     {
         $noticeDays = (int) config('subscriptions.renewal_notice_days', 7);
-        $graceDays  = (int) config('subscriptions.grace_days', 5);
+        $graceDays = (int) config('subscriptions.grace_days', 5);
 
         $liveStatuses = [
             SubscriptionStatus::Trialing->value,
@@ -37,8 +37,8 @@ class NotifyExpiringSubscriptions extends Command
             SubscriptionStatus::PastDue->value,
         ];
 
-        $notified  = 0;
-        $now       = now();
+        $notified = 0;
+        $now = now();
         $threshold = $now->copy()->addDays($noticeDays);
 
         Subscription::query()
@@ -51,14 +51,14 @@ class NotifyExpiringSubscriptions extends Command
                         ->whereBetween('trial_ends_at', [$now, $threshold]);
                 })
                 // Ciclo ativo expirando
-                ->orWhere(function ($q) use ($now, $threshold): void {
-                    $q->whereNotNull('ends_at')
-                        ->whereBetween('ends_at', [$now, $threshold]);
-                });
+                    ->orWhere(function ($q) use ($now, $threshold): void {
+                        $q->whereNotNull('ends_at')
+                            ->whereBetween('ends_at', [$now, $threshold]);
+                    });
             })
             ->each(function (Subscription $subscription) use ($graceDays, &$notified): void {
                 $tenant = $subscription->tenant;
-                $plan   = $subscription->plan;
+                $plan = $subscription->plan;
 
                 if (! $tenant instanceof Tenant || ! $plan) {
                     return;
@@ -78,11 +78,11 @@ class NotifyExpiringSubscriptions extends Command
 
                 $admins->each(function (User $admin) use ($tenant, $plan, $daysRemaining, $expiresAt, $graceDays) {
                     Mail::to($admin->email)->send(new SubscriptionExpiringMail(
-                        storeName:     $tenant->displayName(),
-                        planName:      $plan->name,
+                        storeName: $tenant->displayName(),
+                        planName: $plan->name,
                         daysRemaining: max(0, $daysRemaining),
-                        expiresAt:     $expiresAt->format('d/m/Y'),
-                        graceDays:     $graceDays,
+                        expiresAt: $expiresAt->format('d/m/Y'),
+                        graceDays: $graceDays,
                     ));
                 });
 

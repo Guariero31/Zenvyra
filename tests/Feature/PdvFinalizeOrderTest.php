@@ -15,6 +15,7 @@ use App\Models\StockMovement;
 use App\Models\Tenant;
 use App\Models\User;
 use Filament\Facades\Filament;
+use Filament\Notifications\Notification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -53,6 +54,8 @@ class PdvFinalizeOrderTest extends TestCase
         $this->assertSame(3, $movement->quantity);
         $this->assertSame($product->id, $movement->product_id);
         $this->assertSame($order->id, $movement->order_id);
+
+        Notification::assertNotified();
     }
 
     public function test_finalize_order_preserves_discount_on_total_amount(): void

@@ -443,6 +443,12 @@ class PdvPage extends Page
             return;
         }
 
+        Notification::make()
+            ->success()
+            ->title('Venda finalizada com sucesso')
+            ->body("Pedido #{$this->lastOrderId} — R$ ".number_format((float) $this->lastOrderTotal, 2, ',', '.'))
+            ->send();
+
         $this->showSuccessModal = true;
         $this->cancelSale();
     }

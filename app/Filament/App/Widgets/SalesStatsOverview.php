@@ -36,20 +36,24 @@ class SalesStatsOverview extends BaseWidget
             Stat::make('Vendas do mês', $this->money($kpis['net']))
                 ->description($this->netDescription($kpis['netDeltaPercent']))
                 ->descriptionIcon($this->trendIcon($kpis['netDeltaPercent']))
+                ->icon('heroicon-o-currency-dollar')
                 ->color($this->trendColor($kpis['netDeltaPercent'])),
 
             Stat::make('Ticket médio', $this->money($kpis['averageTicket']))
                 ->description('Faturamento líquido por venda')
+                ->icon('heroicon-o-receipt-percent')
                 ->color('primary'),
 
             Stat::make('Pedidos pendentes', (string) $pendingCount)
                 ->description($pendingCount > 0 ? 'Requer atenção' : 'Nenhum pendente')
                 ->descriptionIcon($pendingCount > 0 ? 'heroicon-m-exclamation-triangle' : 'heroicon-m-check-circle')
+                ->icon('heroicon-o-clipboard-document-list')
                 ->color($pendingCount > 0 ? 'warning' : 'success'),
 
             Stat::make('Estoque baixo', $lowStockCount.' '.($lowStockCount === 1 ? 'item' : 'itens'))
                 ->description($lowStockCount > 0 ? 'Reposição urgente' : 'Estoque saudável')
                 ->descriptionIcon($lowStockCount > 0 ? 'heroicon-m-exclamation-circle' : 'heroicon-m-check-circle')
+                ->icon('heroicon-o-archive-box')
                 ->color($lowStockCount > 0 ? 'danger' : 'success'),
         ];
     }

@@ -73,6 +73,7 @@ class ProductForm
                         TextInput::make('stock')
                             ->label('Quantidade em estoque')
                             ->integer()
+                            ->type('text')
                             ->minValue(0)
                             ->default(0)
                             ->disabled(fn (?Product $record): bool => (bool) $record?->hasVariations())
@@ -84,6 +85,7 @@ class ProductForm
                         TextInput::make('low_stock_threshold')
                             ->label('Alerta de estoque baixo')
                             ->integer()
+                            ->type('text')
                             ->minValue(0)
                             ->default(5)
                             ->helperText('Destaca o produto em amarelo quando o saldo atingir este valor.'),

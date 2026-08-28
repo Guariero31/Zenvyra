@@ -50,6 +50,7 @@ class ItemsRelationManager extends RelationManager
                 TextInput::make('quantity')
                     ->label('Quantidade')
                     ->integer()
+                    ->type('text')
                     ->default(1)
                     ->minValue(1)
                     ->required()

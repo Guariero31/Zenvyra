@@ -45,6 +45,7 @@ class PlanForm
                             ->helperText('Use 0 para não oferecer período de teste.')
                             ->numeric()
                             ->type('text')
+                            ->extraInputAttributes(['x-on:focus' => '$el.select()'])
                             ->minValue(0)
                             ->default(0)
                             ->required(),
@@ -53,12 +54,14 @@ class PlanForm
                             ->helperText('Deixe vazio para ilimitado.')
                             ->numeric()
                             ->type('text')
+                            ->extraInputAttributes(['x-on:focus' => '$el.select()'])
                             ->minValue(0),
                         TextInput::make('max_users')
                             ->label('Limite de usuários')
                             ->helperText('Deixe vazio para ilimitado.')
                             ->numeric()
                             ->type('text')
+                            ->extraInputAttributes(['x-on:focus' => '$el.select()'])
                             ->minValue(0),
                         KeyValue::make('features')
                             ->label('Recursos')

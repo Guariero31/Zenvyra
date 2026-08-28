@@ -29,6 +29,7 @@ class VariationsRelationManager extends RelationManager
                     ->label('Estoque')
                     ->integer()
                     ->type('text')
+                    ->extraInputAttributes(['x-on:focus' => '$el.select()'])
                     ->default(0)
                     ->required(),
             ]);

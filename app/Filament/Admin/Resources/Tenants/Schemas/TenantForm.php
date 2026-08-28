@@ -38,6 +38,7 @@ class TenantForm
                             ->label('Dias de avaliação')
                             ->numeric()
                             ->type('text')
+                            ->extraInputAttributes(['x-on:focus' => '$el.select()'])
                             ->minValue(1)
                             ->maxValue(365)
                             ->default(fn (): int => (int) config('subscriptions.evaluation_days'))

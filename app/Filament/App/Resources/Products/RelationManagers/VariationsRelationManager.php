@@ -28,6 +28,7 @@ class VariationsRelationManager extends RelationManager
                 TextInput::make('stock')
                     ->label('Estoque')
                     ->integer()
+                    ->type('text')
                     ->default(0)
                     ->required(),
             ]);

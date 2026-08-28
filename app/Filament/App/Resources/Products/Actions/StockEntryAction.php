@@ -33,6 +33,7 @@ class StockEntryAction
                 TextInput::make('quantity')
                     ->label('Quantidade')
                     ->integer()
+                    ->type('text')
                     ->minValue(1)
                     ->default(1)
                     ->required(),

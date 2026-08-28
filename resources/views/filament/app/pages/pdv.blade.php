@@ -341,6 +341,11 @@
         transition: border-color .15s; text-align: right;
     }
     .pdv-discount-input:focus { border-color: var(--accent); }
+    /* Hide the native number-input spinner; type="number" is kept only for
+       the numeric keypad on touch devices. */
+    .pdv-discount-input::-webkit-outer-spin-button,
+    .pdv-discount-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .pdv-discount-input { -moz-appearance: textfield; }
 
     /* Summary */
     .pdv-summary {
@@ -390,6 +395,9 @@
         transition: border-color .15s;
     }
     .pdv-cash-input:focus { border-color: var(--accent); }
+    .pdv-cash-input::-webkit-outer-spin-button,
+    .pdv-cash-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .pdv-cash-input { -moz-appearance: textfield; }
     .pdv-change-row { display: flex; justify-content: space-between; margin-top: .35rem; }
     .pdv-change-key { font-size: 12px; color: var(--text3); }
     .pdv-change-val { font-size: 14px; font-weight: 700; color: var(--yellow); }

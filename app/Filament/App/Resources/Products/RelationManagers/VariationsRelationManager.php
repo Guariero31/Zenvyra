@@ -17,6 +17,12 @@ class VariationsRelationManager extends RelationManager
 {
     protected static string $relationship = 'variations';
 
+    protected static ?string $title = 'Variações';
+
+    protected static ?string $modelLabel = 'variação';
+
+    protected static ?string $pluralModelLabel = 'variações';
+
     public function form(Schema $schema): Schema
     {
         return $schema
@@ -50,6 +56,8 @@ class VariationsRelationManager extends RelationManager
             ->filters([
                 //
             ])
+            ->emptyStateHeading('Sem variações')
+            ->emptyStateDescription('Crie uma variação para começar.')
             ->headerActions([
                 CreateAction::make(),
             ])

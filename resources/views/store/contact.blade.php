@@ -1,4 +1,4 @@
-@extends('store.layout', ['navClass' => 'nav--solid'])
+@extends('store.layout')
 
 @section('title', 'Contato')
 @section('og_title', 'Contato — ' . ($theme->nome_loja ?? $tenant->te_name))
@@ -208,13 +208,5 @@
     </div>
 
 </div>
-
-<footer class="footer">
-    <span class="footer__brand">© {{ date('Y') }} {{ $theme->nome_loja ?? $tenant->te_name }}</span>
-    <div class="footer__links">
-        <a href="{{ route('store.home', $tenant->te_slug) }}" class="footer__link">Início</a>
-        <a href="{{ route('store.catalog', $tenant->te_slug) }}" class="footer__link">Catálogo</a>
-    </div>
-</footer>
 
 @endsection

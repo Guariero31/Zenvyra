@@ -14,10 +14,17 @@ class CatalogController extends StoreController
     public function __invoke(Request $request): View
     {
         $categorySlug = $request->query('categoria');
+        $sort = $request->query('ordenar', 'recentes');
 
         $query = Product::where('status', 'active')
-            ->with(['primaryImage', 'category'])
-            ->orderBy('title');
+            ->with(['primaryImage', 'category']);
+
+        match ($sort) {
+            'menor_preco' => $query->orderBy('price'),
+            'maior_preco' => $query->orderByDesc('price'),
+            'nome' => $query->orderBy('title'),
+            default => $query->latest(),
+        };
 
         if ($categorySlug) {
             $query->whereHas('category', fn ($q) => $q->where('slug', $categorySlug));
@@ -33,6 +40,7 @@ class CatalogController extends StoreController
             'products' => $products,
             'categories' => $categories,
             'active' => $active,
+            'sort' => $sort,
         ]));
     }
 }

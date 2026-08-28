@@ -1,4 +1,4 @@
-@extends('store.layout', ['navClass' => 'nav--solid'])
+@extends('store.layout')
 
 @section('title', 'Catálogo')
 @section('og_title', 'Catálogo — ' . ($theme->nome_loja ?? $tenant->te_name))
@@ -9,18 +9,31 @@
 <style>
     /* CATALOG HEADER */
     .cat-header {
-        padding: 2rem 2rem 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 2rem 2rem 1.25rem;
     }
     .cat-header__title {
-        font-size: 28px;
-        font-style: italic;
-        font-weight: 500;
-        letter-spacing: -1px;
-        margin-bottom: .5rem;
+        font-size: 26px;
+        font-weight: 700;
     }
-    .cat-header__sub {
+    .cat-sort {
         font-size: 12px;
-        color: #9ca3af;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+    .cat-sort select {
+        font-size: 12px;
+        font-family: inherit;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        padding: 6px 10px;
+        color: #111827;
+        background: #fff;
     }
 
     /* FILTER PILLS */
@@ -28,14 +41,12 @@
         display: flex;
         flex-wrap: wrap;
         gap: 6px;
-        padding: 1.5rem 2rem;
-        border-bottom: 1px solid #f3f4f6;
+        padding: 0 2rem 1.5rem;
     }
     .filter-pill {
-        font-size: 11px;
-        letter-spacing: .06em;
-        text-transform: uppercase;
-        padding: 6px 16px;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 7px 16px;
         border-radius: 20px;
         border: 1px solid #e5e7eb;
         background: #fff;
@@ -45,26 +56,24 @@
         transition: all .15s;
         line-height: 1;
     }
-    .filter-pill:hover { border-color: #111; color: #111; }
-    .filter-pill.is-active { background: #111; color: #fff; border-color: #111; }
+    .filter-pill:hover { border-color: var(--primary); color: var(--primary); }
+    .filter-pill.is-active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
-    /* 3-COL GRID */
+    /* 4-COL GRID */
     .cat-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-        padding: 2rem;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.25rem;
+        padding: 0 2rem 2rem;
     }
-    @media (max-width: 800px) {
+    @media (max-width: 900px) {
         .cat-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 480px) {
-        .cat-grid { grid-template-columns: 1fr; padding: 1rem; }
-        .filters { padding: 1rem; }
+        .cat-grid { grid-template-columns: 1fr; padding: 0 1rem 1.5rem; }
+        .cat-header { padding: 1.5rem 1rem 1rem; flex-direction: column; align-items: flex-start; }
+        .filters { padding: 0 1rem 1.25rem; }
     }
-
-    /* CATALOG CARD (same .pcard but with fixed img height) */
-    .cat-grid .pcard__img { aspect-ratio: 4 / 3; }
 
     /* EMPTY */
     .empty {
@@ -79,7 +88,7 @@
         display: flex;
         justify-content: center;
         gap: 4px;
-        padding: 2rem;
+        padding: 1rem 2rem 3rem;
     }
     .pagination a,
     .pagination span {
@@ -96,8 +105,8 @@
         text-decoration: none;
         transition: all .15s;
     }
-    .pagination a:hover { border-color: #111; color: #111; }
-    .pagination span.active { background: #111; color: #fff; border-color: #111; }
+    .pagination a:hover { border-color: var(--primary); color: var(--primary); }
+    .pagination span.active { background: var(--primary); color: #fff; border-color: var(--primary); }
     .pagination span.disabled { opacity: .4; cursor: default; }
 </style>
 @endpush
@@ -105,17 +114,24 @@
 @section('content')
 
 <div class="cat-header">
-    <h1 class="cat-header__title">
-        @if($active){{ $active->name }}@else Todos os produtos @endif
-    </h1>
-    <p class="cat-header__sub">{{ $products->total() }} produto{{ $products->total() !== 1 ? 's' : '' }}</p>
+    <h1 class="cat-header__title">Catálogo</h1>
+    <form class="cat-sort" method="GET">
+        @if($active)<input type="hidden" name="categoria" value="{{ $active->slug }}">@endif
+        <label for="ordenar">Ordenar por:</label>
+        <select name="ordenar" id="ordenar" onchange="this.form.submit()">
+            <option value="recentes" {{ $sort === 'recentes' ? 'selected' : '' }}>Mais recentes</option>
+            <option value="menor_preco" {{ $sort === 'menor_preco' ? 'selected' : '' }}>Menor preço</option>
+            <option value="maior_preco" {{ $sort === 'maior_preco' ? 'selected' : '' }}>Maior preço</option>
+            <option value="nome" {{ $sort === 'nome' ? 'selected' : '' }}>Nome (A-Z)</option>
+        </select>
+    </form>
 </div>
 
 <div class="filters">
-    <a href="{{ route('store.catalog', $tenant->te_slug) }}"
+    <a href="{{ route('store.catalog', $tenant->te_slug) }}?ordenar={{ $sort }}"
        class="filter-pill {{ !$active ? 'is-active' : '' }}">Todos</a>
     @foreach($categories as $cat)
-    <a href="{{ route('store.catalog', $tenant->te_slug) }}?categoria={{ $cat->slug }}"
+    <a href="{{ route('store.catalog', $tenant->te_slug) }}?categoria={{ $cat->slug }}&ordenar={{ $sort }}"
        class="filter-pill {{ $active?->is($cat) ? 'is-active' : '' }}">{{ $cat->name }}</a>
     @endforeach
 </div>
@@ -126,6 +142,9 @@
 <div class="cat-grid">
     @foreach($products as $product)
     <a href="{{ route('store.product', [$tenant->te_slug, $product->id]) }}" class="pcard">
+        @if($product->created_at?->diffInDays(now()) <= 14)
+            <span class="pcard__badge-new">Novo</span>
+        @endif
         <div class="pcard__img">
             @if($product->primaryImage)
                 <img src="{{ Storage::url($product->primaryImage->image_path) }}" alt="{{ $product->title }}">
@@ -167,11 +186,4 @@
 @endif
 @endif
 
-<footer class="footer">
-    <span class="footer__brand">© {{ date('Y') }} {{ $theme->nome_loja ?? $tenant->te_name }}</span>
-    <div class="footer__links">
-        <a href="{{ route('store.home', $tenant->te_slug) }}" class="footer__link">Início</a>
-        <a href="{{ route('store.contact', $tenant->te_slug) }}" class="footer__link">Contato</a>
-    </div>
-</footer>
 @endsection

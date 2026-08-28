@@ -74,6 +74,7 @@ class ProductForm
                             ->label('Quantidade em estoque')
                             ->integer()
                             ->type('text')
+                            ->extraInputAttributes(['x-on:focus' => '$el.select()'])
                             ->minValue(0)
                             ->default(0)
                             ->disabled(fn (?Product $record): bool => (bool) $record?->hasVariations())
@@ -86,6 +87,7 @@ class ProductForm
                             ->label('Alerta de estoque baixo')
                             ->integer()
                             ->type('text')
+                            ->extraInputAttributes(['x-on:focus' => '$el.select()'])
                             ->minValue(0)
                             ->default(5)
                             ->helperText('Destaca o produto em amarelo quando o saldo atingir este valor.'),

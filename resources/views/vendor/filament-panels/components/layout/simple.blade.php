@@ -17,13 +17,37 @@
         'subheading' => null,
     ])
 
+    <script>
+        // Filament toggles `dark` on <html> based on localStorage/system
+        // preference — and re-applies it via its own Alpine-driven theme
+        // watcher after this script runs once, so a single classList.remove()
+        // here isn't enough. A MutationObserver keeps stripping it for as
+        // long as this page is open, so the login screen never goes dark.
+        (function () {
+            var root = document.documentElement;
+
+            function forceLight() {
+                root.classList.remove('dark');
+                root.style.colorScheme = 'light';
+            }
+
+            forceLight();
+            new MutationObserver(forceLight).observe(root, {
+                attributes: true,
+                attributeFilter: ['class'],
+            });
+        })();
+    </script>
+
     <style>
         /* ── SPLIT LOGIN ───────────────────────────────────────────── */
-        html, body {
+        html, body,
+        html.dark, html.dark body {
             height: 100%;
             margin: 0;
             padding: 0;
             background: #0a0f1e;
+            color-scheme: light;
         }
 
         /* Outer shell = full screen */
@@ -131,13 +155,14 @@
         }
 
         /* ── RIGHT PANEL ── */
-        .zv-login-right {
+        .zv-login-right,
+        html.dark .zv-login-right {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 2.5rem 2rem;
-            background: #ffffff;
+            background: #ffffff !important;
             overflow-y: auto;
             color-scheme: light;
             color: #000000;
@@ -162,18 +187,29 @@
             padding: 0 !important;
         }
 
-        /* Force black text throughout right panel */
+        /* Force black text throughout right panel, in light AND dark mode */
         .zv-login-right,
-        .zv-login-right *:not(.fi-fo-field-wrp-error-message):not([class*="fi-color-danger"]):not([data-validation-error]),
+        .zv-login-right *:not(.fi-fo-field-wrp-error-message):not([class*="fi-color-danger"]):not([data-validation-error]):not(button[type="submit"]):not(button[type="submit"] *),
         .zv-login-right label,
         .zv-login-right input,
         .zv-login-right a,
         .zv-login-right p:not(.fi-fo-field-wrp-error-message),
-        .zv-login-right span:not([class*="fi-color-danger"]),
+        .zv-login-right span:not([class*="fi-color-danger"]):not(button[type="submit"] *),
         .zv-login-right h1,
         .zv-login-right h2,
         .zv-login-right h3,
-        .zv-login-right [class*="fi-"]:not(.fi-fo-field-wrp-error-message):not([class*="fi-color-danger"]) {
+        .zv-login-right [class*="fi-"]:not(.fi-fo-field-wrp-error-message):not([class*="fi-color-danger"]):not(button[type="submit"]):not(button[type="submit"] *),
+        html.dark .zv-login-right,
+        html.dark .zv-login-right *:not(.fi-fo-field-wrp-error-message):not([class*="fi-color-danger"]):not([data-validation-error]):not(button[type="submit"]):not(button[type="submit"] *),
+        html.dark .zv-login-right label,
+        html.dark .zv-login-right input,
+        html.dark .zv-login-right a,
+        html.dark .zv-login-right p:not(.fi-fo-field-wrp-error-message),
+        html.dark .zv-login-right span:not([class*="fi-color-danger"]):not(button[type="submit"] *),
+        html.dark .zv-login-right h1,
+        html.dark .zv-login-right h2,
+        html.dark .zv-login-right h3,
+        html.dark .zv-login-right [class*="fi-"]:not(.fi-fo-field-wrp-error-message):not([class*="fi-color-danger"]):not(button[type="submit"]):not(button[type="submit"] *) {
             color: #000000 !important;
         }
 
@@ -193,9 +229,13 @@
             border-color: #dc2626 !important;
         }
 
-        /* Login button — bold white text */
+        /* Login button — bold white text, fixed regardless of dark mode */
         .zv-login-right button[type="submit"],
-        .zv-login-right .fi-btn-label {
+        .zv-login-right .fi-btn-label,
+        .zv-login-right button[type="submit"] *,
+        html.dark .zv-login-right button[type="submit"],
+        html.dark .zv-login-right .fi-btn-label,
+        html.dark .zv-login-right button[type="submit"] * {
             font-weight: 700 !important;
             color: #ffffff !important;
         }

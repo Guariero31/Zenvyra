@@ -103,7 +103,7 @@
         }
         .footer__top {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
             gap: 2rem;
             padding-bottom: 2rem;
         }
@@ -111,7 +111,8 @@
         .footer__brand-desc { font-size: 12px; color: #6b7280; line-height: 1.6; max-width: 320px; }
         .footer__col-title { font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #9ca3af; margin-bottom: .85rem; }
         .footer__col-links { display: flex; flex-direction: column; gap: .6rem; }
-        .footer__col-links a { font-size: 12px; color: #6b7280; }
+        .footer__col-links a,
+        .footer__col-links span { font-size: 12px; color: #6b7280; }
         .footer__col-links a:hover { color: #111827; }
         .footer__bottom {
             display: flex;
@@ -342,6 +343,27 @@
                 <a href="{{ route('legal.privacy') }}">Privacidade</a>
             </div>
         </div>
+        @php
+            $footerWhatsapp = $theme->storeConfig('whatsapp');
+            $footerEmail = $theme->storeConfig('email');
+            $footerEndereco = $theme->storeConfig('endereco');
+        @endphp
+        @if($footerWhatsapp || $footerEmail || $footerEndereco)
+        <div>
+            <div class="footer__col-title">Contato</div>
+            <div class="footer__col-links">
+                @if($footerWhatsapp)
+                    <a href="https://wa.me/{{ preg_replace('/\D/', '', $footerWhatsapp) }}" target="_blank" rel="noopener">{{ $footerWhatsapp }}</a>
+                @endif
+                @if($footerEmail)
+                    <a href="mailto:{{ $footerEmail }}">{{ $footerEmail }}</a>
+                @endif
+                @if($footerEndereco)
+                    <span>{{ $footerEndereco }}</span>
+                @endif
+            </div>
+        </div>
+        @endif
     </div>
     <div class="footer__bottom">
         <span class="footer__brand">© {{ date('Y') }} {{ $theme->nome_loja ?? $tenant->te_name }}. Todos os direitos reservados.</span>

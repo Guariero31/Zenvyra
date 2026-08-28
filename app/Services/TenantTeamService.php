@@ -157,9 +157,9 @@ class TenantTeamService
         $panelUrl = url("/app/{$tenant->te_slug}");
 
         Mail::to($user->email)->send(new WelcomeMail(
-            userName:  $user->name,
+            userName: $user->name,
             storeName: $tenant->displayName(),
-            panelUrl:  $panelUrl,
+            panelUrl: $panelUrl,
         ));
     }
 

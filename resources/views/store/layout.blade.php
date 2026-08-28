@@ -271,7 +271,7 @@
     </a>
     <div class="nav__links">
         <a href="{{ route('store.home', $tenant->te_slug) }}"
-           class="nav__link {{ request()->routeIs('store.home') ? 'nav__link--active' : '' }}">Home</a>
+           class="nav__link {{ request()->routeIs('store.home') ? 'nav__link--active' : '' }}">Início</a>
         <a href="{{ route('store.catalog', $tenant->te_slug) }}"
            class="nav__link {{ request()->routeIs('store.catalog') ? 'nav__link--active' : '' }}">Catálogo</a>
         <a href="{{ route('store.contact', $tenant->te_slug) }}"

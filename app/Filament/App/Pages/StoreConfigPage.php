@@ -47,7 +47,7 @@ class StoreConfigPage extends Page
     public static function canAccess(): bool
     {
         /** @var Authenticatable|FilamentUser|null $user */
-        $user  = auth()->user();
+        $user = auth()->user();
         $tenant = Filament::getTenant();
 
         if (! $user || ! $tenant instanceof Tenant) {
@@ -71,10 +71,10 @@ class StoreConfigPage extends Page
         $config = $theme->store_config ?? [];
 
         $this->form->fill([
-            'whatsapp'        => $config['whatsapp']    ?? '',
-            'email'           => $config['email']       ?? '',
-            'endereco'        => $config['endereco']    ?? '',
-            'ticker_items'    => $config['ticker_items'] ?? [],
+            'whatsapp' => $config['whatsapp'] ?? '',
+            'email' => $config['email'] ?? '',
+            'endereco' => $config['endereco'] ?? '',
+            'ticker_items' => $config['ticker_items'] ?? [],
             'carousel_slides' => $config['carousel_slides'] ?? [],
         ]);
     }
@@ -93,7 +93,7 @@ class StoreConfigPage extends Page
 
     public function form(Schema $schema): Schema
     {
-        $tenant   = Filament::getTenant();
+        $tenant = Filament::getTenant();
         $tenantId = $tenant instanceof Tenant ? (int) $tenant->getKey() : 0;
 
         return $schema->schema([
@@ -231,10 +231,10 @@ class StoreConfigPage extends Page
 
         $theme->update([
             'store_config' => [
-                'whatsapp'        => $data['whatsapp']    ?: null,
-                'email'           => $data['email']       ?: null,
-                'endereco'        => $data['endereco']    ?: null,
-                'ticker_items'    => $data['ticker_items']    ?? [],
+                'whatsapp' => $data['whatsapp'] ?: null,
+                'email' => $data['email'] ?: null,
+                'endereco' => $data['endereco'] ?: null,
+                'ticker_items' => $data['ticker_items'] ?? [],
                 'carousel_slides' => $data['carousel_slides'] ?? [],
             ],
         ]);

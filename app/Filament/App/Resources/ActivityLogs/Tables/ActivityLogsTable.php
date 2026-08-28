@@ -18,11 +18,11 @@ class ActivityLogsTable
                     ->label('Módulo')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'produto'    => 'info',
-                        'pedido'     => 'success',
-                        'cliente'    => 'warning',
+                        'produto' => 'info',
+                        'pedido' => 'success',
+                        'cliente' => 'warning',
                         'assinatura' => 'danger',
-                        default      => 'gray',
+                        default => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => ucfirst($state))
                     ->sortable(),
@@ -34,13 +34,13 @@ class ActivityLogsTable
                         'created' => 'success',
                         'updated' => 'info',
                         'deleted' => 'danger',
-                        default   => 'gray',
+                        default => 'gray',
                     })
                     ->formatStateUsing(fn (?string $state): string => match ($state) {
                         'created' => 'Criado',
                         'updated' => 'Atualizado',
                         'deleted' => 'Excluído',
-                        default   => $state ?? '—',
+                        default => $state ?? '—',
                     }),
 
                 TextColumn::make('description')
@@ -63,11 +63,11 @@ class ActivityLogsTable
                 SelectFilter::make('log_name')
                     ->label('Módulo')
                     ->options([
-                        'produto'    => 'Produto',
-                        'pedido'     => 'Pedido',
-                        'cliente'    => 'Cliente',
+                        'produto' => 'Produto',
+                        'pedido' => 'Pedido',
+                        'cliente' => 'Cliente',
                         'assinatura' => 'Assinatura',
-                        'default'    => 'Geral',
+                        'default' => 'Geral',
                     ]),
 
                 SelectFilter::make('event')

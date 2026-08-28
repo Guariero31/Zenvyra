@@ -16,11 +16,11 @@ use Illuminate\Mail\Mailables\Envelope;
 class LowStockAlertMail extends Mailable
 {
     /**
-     * @param  string       $storeName     Nome de exibição da loja
-     * @param  string       $productName   Nome do produto
-     * @param  string|null  $variationName Nome da variação (null para produtos simples)
-     * @param  int          $currentStock  Saldo atual após a baixa
-     * @param  int          $threshold     Limite mínimo configurado
+     * @param  string  $storeName  Nome de exibição da loja
+     * @param  string  $productName  Nome do produto
+     * @param  string|null  $variationName  Nome da variação (null para produtos simples)
+     * @param  int  $currentStock  Saldo atual após a baixa
+     * @param  int  $threshold  Limite mínimo configurado
      */
     public function __construct(
         public readonly string $storeName,
@@ -49,12 +49,12 @@ class LowStockAlertMail extends Mailable
         return new Content(
             view: 'emails.low-stock-alert',
             with: [
-                'subject'       => $this->subjectLine(),
-                'storeName'     => $this->storeName,
-                'productName'   => $this->productName,
+                'subject' => $this->subjectLine(),
+                'storeName' => $this->storeName,
+                'productName' => $this->productName,
                 'variationName' => $this->variationName,
-                'currentStock'  => $this->currentStock,
-                'threshold'     => $this->threshold,
+                'currentStock' => $this->currentStock,
+                'threshold' => $this->threshold,
             ],
         );
     }

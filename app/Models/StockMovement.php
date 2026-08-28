@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\StockMovementType;
+use Database\Factories\StockMovementFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StockMovement extends Model
 {
-    /** @use HasFactory<\Database\Factories\StockMovementFactory> */
+    /** @use HasFactory<StockMovementFactory> */
     use HasFactory;
 
     protected $fillable = [

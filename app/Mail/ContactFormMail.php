@@ -15,10 +15,10 @@ use Illuminate\Mail\Mailables\Envelope;
 class ContactFormMail extends Mailable
 {
     /**
-     * @param  string  $storeName    Nome de exibição da loja
-     * @param  string  $senderName   Nome informado pelo visitante
+     * @param  string  $storeName  Nome de exibição da loja
+     * @param  string  $senderName  Nome informado pelo visitante
      * @param  string  $senderEmail  E-mail informado pelo visitante
-     * @param  string  $message      Mensagem enviada pelo visitante
+     * @param  string  $message  Mensagem enviada pelo visitante
      */
     public function __construct(
         public readonly string $storeName,
@@ -40,11 +40,11 @@ class ContactFormMail extends Mailable
         return new Content(
             view: 'emails.contact-form',
             with: [
-                'subject'     => "Nova mensagem de contato via site — {$this->storeName}",
-                'storeName'   => $this->storeName,
-                'senderName'  => $this->senderName,
+                'subject' => "Nova mensagem de contato via site — {$this->storeName}",
+                'storeName' => $this->storeName,
+                'senderName' => $this->senderName,
                 'senderEmail' => $this->senderEmail,
-                'message'     => $this->message,
+                'message' => $this->message,
             ],
         );
     }

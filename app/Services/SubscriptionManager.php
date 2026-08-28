@@ -229,7 +229,7 @@ class SubscriptionManager
     private function notifySubscriptionExpired(Subscription $subscription): void
     {
         $tenant = $subscription->tenant;
-        $plan   = $subscription->plan;
+        $plan = $subscription->plan;
 
         if (! $tenant instanceof Tenant || ! $plan) {
             return;
@@ -242,9 +242,9 @@ class SubscriptionManager
             ->get()
             ->each(function (User $admin) use ($tenant, $plan, $expiredAt): void {
                 Mail::to($admin->email)->send(new SubscriptionExpiredMail(
-                    storeName:  $tenant->displayName(),
-                    planName:   $plan->name,
-                    expiredAt:  $expiredAt,
+                    storeName: $tenant->displayName(),
+                    planName: $plan->name,
+                    expiredAt: $expiredAt,
                 ));
             });
     }

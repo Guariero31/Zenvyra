@@ -16,7 +16,7 @@ class SubscriptionExpiredMail extends Mailable
 {
     /**
      * @param  string  $storeName  Nome de exibição da loja
-     * @param  string  $planName   Nome do plano expirado
+     * @param  string  $planName  Nome do plano expirado
      * @param  string  $expiredAt  Data de expiração formatada (d/m/Y)
      */
     public function __construct(
@@ -35,9 +35,9 @@ class SubscriptionExpiredMail extends Mailable
         return new Content(
             view: 'emails.subscription-expired',
             with: [
-                'subject'   => "Assinatura expirada — {$this->storeName}",
+                'subject' => "Assinatura expirada — {$this->storeName}",
                 'storeName' => $this->storeName,
-                'planName'  => $this->planName,
+                'planName' => $this->planName,
                 'expiredAt' => $this->expiredAt,
             ],
         );

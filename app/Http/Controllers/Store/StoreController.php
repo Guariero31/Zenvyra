@@ -12,12 +12,13 @@ use Illuminate\Http\Request;
 abstract class StoreController extends Controller
 {
     protected Tenant $tenant;
+
     protected TenantTheme $theme;
 
     public function __construct(Request $request)
     {
         $this->tenant = $request->attributes->get('public_store_tenant');
-        $this->theme  = TenantTheme::obterOuCriarParaTenant($this->tenant->getKey());
+        $this->theme = TenantTheme::obterOuCriarParaTenant($this->tenant->getKey());
     }
 
     /** @return array<string, mixed> */
@@ -25,7 +26,7 @@ abstract class StoreController extends Controller
     {
         return [
             'tenant' => $this->tenant,
-            'theme'  => $this->theme,
+            'theme' => $this->theme,
         ];
     }
 }

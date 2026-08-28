@@ -15,8 +15,8 @@ class ContactFormController extends StoreController
     public function __invoke(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'name'    => ['required', 'string', 'max:100'],
-            'email'   => ['required', 'email', 'max:150'],
+            'name' => ['required', 'string', 'max:100'],
+            'email' => ['required', 'email', 'max:150'],
             'message' => ['required', 'string', 'min:10', 'max:2000'],
         ]);
 
@@ -30,10 +30,10 @@ class ContactFormController extends StoreController
 
         if ($recipientEmail) {
             Mail::to($recipientEmail)->send(new ContactFormMail(
-                storeName:   $storeName,
-                senderName:  $data['name'],
+                storeName: $storeName,
+                senderName: $data['name'],
                 senderEmail: $data['email'],
-                message:     $data['message'],
+                message: $data['message'],
             ));
         }
 

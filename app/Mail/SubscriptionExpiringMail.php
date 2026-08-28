@@ -15,11 +15,11 @@ use Illuminate\Mail\Mailables\Envelope;
 class SubscriptionExpiringMail extends Mailable
 {
     /**
-     * @param  string  $storeName     Nome de exibição da loja
-     * @param  string  $planName      Nome do plano atual
-     * @param  int     $daysRemaining Dias restantes até o vencimento
-     * @param  string  $expiresAt     Data de vencimento formatada (d/m/Y)
-     * @param  int     $graceDays     Dias de tolerância após o vencimento
+     * @param  string  $storeName  Nome de exibição da loja
+     * @param  string  $planName  Nome do plano atual
+     * @param  int  $daysRemaining  Dias restantes até o vencimento
+     * @param  string  $expiresAt  Data de vencimento formatada (d/m/Y)
+     * @param  int  $graceDays  Dias de tolerância após o vencimento
      */
     public function __construct(
         public readonly string $storeName,
@@ -40,18 +40,18 @@ class SubscriptionExpiringMail extends Mailable
 
     public function content(): Content
     {
-        $label   = $this->daysRemaining === 1 ? 'dia' : 'dias';
+        $label = $this->daysRemaining === 1 ? 'dia' : 'dias';
         $subject = "Sua assinatura vence em {$this->daysRemaining} {$label} — {$this->storeName}";
 
         return new Content(
             view: 'emails.subscription-expiring',
             with: [
-                'subject'       => $subject,
-                'storeName'     => $this->storeName,
-                'planName'      => $this->planName,
+                'subject' => $subject,
+                'storeName' => $this->storeName,
+                'planName' => $this->planName,
                 'daysRemaining' => $this->daysRemaining,
-                'expiresAt'     => $this->expiresAt,
-                'graceDays'     => $this->graceDays,
+                'expiresAt' => $this->expiresAt,
+                'graceDays' => $this->graceDays,
             ],
         );
     }

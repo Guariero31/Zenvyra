@@ -3,6 +3,7 @@
 namespace App\Filament\App\Resources\TeamMembers\Pages;
 
 use App\Filament\App\Resources\TeamMembers\TeamMemberResource;
+use App\Filament\Concerns\RedirectsToIndexAfterCreate;
 use App\Models\Tenant;
 use App\Services\PlanLimitService;
 use App\Services\TenantTeamService;
@@ -14,6 +15,8 @@ use RuntimeException;
 
 class CreateTeamMember extends CreateRecord
 {
+    use RedirectsToIndexAfterCreate;
+
     protected static string $resource = TeamMemberResource::class;
 
     public function getTitle(): string
@@ -48,5 +51,10 @@ class CreateTeamMember extends CreateRecord
         abort_unless($tenant instanceof Tenant, 403);
 
         return app(TenantTeamService::class)->addMember($tenant, $data);
+    }
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Membro adicionado';
     }
 }

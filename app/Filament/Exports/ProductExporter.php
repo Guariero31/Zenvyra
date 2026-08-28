@@ -49,10 +49,10 @@ class ProductExporter extends Exporter
             ExportColumn::make('status')
                 ->label('Status')
                 ->formatStateUsing(fn (string $state): string => match ($state) {
-                    'active'   => 'Ativo',
+                    'active' => 'Ativo',
                     'inactive' => 'Inativo',
-                    'draft'    => 'Rascunho',
-                    default    => $state,
+                    'draft' => 'Rascunho',
+                    default => $state,
                 }),
 
             ExportColumn::make('created_at')
@@ -65,7 +65,7 @@ class ProductExporter extends Exporter
     {
         $count = number_format($export->successful_rows);
 
-        return "Exportação de produtos concluída: {$count} " . ($export->successful_rows === 1 ? 'registro' : 'registros') . ' exportados.';
+        return "Exportação de produtos concluída: {$count} ".($export->successful_rows === 1 ? 'registro' : 'registros').' exportados.';
     }
 
     public static function getCompletedNotificationTitle(Export $export): string

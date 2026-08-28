@@ -36,9 +36,9 @@ class ExportTest extends TestCase
         ]);
 
         $this->tenant = Tenant::factory()->create();
-        $this->admin  = User::factory()->create();
+        $this->admin = User::factory()->create();
         $this->tenant->users()->attach($this->admin, [
-            'tu_papel'          => TenantPortalRole::AdministradorCliente->value,
+            'tu_papel' => TenantPortalRole::AdministradorCliente->value,
             'tu_commission_rate' => 0,
         ]);
 

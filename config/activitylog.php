@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+use App\Models\ActivityLog;
 
 return [
 
@@ -24,7 +25,7 @@ return [
     /*
      * Model customizado que armazena as atividades no schema do tenant.
      */
-    'activity_model' => \App\Models\ActivityLog::class,
+    'activity_model' => ActivityLog::class,
 
     /*
      * Nome da tabela de logs — criada dentro de cada schema de tenant.

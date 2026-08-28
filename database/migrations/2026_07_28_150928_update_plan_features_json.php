@@ -53,9 +53,9 @@ return new class extends Migration
     public function down(): void
     {
         $plans = [
-            'avaliacao'  => json_encode(['usuarios' => '1',          'produtos' => '25',      'suporte' => 'Avaliação']),
-            'starter'    => json_encode(['usuarios' => '2',          'produtos' => '500',     'suporte' => 'E-mail']),
-            'pro'        => json_encode(['usuarios' => '10',         'produtos' => '5000',    'suporte' => 'Prioritário']),
+            'avaliacao' => json_encode(['usuarios' => '1',          'produtos' => '25',      'suporte' => 'Avaliação']),
+            'starter' => json_encode(['usuarios' => '2',          'produtos' => '500',     'suporte' => 'E-mail']),
+            'pro' => json_encode(['usuarios' => '10',         'produtos' => '5000',    'suporte' => 'Prioritário']),
             'enterprise' => json_encode(['usuarios' => 'Ilimitado',  'produtos' => 'Ilimitado', 'suporte' => 'Dedicado']),
         ];
 

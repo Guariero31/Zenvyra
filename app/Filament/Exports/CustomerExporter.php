@@ -42,7 +42,7 @@ class CustomerExporter extends Exporter
     {
         $count = number_format($export->successful_rows);
 
-        return "Exportação de clientes concluída: {$count} " . ($export->successful_rows === 1 ? 'registro' : 'registros') . ' exportados.';
+        return "Exportação de clientes concluída: {$count} ".($export->successful_rows === 1 ? 'registro' : 'registros').' exportados.';
     }
 
     public static function getCompletedNotificationTitle(Export $export): string

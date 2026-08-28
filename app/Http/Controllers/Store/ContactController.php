@@ -14,7 +14,7 @@ class ContactController extends StoreController
 
         return view('store.contact', array_merge($this->shared(), [
             'whatsapp' => $config['whatsapp'] ?? null,
-            'email'    => $config['email']    ?? null,
+            'email' => $config['email'] ?? null,
             'endereco' => $config['endereco'] ?? null,
         ]));
     }

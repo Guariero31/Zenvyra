@@ -17,6 +17,7 @@ class Product extends Model
 {
     /** @use HasFactory<ProductFactory> */
     use HasFactory;
+
     use LogsActivity;
 
     public function getActivitylogOptions(): LogOptions

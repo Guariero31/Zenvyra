@@ -19,7 +19,9 @@ class SettingsPageTest extends TestCase
     use RefreshDatabase;
 
     private Tenant $tenant;
+
     private User $admin;
+
     private User $member;
 
     protected function setUp(): void

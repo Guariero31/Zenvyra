@@ -23,16 +23,16 @@ class CatalogController extends StoreController
             $query->whereHas('category', fn ($q) => $q->where('slug', $categorySlug));
         }
 
-        $products   = $query->paginate(12)->withQueryString();
+        $products = $query->paginate(12)->withQueryString();
         $categories = Category::has('products')->orderBy('name')->get();
-        $active     = $categorySlug
+        $active = $categorySlug
             ? $categories->firstWhere('slug', $categorySlug)
             : null;
 
         return view('store.catalog', array_merge($this->shared(), [
-            'products'   => $products,
+            'products' => $products,
             'categories' => $categories,
-            'active'     => $active,
+            'active' => $active,
         ]));
     }
 }

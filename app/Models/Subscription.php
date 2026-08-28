@@ -20,6 +20,7 @@ class Subscription extends Model
 {
     /** @use HasFactory<SubscriptionFactory> */
     use HasFactory;
+
     use LogsActivity;
 
     public function getActivitylogOptions(): LogOptions

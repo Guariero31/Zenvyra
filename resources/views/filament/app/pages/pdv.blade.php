@@ -4,6 +4,14 @@
     $dashUrl   = \App\Filament\App\Pages\Dashboard::getUrl(panel: 'app');
 @endphp
 
+{{-- The Livewire component view must have a single root element — the
+     <style> block used to be a sibling of the .pdv div below, which made
+     Livewire attach its wire:id to the <style> tag instead, leaving all
+     of the actual markup (and every wire:click/wire:model in it) outside
+     the component's tracked boundary. Nesting <style> as the first child
+     fixes that. --}}
+<div class="pdv" wire:poll.60s="">
+
 <style>
     /* ── RESET ──────────────────────────────────────────────────────── */
     html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
@@ -456,8 +464,6 @@
     }
     .pdv-modal-cancel:hover { border-color: var(--text2); color: var(--text2); }
 </style>
-
-<div class="pdv" wire:poll.60s="">
 
     {{-- TOPBAR --}}
     <div class="pdv-top">

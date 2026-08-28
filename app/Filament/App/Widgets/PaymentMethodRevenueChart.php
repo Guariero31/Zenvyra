@@ -9,9 +9,11 @@ use Filament\Widgets\ChartWidget;
 
 class PaymentMethodRevenueChart extends ChartWidget
 {
-    protected static ?int $sort = 6;
+    protected static ?int $sort = 3;
 
-    protected ?string $heading = 'Segmentos por forma de pagamento';
+    protected int|string|array $columnSpan = 1;
+
+    protected ?string $heading = 'Formas de Pagamento';
 
     protected ?string $description = 'Participação de cada meio de pagamento (12 meses).';
 
@@ -25,11 +27,11 @@ class PaymentMethodRevenueChart extends ChartWidget
                     'label' => 'Faturamento líquido (R$)',
                     'data' => $data['data'],
                     'backgroundColor' => [
-                        'rgba(148, 163, 184, 0.75)',  // Cinza — sem info
-                        'rgb(59, 130, 246)',           // Azul — Pix / principal
-                        'rgb(34, 197, 94)',            // Verde
-                        'rgb(245, 158, 11)',           // Âmbar
-                        'rgb(139, 92, 246)',           // Roxo
+                        'rgb(70, 72, 212)',    // Indigo — principal
+                        'rgb(0, 110, 45)',     // Verde — secundário
+                        'rgb(141, 75, 0)',     // Âmbar — terciário
+                        'rgb(186, 26, 26)',    // Error red
+                        'rgba(118, 117, 134, 0.75)', // Cinza — outros
                     ],
                     'borderWidth' => 0,
                     'hoverOffset' => 6,
@@ -54,7 +56,7 @@ class PaymentMethodRevenueChart extends ChartWidget
                     'labels' => [
                         'usePointStyle' => true,
                         'padding' => 18,
-                        'color' => 'rgba(255,255,255,0.6)',
+                        'color' => '#464554',
                     ],
                 ],
             ],

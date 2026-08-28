@@ -17,12 +17,12 @@ use Illuminate\Mail\Mailables\Envelope;
 class OrderPaidMail extends Mailable
 {
     /**
-     * @param  string                $customerName  Nome do cliente
-     * @param  int                   $orderId       ID do pedido
-     * @param  string                $storeName     Nome de exibição da loja
-     * @param  string|null           $paymentMethod Forma de pagamento (ex.: "Cartão de crédito")
-     * @param  array<OrderItemData>  $items         Itens do pedido
-     * @param  string                $totalAmount   Total do pedido (decimal string)
+     * @param  string  $customerName  Nome do cliente
+     * @param  int  $orderId  ID do pedido
+     * @param  string  $storeName  Nome de exibição da loja
+     * @param  string|null  $paymentMethod  Forma de pagamento (ex.: "Cartão de crédito")
+     * @param  array<OrderItemData>  $items  Itens do pedido
+     * @param  string  $totalAmount  Total do pedido (decimal string)
      */
     public function __construct(
         public readonly string $customerName,
@@ -43,13 +43,13 @@ class OrderPaidMail extends Mailable
         return new Content(
             view: 'emails.order-paid',
             with: [
-                'subject'       => "Pedido #{$this->orderId} confirmado — {$this->storeName}",
-                'customerName'  => $this->customerName,
-                'orderId'       => $this->orderId,
-                'storeName'     => $this->storeName,
+                'subject' => "Pedido #{$this->orderId} confirmado — {$this->storeName}",
+                'customerName' => $this->customerName,
+                'orderId' => $this->orderId,
+                'storeName' => $this->storeName,
                 'paymentMethod' => $this->paymentMethod,
-                'items'         => $this->items,
-                'totalAmount'   => $this->totalAmount,
+                'items' => $this->items,
+                'totalAmount' => $this->totalAmount,
             ],
         );
     }

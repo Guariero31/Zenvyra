@@ -26,13 +26,13 @@ class HomeController extends StoreController
 
         // Ticker: prefer manually configured items, fall back to category names
         $tickerItems = $config['ticker_items'] ?? [];
-        $categories  = Category::has('products')->orderBy('name')->get();
+        $categories = Category::has('products')->orderBy('name')->get();
 
         return view('store.home', array_merge($this->shared(), [
             'carouselSlides' => $carouselSlides,
-            'featured'       => $featured,
-            'tickerItems'    => $tickerItems,
-            'categories'     => $categories,
+            'featured' => $featured,
+            'tickerItems' => $tickerItems,
+            'categories' => $categories,
         ]));
     }
 }

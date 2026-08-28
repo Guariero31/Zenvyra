@@ -1,4 +1,4 @@
-@extends('store.layout', ['navClass' => 'nav--solid'])
+@extends('store.layout')
 
 @section('title', $product->title)
 @section('og_type', 'product')
@@ -97,8 +97,9 @@
         background: #fff;
     }
     .variation-pill:hover,
-    .variation-pill.is-active { background: #111; color: #fff; border-color: #111; }
+    .variation-pill.is-active { background: var(--primary); color: #fff; border-color: var(--primary); }
     .variation-pill.is-out { opacity: .4; cursor: not-allowed; text-decoration: line-through; }
+    .variation-pill__stock { font-size: 10px; opacity: .65; margin-left: 3px; }
 
     /* CTA */
     .pinfo__cta { display: flex; gap: .75rem; flex-wrap: wrap; }
@@ -254,13 +255,14 @@
         {{-- VARIATIONS --}}
         @if($product->variations->isNotEmpty())
         <div class="variations">
-            <div class="variations__label">Variações</div>
+            <div class="variations__label">Tamanho</div>
             <div class="variations__list">
                 @foreach($product->variations as $variation)
                 <button class="variation-pill {{ $variation->stock <= 0 ? 'is-out' : '' }}"
                         type="button"
                         {{ $variation->stock <= 0 ? 'disabled' : '' }}>
                     {{ $variation->name }}
+                    <span class="variation-pill__stock">({{ str_pad((string) $variation->stock, 2, '0', STR_PAD_LEFT) }})</span>
                 </button>
                 @endforeach
             </div>
@@ -320,15 +322,6 @@
     </div>
 </div>
 @endif
-
-<footer class="footer">
-    <span class="footer__brand">© {{ date('Y') }} {{ $theme->nome_loja ?? $tenant->te_name }}</span>
-    <div class="footer__links">
-        <a href="{{ route('store.home', $tenant->te_slug) }}" class="footer__link">Início</a>
-        <a href="{{ route('store.catalog', $tenant->te_slug) }}" class="footer__link">Catálogo</a>
-        <a href="{{ route('store.contact', $tenant->te_slug) }}" class="footer__link">Contato</a>
-    </div>
-</footer>
 
 @push('scripts')
 function gallerySelect(el) {

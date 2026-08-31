@@ -50,6 +50,8 @@ class ItemsRelationManager extends RelationManager
                 TextInput::make('quantity')
                     ->label('Quantidade')
                     ->integer()
+                    ->type('text')
+                    ->extraInputAttributes(['x-on:focus' => '$el.select()'])
                     ->default(1)
                     ->minValue(1)
                     ->required()

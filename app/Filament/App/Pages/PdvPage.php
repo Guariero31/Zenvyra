@@ -261,6 +261,7 @@ class PdvPage extends Page
         }
 
         $stock = $variation ? (int) $variation->stock : (int) $product->stock;
+        $price = $variation ? $variation->effectivePrice($product) : (float) $product->price;
 
         $this->cart[] = [
             'key' => $key,
@@ -269,7 +270,7 @@ class PdvPage extends Page
             'name' => $product->title,
             'variation_name' => $variation?->name,
             'sku' => $product->sku,
-            'price' => (string) $product->price,
+            'price' => number_format($price, 2, '.', ''),
             'commission_rate' => (string) ($product->commission_rate ?? '0'),
             'quantity' => 1,
             'stock' => $stock,

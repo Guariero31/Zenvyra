@@ -33,6 +33,8 @@ class StockEntryAction
                 TextInput::make('quantity')
                     ->label('Quantidade')
                     ->integer()
+                    ->type('text')
+                    ->extraInputAttributes(['x-on:focus' => '$el.select()'])
                     ->minValue(1)
                     ->default(1)
                     ->required(),

@@ -1,0 +1,40 @@
+name: E2E Tests (Cypress)
+
+on:
+  push:
+    branches:
+      - prd   # troque para o nome real da sua branch de publicação
+  workflow_dispatch:  # permite rodar manualmente pela aba Actions
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Instalar dependências e rodar Cypress
+        uses: cypress-io/github-action@v6
+        with:
+          browser: chrome
+        env:
+          # O Cypress lê automaticamente variáveis prefixadas com CYPRESS_
+          # e as expõe via Cypress.env('ADMIN_EMAIL') / Cypress.env('ADMIN_PASSWORD')
+          CYPRESS_ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          CYPRESS_ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+
+      - name: Upload de screenshots (em caso de falha)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+          if-no-files-found: ignore
+
+      - name: Upload de vídeos da execução
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-videos
+          path: cypress/videos
+          if-no-files-found: ignore

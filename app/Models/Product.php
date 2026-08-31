@@ -40,6 +40,7 @@ class Product extends Model
         'stock',
         'low_stock_threshold',
         'status',
+        'has_variations',
     ];
 
     protected function casts(): array
@@ -50,16 +51,19 @@ class Product extends Model
             'commission_rate' => 'decimal:2',
             'stock' => 'integer',
             'low_stock_threshold' => 'integer',
+            'has_variations' => 'boolean',
         ];
     }
 
+    /**
+     * Whether this product's stock/price is managed per-variation. This is
+     * an explicit toggle (not derived from whether variation rows exist),
+     * so the "Variações" tab can be revealed before the first variation is
+     * created.
+     */
     public function hasVariations(): bool
     {
-        if ($this->relationLoaded('variations')) {
-            return $this->variations->isNotEmpty();
-        }
-
-        return $this->variations()->exists();
+        return (bool) $this->has_variations;
     }
 
     public function effectiveStock(): int
@@ -80,14 +84,17 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    /** Images belonging to the product itself (not to a specific variation). */
     public function images(): HasMany
     {
-        return $this->hasMany(ProductImage::class);
+        return $this->hasMany(ProductImage::class)->whereNull('product_variation_id');
     }
 
     public function primaryImage(): HasOne
     {
-        return $this->hasOne(ProductImage::class)->where('is_primary', true);
+        return $this->hasOne(ProductImage::class)
+            ->whereNull('product_variation_id')
+            ->where('is_primary', true);
     }
 
     public function variations(): HasMany
@@ -107,6 +114,34 @@ class Product extends Model
 
     public function isLowStock(): bool
     {
+        if ($this->hasVariations()) {
+            $variations = $this->relationLoaded('variations') ? $this->variations : $this->variations()->get();
+
+            return $variations->contains(fn (ProductVariation $variation): bool => $variation->isLowStock());
+        }
+
         return $this->effectiveStock() <= (int) $this->low_stock_threshold;
+    }
+
+    /**
+     * Min/max sale price across variations (falling back to the product's
+     * own price for variations without an override). For products without
+     * variations, min and max are both the product's price.
+     *
+     * @return array{min: float, max: float}
+     */
+    public function priceRange(): array
+    {
+        if (! $this->hasVariations()) {
+            return ['min' => (float) $this->price, 'max' => (float) $this->price];
+        }
+
+        $variations = $this->relationLoaded('variations') ? $this->variations : $this->variations()->get();
+
+        $prices = $variations->isEmpty()
+            ? collect([(float) $this->price])
+            : $variations->map(fn (ProductVariation $variation): float => (float) $variation->effectivePrice($this));
+
+        return ['min' => (float) $prices->min(), 'max' => (float) $prices->max()];
     }
 }

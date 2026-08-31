@@ -5,6 +5,11 @@ module.exports = defineConfig({
     baseUrl: 'https://zenyvra-production-jumyzd.laravel.cloud',
     viewportWidth: 1280,
     viewportHeight: 800,
+    defaultCommandTimeout: 10000, // tempo de espera padrão (era 4000ms)
+    retries: {
+      runMode: 2,   // no CI (GitHub Actions), tenta até 2 vezes se um teste falhar
+      openMode: 0,  // localmente (cypress open), sem retry automático
+    },
     setupNodeEvents(on, config) {
       config.browsers = config.browsers.concat({
         name: 'chrome-manual',

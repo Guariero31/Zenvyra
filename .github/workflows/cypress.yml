@@ -3,8 +3,8 @@ name: E2E Tests (Cypress)
 on:
   push:
     branches:
-      - prd   # troque para o nome real da sua branch de publicação
-  workflow_dispatch:  # permite rodar manualmente pela aba Actions
+      - prd
+  workflow_dispatch:
 
 jobs:
   cypress-run:
@@ -13,13 +13,23 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: Instalar dependências e rodar Cypress
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Baixar binário do Cypress
+        run: npx cypress install
+
+      - name: Rodar testes Cypress
         uses: cypress-io/github-action@v6
         with:
+          install: false
           browser: chrome
         env:
-          # O Cypress lê automaticamente variáveis prefixadas com CYPRESS_
-          # e as expõe via Cypress.env('ADMIN_EMAIL') / Cypress.env('ADMIN_PASSWORD')
           CYPRESS_ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
           CYPRESS_ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
 

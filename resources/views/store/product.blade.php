@@ -235,10 +235,23 @@
 
         <h1 class="pinfo__title">{{ $product->title }}</h1>
 
-        @if($product->price)
+        @php $priceRange = $product->priceRange(); @endphp
+        @if($priceRange['max'] > 0)
         <div>
-            <div class="pinfo__price">R$ {{ number_format($product->price, 2, ',', '.') }}</div>
-            <div class="pinfo__price-sub">Consulte condições de pagamento</div>
+            <div class="pinfo__price">
+                @if($priceRange['min'] < $priceRange['max'])
+                    A partir de R$ {{ number_format($priceRange['min'], 2, ',', '.') }}
+                @else
+                    R$ {{ number_format($priceRange['min'], 2, ',', '.') }}
+                @endif
+            </div>
+            <div class="pinfo__price-sub">
+                @if($priceRange['min'] < $priceRange['max'])
+                    Preço varia conforme a variação selecionada
+                @else
+                    Consulte condições de pagamento
+                @endif
+            </div>
         </div>
         @endif
 

@@ -341,6 +341,11 @@
         transition: border-color .15s; text-align: right;
     }
     .pdv-discount-input:focus { border-color: var(--accent); }
+    /* Hide the native number-input spinner; type="number" is kept only for
+       the numeric keypad on touch devices. */
+    .pdv-discount-input::-webkit-outer-spin-button,
+    .pdv-discount-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .pdv-discount-input { -moz-appearance: textfield; }
 
     /* Summary */
     .pdv-summary {
@@ -390,6 +395,9 @@
         transition: border-color .15s;
     }
     .pdv-cash-input:focus { border-color: var(--accent); }
+    .pdv-cash-input::-webkit-outer-spin-button,
+    .pdv-cash-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .pdv-cash-input { -moz-appearance: textfield; }
     .pdv-change-row { display: flex; justify-content: space-between; margin-top: .35rem; }
     .pdv-change-key { font-size: 12px; color: var(--text3); }
     .pdv-change-val { font-size: 14px; font-weight: 700; color: var(--yellow); }
@@ -453,7 +461,9 @@
         border-radius: 8px; cursor: pointer; transition: all .15s;
     }
     .pdv-var-btn:hover { border-color: var(--accent); }
+    .pdv-var-info { display: flex; flex-direction: column; gap: 2px; align-items: flex-start; }
     .pdv-var-name { font-size: 13px; font-weight: 500; }
+    .pdv-var-price { font-size: 11px; color: var(--green); }
     .pdv-var-stock { font-size: 11px; color: var(--text3); }
     .pdv-var-btn.zero-stock { opacity: .4; cursor: not-allowed; }
     .pdv-modal-cancel {
@@ -774,7 +784,10 @@
                             @disabled($variation->stock === 0)
                             wire:click="addProductVariation({{ $this->variationProduct->id }}, {{ $variation->id }})"
                         >
-                            <span class="pdv-var-name">{{ $variation->name }}</span>
+                            <span class="pdv-var-info">
+                                <span class="pdv-var-name">{{ $variation->name }}</span>
+                                <span class="pdv-var-price">R$ {{ number_format($variation->effectivePrice($this->variationProduct), 2, ',', '.') }}</span>
+                            </span>
                             <span class="pdv-var-stock">
                                 @if ($variation->stock === 0) Sem estoque
                                 @else {{ $variation->stock }} em estoque

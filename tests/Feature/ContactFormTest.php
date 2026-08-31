@@ -25,6 +25,10 @@ class ContactFormTest extends TestCase
     {
         parent::setUp();
 
+        $this->artisan('migrate', [
+            '--path' => 'database/migrations/tenant',
+        ]);
+
         $this->tenant = Tenant::factory()->create(['te_slug' => 'loja-teste', 'te_ativo' => true]);
 
         $this->admin = User::factory()->create(['email' => 'admin@loja.com']);

@@ -33,11 +33,20 @@ class StockPage extends Page
 
     public static function getNavigationBadge(): ?string
     {
-        $count = Product::query()
+        $simpleCount = Product::query()
+            ->where('has_variations', false)
             ->whereColumn('stock', '<=', 'low_stock_threshold')
             ->where('stock', '>', 0)
-            ->whereDoesntHave('variations')
             ->count();
+
+        $variableCount = Product::query()
+            ->where('has_variations', true)
+            ->whereHas('variations', fn ($query) => $query
+                ->whereColumn('stock', '<=', 'low_stock_threshold')
+                ->where('stock', '>', 0))
+            ->count();
+
+        $count = $simpleCount + $variableCount;
 
         return $count > 0 ? (string) $count : null;
     }

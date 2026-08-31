@@ -27,10 +27,24 @@ class SalesStatsOverview extends BaseWidget
             ->where('status', OrderStatus::Pending)
             ->count();
 
-        $lowStockCount = Product::query()
+        // Simple products: compare their own stock/threshold. Variation
+        // products don't carry a meaningful stock/threshold of their own
+        // (that section is hidden once "tem variações?" is ligado) — those
+        // are counted separately, based on each variation's own threshold.
+        $simpleLowStockCount = Product::query()
             ->where('status', 'active')
-            ->whereRaw('stock <= low_stock_threshold AND low_stock_threshold > 0')
+            ->where('has_variations', false)
+            ->whereColumn('stock', '<=', 'low_stock_threshold')
+            ->where('low_stock_threshold', '>', 0)
             ->count();
+
+        $variableLowStockCount = Product::query()
+            ->where('status', 'active')
+            ->where('has_variations', true)
+            ->whereHas('variations', fn ($query) => $query->whereColumn('stock', '<=', 'low_stock_threshold'))
+            ->count();
+
+        $lowStockCount = $simpleLowStockCount + $variableLowStockCount;
 
         return [
             Stat::make('Vendas do mês', $this->money($kpis['net']))

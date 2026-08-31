@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Filament\App\Resources\Products\Schemas;
 
 use App\Filament\Forms\Components\Percent;
-use App\Models\Product;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Leandrocfe\FilamentPtbrFormFields\Money;
 
@@ -66,27 +67,39 @@ class ProductForm
                             ->helperText('Deixe vazio para usar a comissão padrão do vendedor.'),
                     ]),
 
+                Section::make('Variações')
+                    ->columnSpanFull()
+                    ->schema([
+                        Toggle::make('has_variations')
+                            ->label('Este produto tem variações (tamanho, cor etc.)?')
+                            ->helperText('Ative para controlar estoque, preço e imagens por variação, na aba "Variações" abaixo. O estoque geral do produto some quando ativado.')
+                            ->live()
+                            ->default(false),
+                    ]),
+
                 Section::make('Estoque')
                     ->columnSpanFull()
                     ->columns(2)
+                    ->hidden(fn (Get $get): bool => (bool) $get('has_variations'))
                     ->schema([
                         TextInput::make('stock')
                             ->label('Quantidade em estoque')
                             ->integer()
+                            ->type('text')
+                            ->extraInputAttributes(['x-on:focus' => '$el.select()'])
                             ->minValue(0)
                             ->default(0)
-                            ->disabled(fn (?Product $record): bool => (bool) $record?->hasVariations())
-                            ->dehydrated(fn (?Product $record): bool => ! (bool) $record?->hasVariations())
-                            ->helperText(fn (?Product $record): ?string => $record?->hasVariations()
-                                ? 'Produto com variações — o estoque é controlado por variação.'
-                                : null),
+                            ->dehydrated(fn (Get $get): bool => ! (bool) $get('has_variations')),
 
                         TextInput::make('low_stock_threshold')
                             ->label('Alerta de estoque baixo')
                             ->integer()
+                            ->type('text')
+                            ->extraInputAttributes(['x-on:focus' => '$el.select()'])
                             ->minValue(0)
                             ->default(5)
-                            ->helperText('Destaca o produto em amarelo quando o saldo atingir este valor.'),
+                            ->helperText('Destaca o produto em amarelo quando o saldo atingir este valor.')
+                            ->dehydrated(fn (Get $get): bool => ! (bool) $get('has_variations')),
                     ]),
 
                 Section::make('Status')

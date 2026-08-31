@@ -57,6 +57,8 @@ class RefundOrderAction
                             ->dehydrated(false),
                         TextInput::make('quantity')
                             ->integer()
+                            ->type('text')
+                            ->extraInputAttributes(['x-on:focus' => '$el.select()'])
                             ->minValue(0)
                             ->default(0)
                             ->maxValue(fn (callable $get): int => max(0, (int) $get('refundable'))),

@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace App\Observers;
 
 use App\Models\ProductImage;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProductImageObserver
 {
     /**
-     * A primeira imagem de um produto vira a capa automaticamente.
+     * A primeira imagem do produto (ou da variação) vira a capa
+     * automaticamente. Produto e cada variação têm seu próprio conjunto de
+     * capa, isolado por product_variation_id.
      */
     public function creating(ProductImage $image): void
     {
-        if (! ProductImage::query()->where('product_id', $image->product_id)->exists()) {
+        if (! $this->scoped($image)->exists()) {
             $image->is_primary = true;
         }
     }
@@ -26,7 +29,8 @@ class ProductImageObserver
     }
 
     /**
-     * Ao remover a capa, promove a imagem mais antiga restante a capa.
+     * Ao remover a capa, promove a imagem mais antiga restante (no mesmo
+     * escopo) a capa.
      */
     public function deleted(ProductImage $image): void
     {
@@ -34,20 +38,24 @@ class ProductImageObserver
             return;
         }
 
-        $replacement = ProductImage::query()
-            ->where('product_id', $image->product_id)
-            ->oldest('id')
-            ->first();
+        $replacement = $this->scoped($image)->oldest('id')->first();
 
         $replacement?->update(['is_primary' => true]);
     }
 
     private function unsetOtherPrimaries(ProductImage $image): void
     {
-        ProductImage::query()
-            ->where('product_id', $image->product_id)
+        $this->scoped($image)
             ->where('id', '!=', $image->getKey())
             ->where('is_primary', true)
             ->update(['is_primary' => false]);
+    }
+
+    /** Query escopada ao mesmo produto e à mesma variação (ou ausência dela). */
+    private function scoped(ProductImage $image): Builder
+    {
+        return ProductImage::query()
+            ->where('product_id', $image->product_id)
+            ->where('product_variation_id', $image->product_variation_id);
     }
 }

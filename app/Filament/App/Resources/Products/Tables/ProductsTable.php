@@ -122,13 +122,14 @@ class ProductsTable
                     ->query(fn (Builder $query): Builder => $query->where(function (Builder $query): void {
                         $query
                             ->where(fn (Builder $q) => $q
-                                ->whereDoesntHave('variations')
+                                ->where('has_variations', false)
                                 ->whereColumn('stock', '<=', 'low_stock_threshold')
                                 ->where('stock', '>', 0))
                             ->orWhere(fn (Builder $q) => $q
-                                ->whereHas('variations')
-                                ->whereRaw('(select coalesce(sum(stock), 0) from product_variations where product_variations.product_id = products.id) <= products.low_stock_threshold')
-                                ->whereRaw('(select coalesce(sum(stock), 0) from product_variations where product_variations.product_id = products.id) > 0'));
+                                ->where('has_variations', true)
+                                ->whereHas('variations', fn (Builder $q) => $q
+                                    ->whereColumn('stock', '<=', 'low_stock_threshold')
+                                    ->where('stock', '>', 0)));
                     })),
 
                 Filter::make('out_of_stock')
@@ -136,10 +137,10 @@ class ProductsTable
                     ->query(fn (Builder $query): Builder => $query->where(function (Builder $query): void {
                         $query
                             ->where(fn (Builder $q) => $q
-                                ->whereDoesntHave('variations')
+                                ->where('has_variations', false)
                                 ->where('stock', '<=', 0))
                             ->orWhere(fn (Builder $q) => $q
-                                ->whereHas('variations')
+                                ->where('has_variations', true)
                                 ->whereRaw('(select coalesce(sum(stock), 0) from product_variations where product_variations.product_id = products.id) <= 0'));
                     })),
             ])

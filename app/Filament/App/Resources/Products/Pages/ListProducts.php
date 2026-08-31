@@ -64,18 +64,18 @@ class ListProducts extends Page
             ->when($this->categoryId, fn ($q) => $q->where('category_id', $this->categoryId))
             ->when($this->stockFilter === 'low', fn ($q) => $q->where(function ($q): void {
                 $q->where(fn ($q) => $q
-                    ->whereDoesntHave('variations')
+                    ->where('has_variations', false)
                     ->whereColumn('stock', '<=', 'low_stock_threshold'))
                     ->orWhere(fn ($q) => $q
-                        ->whereHas('variations')
-                        ->whereRaw('(select coalesce(sum(stock), 0) from product_variations where product_variations.product_id = products.id) <= products.low_stock_threshold'));
+                        ->where('has_variations', true)
+                        ->whereHas('variations', fn ($q) => $q->whereColumn('stock', '<=', 'low_stock_threshold')));
             }))
             ->when($this->stockFilter === 'out', fn ($q) => $q->where(function ($q): void {
                 $q->where(fn ($q) => $q
-                    ->whereDoesntHave('variations')
+                    ->where('has_variations', false)
                     ->where('stock', '<=', 0))
                     ->orWhere(fn ($q) => $q
-                        ->whereHas('variations')
+                        ->where('has_variations', true)
                         ->whereRaw('(select coalesce(sum(stock), 0) from product_variations where product_variations.product_id = products.id) <= 0'));
             }))
             ->orderBy('title')

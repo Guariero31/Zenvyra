@@ -65,11 +65,11 @@ class StockProductsWidget extends TableWidget
                     ->query(fn (Builder $query): Builder => $query->where(function (Builder $query): void {
                         $query
                             ->where(fn (Builder $q) => $q
-                                ->whereDoesntHave('variations')
+                                ->where('has_variations', false)
                                 ->whereColumn('stock', '<=', 'low_stock_threshold'))
                             ->orWhere(fn (Builder $q) => $q
-                                ->whereHas('variations')
-                                ->whereRaw('(select coalesce(sum(stock), 0) from product_variations where product_variations.product_id = products.id) <= products.low_stock_threshold'));
+                                ->where('has_variations', true)
+                                ->whereHas('variations', fn (Builder $q) => $q->whereColumn('stock', '<=', 'low_stock_threshold')));
                     })),
             ])
             ->recordActions([

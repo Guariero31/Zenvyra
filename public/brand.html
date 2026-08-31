@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-mode="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zenvyra — Brand Identity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      /* Primitive */
+      --indigo-50:  #EEF2FF;
+      --indigo-100: #E0E7FF;
+      --indigo-200: #C7D2FE;
+      --indigo-400: #818CF8;
+      --indigo-500: #6366F1;
+      --indigo-600: #4F46E5;
+      --indigo-700: #4338CA;
+      --indigo-800: #3730A3;
+      --indigo-900: #312E81;
+
+      --amber-50:  #FFFBEB;
+      --amber-100: #FEF3C7;
+      --amber-300: #FCD34D;
+      --amber-400: #FBBF24;
+      --amber-500: #F59E0B;
+      --amber-600: #D97706;
+      --amber-700: #B45309;
+
+      --emerald-50:  #ECFDF5;
+      --emerald-500: #10B981;
+      --emerald-600: #059669;
+      --emerald-700: #047857;
+
+      --rose-50:  #FFF1F2;
+      --rose-500: #F43F5E;
+      --rose-600: #E11D48;
+
+      --sky-50:  #F0F9FF;
+      --sky-500: #0EA5E9;
+      --sky-600: #0284C7;
+
+      --warm-50:  #FAFAF8;
+      --warm-100: #F4F3F0;
+      --warm-200: #E8E6E1;
+      --warm-300: #D6D3CC;
+      --warm-400: #A8A49B;
+      --warm-500: #78746A;
+      --warm-600: #57534A;
+      --warm-700: #3D3A33;
+      --warm-800: #292621;
+      --warm-900: #0F0E0C;
+
+      /* Semantic - Light Mode */
+      --bg-primary:    #FFFFFF;
+      --bg-secondary:  var(--warm-50);
+      --bg-tertiary:   var(--warm-100);
+      --border:        var(--warm-200);
+      --border-strong: var(--warm-300);
+      --text-primary:  var(--warm-900);
+      --text-secondary:var(--warm-600);
+      --text-muted:    var(--warm-400);
+
+      --color-primary:       var(--indigo-600);
+      --color-primary-hover: var(--indigo-700);
+      --color-primary-tint:  var(--indigo-50);
+      --color-primary-text:  var(--indigo-700);
+
+      --color-accent:        var(--amber-500);
+      --color-accent-tint:   var(--amber-50);
+      --color-accent-text:   var(--amber-700);
+
+      --color-success:       var(--emerald-500);
+      --color-success-tint:  var(--emerald-50);
+      --color-success-text:  var(--emerald-700);
+
+      --color-warning:       var(--amber-400);
+      --color-warning-tint:  var(--amber-50);
+      --color-warning-text:  var(--amber-700);
+
+      --color-danger:        var(--rose-500);
+      --color-danger-tint:   var(--rose-50);
+      --color-danger-text:   var(--rose-600);
+
+      --color-info:          var(--sky-500);
+      --color-info-tint:     var(--sky-50);
+      --color-info-text:     var(--sky-600);
+
+      /* Spacing */
+      --space-1: 4px;  --space-2: 8px;  --space-3: 12px;
+      --space-4: 16px; --space-5: 20px; --space-6: 24px;
+      --space-8: 32px; --space-10: 40px; --space-12: 48px;
+      --space-16: 64px; --space-20: 80px;
+
+      /* Radius */
+      --radius-sm: 4px;
+      --radius:    6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --radius-2xl:20px;
+      --radius-full: 9999px;
+
+      /* Typography */
+      --font: 'Inter', -apple-system, system-ui, sans-serif;
+      --font-mono: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    /* Dark Mode Semantic Overrides */
+    [data-mode="dark"] {
+      --bg-primary:    #0C0E12;
+      --bg-secondary:  #13151A;
+      --bg-tertiary:   #1A1D24;
+      --border:        #23262F;
+      --border-strong: #2E323D;
+      --text-primary:  #F4F3F0;
+      --text-secondary:#A8A49B;
+      --text-muted:    #57534A;
+
+      --color-primary:       var(--indigo-400);
+      --color-primary-hover: var(--indigo-500);
+      --color-primary-tint:  rgba(99,102,241,0.12);
+      --color-primary-text:  var(--indigo-200);
+
+      --color-accent:        var(--amber-400);
+      --color-accent-tint:   rgba(251,191,36,0.1);
+      --color-accent-text:   var(--amber-300);
+
+      --color-success:       var(--emerald-500);
+      --color-success-tint:  rgba(16,185,129,0.1);
+      --color-success-text:  #6EE7B7;
+
+      --color-warning:       var(--amber-400);
+      --color-warning-tint:  rgba(251,191,36,0.1);
+      --color-warning-text:  var(--amber-300);
+
+      --color-danger:        var(--rose-500);
+      --color-danger-tint:   rgba(244,63,94,0.1);
+      --color-danger-text:   #FDA4AF;
+
+      --color-info:          var(--sky-500);
+      --color-info-tint:     rgba(14,165,233,0.1);
+      --color-info-text:     #7DD3FC;
+    }
+
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      font-size: 14px;
+      line-height: 1.6;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.25s, color 0.25s;
+    }
+
+    /* ── LAYOUT ── */
+    .page { max-width: 1080px; margin: 0 auto; padding: 48px 24px 96px; }
+
+    /* ── HEADER ── */
+    .brand-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 56px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-mark {
+      width: 36px; height: 36px;
+      background: var(--color-primary);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-mark svg { width: 20px; height: 20px; }
+    .logo-wordmark {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+    .brand-meta { font-size: 12px; color: var(--text-muted); }
+
+    /* Mode Toggle */
+    .mode-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-secondary);
+      background: var(--bg-primary);
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .mode-toggle:hover { border-color: var(--border-strong); color: var(--text-primary); }
+    .mode-icon { font-size: 14px; }
+
+    /* ── SECTIONS ── */
+    .section { margin-bottom: 56px; }
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    /* ── COLORS ── */
+    .color-groups { display: flex; flex-direction: column; gap: 16px; }
+    .color-group-label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
+    .color-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .color-chip {
+      width: 64px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .color-chip-swatch { height: 48px; }
+    .color-chip-info { padding: 5px 6px; background: var(--bg-primary); }
+    .color-chip-name { font-size: 9px; font-weight: 600; color: var(--text-secondary); display: block; }
+    .color-chip-hex  { font-size: 9px; font-family: var(--font-mono); color: var(--text-muted); display: block; margin-top: 1px; }
+
+    .semantic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+    .semantic-card {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .semantic-card-swatch { height: 56px; display: flex; align-items: center; justify-content: center; }
+    .semantic-card-body { padding: 8px 10px; background: var(--bg-primary); }
+    .semantic-card-label { font-size: 11px; font-weight: 600; color: var(--text-primary); }
+    .semantic-card-use   { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── TYPOGRAPHY ── */
+    .type-scale { display: flex; flex-direction: column; gap: 1px; }
+    .type-row {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      padding: 12px 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-bottom: 4px;
+    }
+    .type-meta {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      min-width: 120px;
+      flex-shrink: 0;
+    }
+    .type-pair { display: flex; flex-direction: column; gap: 2px; }
+    .type-use  { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+
+    .font-pair-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+    .font-pair-card {
+      padding: 20px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+    }
+    .font-pair-name { font-size: 10px; color: var(--text-muted); margin-bottom: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+    .font-pair-demo-h { font-size: 20px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.02em; line-height: 1.2; }
+    .font-pair-demo-p { font-size: 14px; color: var(--text-secondary); margin-top: 6px; line-height: 1.6; }
+
+    /* ── COMPONENTS ── */
+    .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .comp-card {
+      padding: 20px 22px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+    }
+    .comp-card-title { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 14px; }
+    .comp-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .comp-col { display: flex; flex-direction: column; gap: 8px; }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: var(--radius-md);
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      border: none; transition: all 0.15s;
+      font-family: var(--font);
+    }
+    .btn-primary { background: var(--color-primary); color: #fff; }
+    .btn-primary:hover { background: var(--color-primary-hover); }
+    .btn-secondary { background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--border-strong); }
+    .btn-ghost { background: transparent; color: var(--color-primary); }
+    .btn-ghost:hover { background: var(--color-primary-tint); }
+    .btn-danger { background: var(--color-danger-tint); color: var(--color-danger-text); border: 1px solid var(--color-danger); }
+    .btn-sm { padding: 5px 10px; font-size: 12px; }
+    .btn-icon { width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--bg-secondary); color: var(--text-secondary); cursor: pointer; font-size: 14px; }
+    .btn-icon:hover { border-color: var(--border-strong); color: var(--text-primary); }
+
+    /* Badges */
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: var(--radius-full);
+      font-size: 11px; font-weight: 500;
+    }
+    .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+    .badge-primary  { background: var(--color-primary-tint);  color: var(--color-primary-text); }
+    .badge-success  { background: var(--color-success-tint);  color: var(--color-success-text); }
+    .badge-warning  { background: var(--color-warning-tint);  color: var(--color-warning-text); }
+    .badge-danger   { background: var(--color-danger-tint);   color: var(--color-danger-text); }
+    .badge-accent   { background: var(--color-accent-tint);   color: var(--color-accent-text); }
+    .badge-neutral  { background: var(--bg-tertiary); color: var(--text-secondary); }
+
+    /* Inputs */
+    .input {
+      width: 100%; padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 13px; font-family: var(--font);
+      outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--color-primary-tint); }
+    .input::placeholder { color: var(--text-muted); }
+    .input-label { font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 4px; display: block; }
+    .input-wrap { display: flex; flex-direction: column; gap: 4px; }
+
+    /* Cards */
+    .card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+    }
+    .card-title { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+    .card-sub   { font-size: 12px; color: var(--text-muted); }
+    .card-value { font-size: 28px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.03em; margin-top: 8px; }
+    .card-delta { font-size: 11px; color: var(--color-success-text); font-weight: 500; margin-top: 2px; }
+
+    /* Table */
+    .table-wrap {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .table th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.04em; text-transform: uppercase; border-bottom: 1px solid var(--border); background: var(--bg-secondary); }
+    .table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-primary); }
+    .table tr:last-child td { border-bottom: none; }
+    .table tr:hover td { background: var(--bg-secondary); }
+
+    /* Avatar */
+    .avatar { width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+    .avatar-indigo { background: var(--color-primary-tint); color: var(--color-primary-text); }
+    .avatar-amber  { background: var(--color-accent-tint);  color: var(--color-accent-text); }
+
+    /* ── PREVIEW PANEL ── */
+    .preview-shell {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      display: flex;
+      height: 440px;
+      background: var(--bg-secondary);
+    }
+    .preview-sidebar {
+      width: 200px;
+      background: var(--bg-primary);
+      border-right: 1px solid var(--border);
+      padding: 20px 0;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .preview-logo {
+      display: flex; align-items: center; gap: 8px;
+      padding: 0 16px 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
+    .preview-logo-mark {
+      width: 24px; height: 24px;
+      background: var(--color-primary);
+      border-radius: 5px;
+    }
+    .preview-logo-text { font-size: 14px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.01em; }
+    .preview-nav { padding: 0 8px; display: flex; flex-direction: column; gap: 1px; }
+    .p-ni {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 10px; border-radius: var(--radius-md);
+      font-size: 13px; color: var(--text-secondary); cursor: pointer;
+    }
+    .p-ni:hover { background: var(--bg-secondary); color: var(--text-primary); }
+    .p-ni.active { background: var(--color-primary-tint); color: var(--color-primary-text); font-weight: 500; }
+    .p-ni-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+    .preview-main { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+    .preview-topbar {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--bg-primary);
+    }
+    .preview-title { font-size: 15px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.01em; }
+    .preview-sub   { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+    .preview-content { padding: 20px; flex: 1; overflow: hidden; }
+    .preview-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 16px; }
+    .p-stat {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+    }
+    .p-stat-l { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+    .p-stat-v { font-size: 20px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.02em; }
+    .p-stat-d { font-size: 10px; margin-top: 1px; font-weight: 500; }
+
+    /* ── TOKENS DOC ── */
+    .token-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .token-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+    }
+    .token-card-title { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px; }
+    .token-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid var(--border); }
+    .token-row:last-child { border-bottom: none; }
+    .token-name { font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); }
+    .token-value { font-size: 11px; font-family: var(--font-mono); color: var(--color-primary-text); }
+
+    /* Tagline section */
+    .tagline-card {
+      background: var(--color-primary);
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .tagline-card h1 { font-size: 36px; font-weight: 600; color: #fff; letter-spacing: -0.03em; line-height: 1.15; }
+    .tagline-card p  { font-size: 15px; color: rgba(255,255,255,0.65); margin-top: 10px; }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      .comp-grid, .token-grid, .font-pair-grid { grid-template-columns: 1fr; }
+      .preview-sidebar { display: none; }
+      .preview-stats { grid-template-columns: repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="brand-header">
+    <div class="brand-logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="3" width="6" height="6" rx="1.5" fill="white"/>
+          <rect x="11" y="3" width="6" height="6" rx="1.5" fill="rgba(255,255,255,0.5)"/>
+          <rect x="3" y="11" width="6" height="6" rx="1.5" fill="rgba(255,255,255,0.5)"/>
+          <rect x="11" y="11" width="6" height="6" rx="1.5" fill="white"/>
+        </svg>
+      </div>
+      <span class="logo-wordmark">Zenvyra</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span class="brand-meta">Brand Identity v1.0 · 2026</span>
+      <button class="mode-toggle" onclick="toggleMode()" id="modeBtn">
+        <span class="mode-icon">☀️</span> Light
+      </button>
+    </div>
+  </div>
+
+  <!-- TAGLINE -->
+  <div class="tagline-card">
+    <h1>Gestão de lojas,<br>sem complicação.</h1>
+    <p>Zenvyra — SaaS B2B para lojistas brasileiros de todos os tamanhos</p>
+  </div>
+
+  <!-- COLORS: PRIMARY -->
+  <div class="section">
+    <div class="section-title">Paleta de cores</div>
+    <div class="color-groups">
+      <div>
+        <div class="color-group-label">Primária — Indigo</div>
+        <div class="color-row">
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#EEF2FF"></div><div class="color-chip-info"><span class="color-chip-name">50</span><span class="color-chip-hex">#EEF2FF</span></div></div>
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#C7D2FE"></div><div class="color-chip-info"><span class="color-chip-name">200</span><span class="color-chip-hex">#C7D2FE</span></div></div>
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#818CF8"></div><div class="color-chip-info"><span class="color-chip-name">400</span><span class="color-chip-hex">#818CF8</span></div></div>
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#6366F1"></div><div class="color-chip-info"><span class="color-chip-name">500</span><span class="color-chip-hex">#6366F1</span></div></div>
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#4F46E5"></div><div class="color-chip-info"><span class="color-chip-name">600 ✦</span><span class="color-chip-hex">#4F46E5</span></div></div>
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#4338CA"></div><div class="color-chip-info"><span class="color-chip-name">700</span><span class="color-chip-hex">#4338CA</span></div></div>
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#312E81"></div><div class="color-chip-info"><span class="color-chip-name">900</span><span class="color-chip-hex">#312E81</span></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="color-group-label">Acento — Âmbar</div>
+        <div class="color-row">
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#FFFBEB"></div><div class="color-chip-info"><span class="color-chip-name">50</span><span class="color-chip-hex">#FFFBEB</span></div></div>
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#FEF3C7"></div><div class="color-chip-info"><span class="color-chip-name">100</span><span class="color-chip-hex">#FEF3C7</span></div></div>
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#FCD34D"></div><div class="color-chip-info"><span class="color-chip-name">300</span><span class="color-chip-hex">#FCD34D</span></div></div>
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#FBBF24"></div><div class="color-chip-info"><span class="color-chip-name">400</span><span class="color-chip-hex">#FBBF24</span></div></div>
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#F59E0B"></div><div class="color-chip-info"><span class="color-chip-name">500 ✦</span><span class="color-chip-hex">#F59E0B</span></div></div>
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#D97706"></div><div class="color-chip-info"><span class="color-chip-name">600</span><span class="color-chip-hex">#D97706</span></div></div>
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#B45309"></div><div class="color-chip-info"><span class="color-chip-name">700</span><span class="color-chip-hex">#B45309</span></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="color-group-label">Neutros — Warm Gray</div>
+        <div class="color-row">
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#FAFAF8"></div><div class="color-chip-info"><span class="color-chip-name">50</span><span class="color-chip-hex">#FAFAF8</span></div></div>
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#F4F3F0"></div><div class="color-chip-info"><span class="color-chip-name">100</span><span class="color-chip-hex">#F4F3F0</span></div></div>
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#E8E6E1"></div><div class="color-chip-info"><span class="color-chip-name">200</span><span class="color-chip-hex">#E8E6E1</span></div></div>
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#A8A49B"></div><div class="color-chip-info"><span class="color-chip-name">400</span><span class="color-chip-hex">#A8A49B</span></div></div>
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#57534A"></div><div class="color-chip-info"><span class="color-chip-name">600</span><span class="color-chip-hex">#57534A</span></div></div>
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#3D3A33"></div><div class="color-chip-info"><span class="color-chip-name">700</span><span class="color-chip-hex">#3D3A33</span></div></div>
+          <div class="color-chip"><div class="color-chip-swatch" style="background:#0F0E0C"></div><div class="color-chip-info"><span class="color-chip-name">900</span><span class="color-chip-hex">#0F0E0C</span></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="color-group-label">Semânticas — Status</div>
+        <div class="semantic-grid">
+          <div class="semantic-card">
+            <div class="semantic-card-swatch" style="background:#ECFDF5"><span style="font-size:11px;font-weight:600;color:#047857">● Sucesso</span></div>
+            <div class="semantic-card-body"><div class="semantic-card-label">Emerald</div><div class="semantic-card-use">#10B981 · Em estoque, Pago</div></div>
+          </div>
+          <div class="semantic-card">
+            <div class="semantic-card-swatch" style="background:#FFFBEB"><span style="font-size:11px;font-weight:600;color:#B45309">● Alerta</span></div>
+            <div class="semantic-card-body"><div class="semantic-card-label">Amber</div><div class="semantic-card-use">#F59E0B · Baixo estoque, Pendente</div></div>
+          </div>
+          <div class="semantic-card">
+            <div class="semantic-card-swatch" style="background:#FFF1F2"><span style="font-size:11px;font-weight:600;color:#E11D48">● Perigo</span></div>
+            <div class="semantic-card-body"><div class="semantic-card-label">Rose</div><div class="semantic-card-use">#F43F5E · Sem estoque, Erro</div></div>
+          </div>
+          <div class="semantic-card">
+            <div class="semantic-card-swatch" style="background:#F0F9FF"><span style="font-size:11px;font-weight:600;color:#0284C7">● Info</span></div>
+            <div class="semantic-card-body"><div class="semantic-card-label">Sky</div><div class="semantic-card-use">#0EA5E9 · Informativo</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TYPOGRAPHY -->
+  <div class="section">
+    <div class="section-title">Tipografia — Inter</div>
+    <div class="type-scale">
+      <div class="type-row">
+        <span class="type-meta">60px / 600 / -0.04em</span>
+        <div class="type-pair"><span style="font-size:36px;font-weight:600;letter-spacing:-0.04em;color:var(--text-primary);line-height:1.1">Display</span><span class="type-use">Hero headline principal</span></div>
+      </div>
+      <div class="type-row">
+        <span class="type-meta">36px / 600 / -0.03em</span>
+        <div class="type-pair"><span style="font-size:28px;font-weight:600;letter-spacing:-0.03em;color:var(--text-primary);line-height:1.15">Título de seção</span><span class="type-use">Landing page sections, modais grandes</span></div>
+      </div>
+      <div class="type-row">
+        <span class="type-meta">24px / 600 / -0.02em</span>
+        <div class="type-pair"><span style="font-size:22px;font-weight:600;letter-spacing:-0.02em;color:var(--text-primary)">Título de página</span><span class="type-use">Cabeçalho de cada tela do sistema</span></div>
+      </div>
+      <div class="type-row">
+        <span class="type-meta">16px / 600 / -0.01em</span>
+        <div class="type-pair"><span style="font-size:16px;font-weight:600;letter-spacing:-0.01em;color:var(--text-primary)">Subtítulo e seção</span><span class="type-use">Card titles, section labels</span></div>
+      </div>
+      <div class="type-row">
+        <span class="type-meta">14px / 400 / 0</span>
+        <div class="type-pair"><span style="font-size:14px;font-weight:400;color:var(--text-secondary)">Corpo de texto padrão. Legível e limpo.</span><span class="type-use">Descrições, conteúdo geral</span></div>
+      </div>
+      <div class="type-row">
+        <span class="type-meta">13px / 400 / 0</span>
+        <div class="type-pair"><span style="font-size:13px;color:var(--text-secondary)">Texto de tabela, labels de formulário e metadados</span><span class="type-use">Tabelas, inputs, listas</span></div>
+      </div>
+      <div class="type-row">
+        <span class="type-meta">11px / 600 / 0.06em</span>
+        <div class="type-pair"><span style="font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted)">RÓTULOS E SEÇÕES</span><span class="type-use">Section labels, table headers</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPONENTS -->
+  <div class="section">
+    <div class="section-title">Componentes</div>
+    <div class="comp-grid">
+      <div class="comp-card">
+        <div class="comp-card-title">Botões</div>
+        <div class="comp-row">
+          <button class="btn btn-primary">Salvar</button>
+          <button class="btn btn-secondary">Cancelar</button>
+          <button class="btn btn-ghost">Ver mais</button>
+          <button class="btn btn-danger btn-sm">Excluir</button>
+        </div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-card-title">Badges de status</div>
+        <div class="comp-row">
+          <span class="badge badge-success"><span class="badge-dot"></span>Em estoque</span>
+          <span class="badge badge-warning"><span class="badge-dot"></span>Estoque baixo</span>
+          <span class="badge badge-danger"><span class="badge-dot"></span>Zerado</span>
+          <span class="badge badge-primary"><span class="badge-dot"></span>Ativo</span>
+          <span class="badge badge-neutral">Pendente</span>
+          <span class="badge badge-accent"><span class="badge-dot"></span>Trial</span>
+        </div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-card-title">Formulários</div>
+        <div class="comp-col">
+          <div class="input-wrap">
+            <label class="input-label">Nome do produto</label>
+            <input class="input" type="text" placeholder="Ex: Camiseta Básica Preta">
+          </div>
+          <div class="input-wrap">
+            <label class="input-label">SKU</label>
+            <input class="input" type="text" placeholder="CBP-001">
+          </div>
+        </div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-card-title">Stat cards</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="card">
+            <div class="card-sub">Vendas do mês</div>
+            <div class="card-value">R$ 48k</div>
+            <div class="card-delta">↑ 12% vs. mês anterior</div>
+          </div>
+          <div class="card">
+            <div class="card-sub">Pedidos</div>
+            <div class="card-value">234</div>
+            <div class="card-delta">↑ 8 hoje</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE EXAMPLE -->
+  <div class="section">
+    <div class="section-title">Tabela — exemplo</div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>SKU</th>
+            <th>Categoria</th>
+            <th>Saldo</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:500">Camiseta Básica Preta</td>
+            <td style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted)">CBP-001</td>
+            <td style="color:var(--text-secondary)">Vestuário</td>
+            <td style="font-weight:600">47 un.</td>
+            <td><span class="badge badge-success"><span class="badge-dot"></span>Em estoque</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:500">Calça Slim Fit</td>
+            <td style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted)">CSF-014</td>
+            <td style="color:var(--text-secondary)">Vestuário</td>
+            <td style="font-weight:600">6 un.</td>
+            <td><span class="badge badge-warning"><span class="badge-dot"></span>Estoque baixo</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:500">Tênis Runner Pro</td>
+            <td style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted)">TRP-088</td>
+            <td style="color:var(--text-secondary)">Calçados</td>
+            <td style="font-weight:600">0 un.</td>
+            <td><span class="badge badge-danger"><span class="badge-dot"></span>Zerado</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- APP PREVIEW -->
+  <div class="section">
+    <div class="section-title">Preview — Painel do Lojista</div>
+    <div class="preview-shell">
+      <div class="preview-sidebar">
+        <div class="preview-logo">
+          <div class="preview-logo-mark"></div>
+          <span class="preview-logo-text">Zenvyra</span>
+        </div>
+        <div class="preview-nav">
+          <div class="p-ni"><div class="p-ni-dot"></div>Dashboard</div>
+          <div class="p-ni"><div class="p-ni-dot"></div>Pedidos</div>
+          <div class="p-ni"><div class="p-ni-dot"></div>Catálogo</div>
+          <div class="p-ni active"><div class="p-ni-dot"></div>Estoque</div>
+          <div class="p-ni"><div class="p-ni-dot"></div>Clientes</div>
+          <div class="p-ni"><div class="p-ni-dot"></div>Vendedores</div>
+        </div>
+      </div>
+      <div class="preview-main">
+        <div class="preview-topbar">
+          <div>
+            <div class="preview-title">Estoque</div>
+            <div class="preview-sub">142 produtos cadastrados</div>
+          </div>
+          <button class="btn btn-primary btn-sm">+ Entrada</button>
+        </div>
+        <div class="preview-content">
+          <div class="preview-stats">
+            <div class="p-stat">
+              <div class="p-stat-l">Total</div>
+              <div class="p-stat-v">142</div>
+            </div>
+            <div class="p-stat">
+              <div class="p-stat-l">Estoque baixo</div>
+              <div class="p-stat-v" style="color:var(--color-warning-text)">8</div>
+              <div class="p-stat-d" style="color:var(--color-warning-text)">↓ reposição urgente</div>
+            </div>
+            <div class="p-stat">
+              <div class="p-stat-l">Sem estoque</div>
+              <div class="p-stat-v" style="color:var(--color-danger-text)">3</div>
+            </div>
+            <div class="p-stat">
+              <div class="p-stat-l">Entradas hoje</div>
+              <div class="p-stat-v">12</div>
+              <div class="p-stat-d" style="color:var(--color-success-text)">↑ +4 vs ontem</div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr><th>Produto</th><th>Saldo</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                <tr><td style="font-weight:500;font-size:12px">Camiseta Básica Preta</td><td style="font-size:12px">47 un.</td><td><span class="badge badge-success" style="font-size:10px"><span class="badge-dot"></span>Ok</span></td></tr>
+                <tr><td style="font-weight:500;font-size:12px">Calça Slim Fit</td><td style="font-size:12px">6 un.</td><td><span class="badge badge-warning" style="font-size:10px"><span class="badge-dot"></span>Baixo</span></td></tr>
+                <tr><td style="font-weight:500;font-size:12px">Tênis Runner Pro</td><td style="font-size:12px">0 un.</td><td><span class="badge badge-danger" style="font-size:10px"><span class="badge-dot"></span>Zerado</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESIGN TOKENS -->
+  <div class="section">
+    <div class="section-title">Design Tokens — CSS Variables</div>
+    <div class="token-grid">
+      <div class="token-card">
+        <div class="token-card-title">Cores — Semânticas</div>
+        <div class="token-row"><span class="token-name">--color-primary</span><span class="token-value">#4F46E5</span></div>
+        <div class="token-row"><span class="token-name">--color-accent</span><span class="token-value">#F59E0B</span></div>
+        <div class="token-row"><span class="token-name">--color-success</span><span class="token-value">#10B981</span></div>
+        <div class="token-row"><span class="token-name">--color-warning</span><span class="token-value">#FBBF24</span></div>
+        <div class="token-row"><span class="token-name">--color-danger</span><span class="token-value">#F43F5E</span></div>
+        <div class="token-row"><span class="token-name">--color-info</span><span class="token-value">#0EA5E9</span></div>
+      </div>
+      <div class="token-card">
+        <div class="token-card-title">Backgrounds</div>
+        <div class="token-row"><span class="token-name">--bg-primary</span><span class="token-value">#FFFFFF</span></div>
+        <div class="token-row"><span class="token-name">--bg-secondary</span><span class="token-value">#FAFAF8</span></div>
+        <div class="token-row"><span class="token-name">--bg-tertiary</span><span class="token-value">#F4F3F0</span></div>
+        <div class="token-row"><span class="token-name">--border</span><span class="token-value">#E8E6E1</span></div>
+        <div class="token-row"><span class="token-name">--text-primary</span><span class="token-value">#0F0E0C</span></div>
+        <div class="token-row"><span class="token-name">--text-secondary</span><span class="token-value">#57534A</span></div>
+      </div>
+      <div class="token-card">
+        <div class="token-card-title">Espaçamento</div>
+        <div class="token-row"><span class="token-name">--space-1</span><span class="token-value">4px</span></div>
+        <div class="token-row"><span class="token-name">--space-2</span><span class="token-value">8px</span></div>
+        <div class="token-row"><span class="token-name">--space-4</span><span class="token-value">16px</span></div>
+        <div class="token-row"><span class="token-name">--space-6</span><span class="token-value">24px</span></div>
+        <div class="token-row"><span class="token-name">--space-8</span><span class="token-value">32px</span></div>
+        <div class="token-row"><span class="token-name">--space-12</span><span class="token-value">48px</span></div>
+      </div>
+      <div class="token-card">
+        <div class="token-card-title">Borda arredondada</div>
+        <div class="token-row"><span class="token-name">--radius-sm</span><span class="token-value">4px</span></div>
+        <div class="token-row"><span class="token-name">--radius</span><span class="token-value">6px</span></div>
+        <div class="token-row"><span class="token-name">--radius-md</span><span class="token-value">8px</span></div>
+        <div class="token-row"><span class="token-name">--radius-lg</span><span class="token-value">12px</span></div>
+        <div class="token-row"><span class="token-name">--radius-xl</span><span class="token-value">16px</span></div>
+        <div class="token-row"><span class="token-name">--radius-full</span><span class="token-value">9999px</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let mode = 'light';
+  function toggleMode() {
+    mode = mode === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-mode', mode);
+    const btn = document.getElementById('modeBtn');
+    btn.innerHTML = mode === 'dark' ? '<span class="mode-icon">🌙</span> Dark' : '<span class="mode-icon">☀️</span> Light';
+  }
+</script>
+</body>
+</html>

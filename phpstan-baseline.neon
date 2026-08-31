@@ -1,0 +1,1381 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Console/Commands/NotifyExpiringSubscriptions.php
+
+		-
+			message: '#^Cannot call method format\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Console/Commands/NotifyExpiringSubscriptions.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:each\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: mixed, Closure\(App\\Models\\User\)\: void given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Console/Commands/NotifyExpiringSubscriptions.php
+
+		-
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
+			count: 2
+			path: app/Console/Commands/RefreshSubscriptionStates.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
+			identifier: notIdentical.alwaysFalse
+			count: 1
+			path: app/Console/Commands/RefreshSubscriptionStates.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionStatus\:\:Active will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Console/Commands/RefreshSubscriptionStates.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_schema\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Console/Commands/RepairTenantOrderIsolation.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Console/Commands/RepairTenantOrderIsolation.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_schema\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Console/Commands/TenantMigrateCommand.php
+
+		-
+			message: '#^Parameter \#1 \$label of method Filament\\Actions\\Action\:\:label\(\) expects Closure\|Illuminate\\Contracts\\Support\\Htmlable\|string\|null, false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Admin/Resources/Administrators/Tables/AdministratorsTable.php
+
+		-
+			message: '#^Parameter \#1 \$label of method Filament\\Actions\\Action\:\:label\(\) expects Closure\|Illuminate\\Contracts\\Support\\Htmlable\|string\|null, false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Admin/Resources/Plans/Tables/PlansTable.php
+
+		-
+			message: '#^Parameter \#1 \$label of method Filament\\Actions\\Action\:\:label\(\) expects Closure\|Illuminate\\Contracts\\Support\\Htmlable\|string\|null, false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Admin/Resources/StoreOwners/Tables/StoreOwnersTable.php
+
+		-
+			message: '#^Parameter \#1 \$label of method Filament\\Actions\\Action\:\:label\(\) expects Closure\|Illuminate\\Contracts\\Support\\Htmlable\|string\|null, false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Admin/Resources/Subscriptions/Tables/SubscriptionsTable.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between string and App\\Enums\\SubscriptionStatus\:\:Active will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: app/Filament/Admin/Resources/Subscriptions/Tables/SubscriptionsTable.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between string and App\\Enums\\SubscriptionStatus\:\:Canceled will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: app/Filament/Admin/Resources/Subscriptions/Tables/SubscriptionsTable.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_ativo\.$#'
+			identifier: property.notFound
+			count: 5
+			path: app/Filament/Admin/Resources/Tenants/Actions/ToggleTenantStatusAction.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:subscriptions\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Filament/Admin/Resources/Tenants/Pages/CreateTenant.php
+
+		-
+			message: '#^Parameter \#1 \$tenant of method App\\Services\\SubscriptionManager\:\:startCommercialSubscription\(\) expects App\\Models\\Tenant, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Admin/Resources/Tenants/Pages/CreateTenant.php
+
+		-
+			message: '#^Parameter \#1 \$tenant of method App\\Services\\SubscriptionManager\:\:startEvaluation\(\) expects App\\Models\\Tenant, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Admin/Resources/Tenants/Pages/CreateTenant.php
+
+		-
+			message: '#^Cannot call method gestaoSettings\(\) on Illuminate\\Database\\Eloquent\\Model\|int\|string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Filament/Admin/Resources/Tenants/Pages/EditTenant.php
+
+		-
+			message: '#^Call to an undefined method Filament\\Forms\\Components\\Field\:\:searchable\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Filament/Admin/Resources/Tenants/RelationManagers/UsersRelationManager.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_schema\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Admin/Resources/Tenants/Schemas/TenantForm.php
+
+		-
+			message: '#^Parameter \#1 \$label of method Filament\\Actions\\Action\:\:label\(\) expects Closure\|Illuminate\\Contracts\\Support\\Htmlable\|string\|null, false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Admin/Resources/Tenants/Tables/TenantsTable.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Admin/Widgets/PlatformOverviewWidget.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>price" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/Admin/Widgets/PlatformOverviewWidget.php
+
+		-
+			message: '#^Method App\\Filament\\Admin\\Widgets\\QuickActionsWidget\:\:getViewData\(\) should return array\<int, array\{title\: string, description\: string, url\: string\}\> but returns array\{actions\: array\{array\{title\: ''Criar Nova Loja'', description\: ''Adicione um novo…'', url\: string\}, array\{title\: ''Ver Relatórios'', description\: ''Análise de uso e…'', url\: string\}, array\{title\: ''Gestão de Planos'', description\: ''Configure planos e…'', url\: string\}\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Filament/Admin/Widgets/QuickActionsWidget.php
+
+		-
+			message: '#^Return type \(array\<int, array\{title\: string, description\: string, url\: string\}\>\) of method App\\Filament\\Admin\\Widgets\\QuickActionsWidget\:\:getViewData\(\) should be compatible with return type \(array\<string, mixed\>\) of method Filament\\Widgets\\Widget\:\:getViewData\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: app/Filament/Admin/Widgets/QuickActionsWidget.php
+
+		-
+			message: '#^Access to an undefined property App\\Filament\\App\\Pages\\PdvPage\:\:\$cartTotal\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/App/Pages/PdvPage.php
+
+		-
+			message: '#^Method App\\Filament\\App\\Pages\\PdvPage\:\:customerResults\(\) should return Illuminate\\Database\\Eloquent\\Collection but returns Illuminate\\Support\\Collection\<\(int\|string\), mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Filament/App/Pages/PdvPage.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\<array\<string, mixed\>\>\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: app/Filament/App/Pages/PdvPage.php
+
+		-
+			message: '#^Parameter \#2 \$variation of method App\\Filament\\App\\Pages\\PdvPage\:\:pushToCart\(\) expects App\\Models\\ProductVariation\|null, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/App/Pages/PdvPage.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>cost_price" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/App/Pages/PdvPage.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/App/Pages/PdvPage.php
+
+		-
+			message: '#^Access to an undefined property App\\Filament\\App\\Pages\\SettingsPage\:\:\$form\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/App/Pages/SettingsPage.php
+
+		-
+			message: '#^Access to an undefined property App\\Filament\\App\\Pages\\StoreConfigPage\:\:\$form\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/App/Pages/StoreConfigPage.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$te_slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/App/Pages/StoreConfigPage.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>te_slug" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/App/Pages/StoreConfigPage.php
+
+		-
+			message: '#^Parameter \#1 \$label of method Filament\\Actions\\Action\:\:label\(\) expects Closure\|Illuminate\\Contracts\\Support\\Htmlable\|string\|null, false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/App/Resources/Categories/Tables/CategoriesTable.php
+
+		-
+			message: '#^Parameter \#1 \$label of method Filament\\Actions\\Action\:\:label\(\) expects Closure\|Illuminate\\Contracts\\Support\\Htmlable\|string\|null, false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Filament/App/Resources/Customers/Tables/CustomersTable.php
+
+		-
+			message: '#^Cannot call method isCancellable\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Filament/App/Resources/Orders/Actions/CancelOrderAction.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/App/Resources/Orders/Actions/RefundOrderAction.php
+
+		-
+			message: '#^Cannot call method isRefundable\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Filament/App/Resources/Orders/Actions/RefundOrderAction.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Filament/App/Resources/Orders/Actions/RefundOrderAction.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: array\{order_item_id\: int, product_label\: mixed, refundable\: int, quantity\: 0\}, Closure\(App\\Models\\OrderItem\)\: array\{order_item_id\: int, product_label\: mixed, refundable\: int, quantity\: 0\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/App/Resources/Orders/Actions/RefundOrderAction.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:filter\(\) expects \(callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: bool\)\|null, Closure\(App\\Models\\OrderItem\)\: bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/App/Resources/Orders/Actions/RefundOrderAction.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/App/Resources/Orders/RelationManagers/ItemsRelationManager.php
+
+		-
+			message: '#^Parameter \#1 \$label of method Filament\\Actions\\Action\:\:label\(\) expects Closure\|Illuminate\\Contracts\\Support\\Htmlable\|string\|null, false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/App/Resources/Orders/RelationManagers/ItemsRelationManager.php
+
+		-
+			message: '#^Anonymous function never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Filament/App/Resources/Orders/Schemas/OrderForm.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:users\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Filament/App/Resources/Orders/Schemas/OrderForm.php
+
+		-
+			message: '#^Parameter \#1 \$label of method Filament\\Actions\\Action\:\:label\(\) expects Closure\|Illuminate\\Contracts\\Support\\Htmlable\|string\|null, false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Filament/App/Resources/Orders/Tables/OrdersTable.php
+
+		-
+			message: '#^Parameter \$variation of method App\\Services\\StockManager\:\:adjustment\(\) expects App\\Models\\ProductVariation\|null, Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\|Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/App/Resources/Products/Actions/StockAdjustmentAction.php
+
+		-
+			message: '#^Parameter \$variation of method App\\Services\\StockManager\:\:entry\(\) expects App\\Models\\ProductVariation\|null, Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\|Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/App/Resources/Products/Actions/StockEntryAction.php
+
+		-
+			message: '#^Parameter \#1 \$tenant of method App\\Services\\PlanLimitService\:\:assertCanAddProduct\(\) expects App\\Models\\Tenant, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/App/Resources/Products/Pages/CreateProduct.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:images\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Filament/App/Resources/Products/RelationManagers/ImagesRelationManager.php
+
+		-
+			message: '#^Parameter \#1 \$label of method Filament\\Actions\\Action\:\:label\(\) expects Closure\|Illuminate\\Contracts\\Support\\Htmlable\|string\|null, false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/App/Resources/Products/RelationManagers/ImagesRelationManager.php
+
+		-
+			message: '#^Parameter \#1 \$label of method Filament\\Actions\\Action\:\:label\(\) expects Closure\|Illuminate\\Contracts\\Support\\Htmlable\|string\|null, false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Filament/App/Resources/Products/RelationManagers/VariationsRelationManager.php
+
+		-
+			message: '#^Parameter \#1 \$tenant of method App\\Services\\PlanLimitService\:\:assertCanAddUser\(\) expects App\\Models\\Tenant, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/App/Resources/TeamMembers/Pages/CreateTeamMember.php
+
+		-
+			message: '#^Cannot call method tenants\(\) on Illuminate\\Database\\Eloquent\\Model\|int\|string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Filament/App/Resources/TeamMembers/Pages/EditTeamMember.php
+
+		-
+			message: '#^Parameter \#2 \$member of method App\\Services\\TenantTeamService\:\:removeMember\(\) expects App\\Models\\User, Illuminate\\Database\\Eloquent\\Model\|int\|string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/App/Resources/TeamMembers/Pages/EditTeamMember.php
+
+		-
+			message: '#^Anonymous function never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Filament/App/Resources/TeamMembers/Schemas/TeamMemberForm.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:gestaoSettings\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Filament/App/Resources/TeamMembers/Tables/TeamMembersTable.php
+
+		-
+			message: '#^Parameter \#1 \$label of method Filament\\Actions\\Action\:\:label\(\) expects Closure\|Illuminate\\Contracts\\Support\\Htmlable\|string\|null, false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/App/Resources/TeamMembers/Tables/TeamMembersTable.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/App/Resources/TenantBrandings/Pages/EditTenantBranding.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$tenant_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/App/Resources/TenantBrandings/Pages/EditTenantBranding.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/App/Resources/TenantBrandings/Schemas/TenantBrandingForm.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$tenant_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/App/Resources/TenantBrandings/TenantBrandingResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\App\\Resources\\TenantBrandings\\TenantBrandingResource\:\:usuarioPodeGerenciarBranding\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 2
+			path: app/Filament/App/Resources/TenantBrandings/TenantBrandingResource.php
+
+		-
+			message: '#^Method App\\Filament\\App\\Widgets\\SalesStatsOverview\:\:countDescription\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Filament/App/Widgets/SalesStatsOverview.php
+
+		-
+			message: '#^Method Filament\\Forms\\Components\\ColorPicker\:\:rgba\(\) invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 8
+			path: app/Filament/Shared/Schemas/IdentidadeVisualFormComponents.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_schema\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/LandingController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/RegisterController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/RegisterController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Store/ContactFormController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Store/ContactFormController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isEvaluation\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Controllers/SubscriptionBlockedController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\SubscriptionBlockedController\:\:accessibleTenants\(\) should return Illuminate\\Support\\Collection\<int, App\\Models\\Tenant\> but returns Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/SubscriptionBlockedController.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:filter\(\) expects \(callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: bool\)\|null, Closure\(App\\Models\\Tenant\)\: bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/SubscriptionBlockedController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Middleware/EnsureSubscriptionIsActive.php
+
+		-
+			message: '#^Parameter \#1 \$subscription of method App\\Services\\SubscriptionManager\:\:refreshState\(\) expects App\\Models\\Subscription, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Middleware/EnsureSubscriptionIsActive.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_schema\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Middleware/ResolvePublicStoreTenant.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$bg_content_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$bg_content_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$bg_page_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$bg_page_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$bg_sidebar_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$bg_sidebar_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$bg_topbar_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$bg_topbar_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$cor_alerta\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$cor_alerta_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$cor_alerta_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$cor_erro\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$cor_erro_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$cor_erro_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$cor_primaria\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$cor_primaria_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$cor_primaria_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$cor_sucesso\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$cor_sucesso_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\IdentidadeVisual\:\:\$cor_sucesso_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/IdentidadeVisual.php
+
+		-
+			message: '#^PHPDoc tag @use has invalid type Database\\Factories\\OrderRefundFactory\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/OrderRefund.php
+
+		-
+			message: '#^Type Database\\Factories\\OrderRefundFactory in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<Database\\Factories\\OrderRefundFactory\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/OrderRefund.php
+
+		-
+			message: '#^PHPDoc tag @use has invalid type Database\\Factories\\OrderRefundItemFactory\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/OrderRefundItem.php
+
+		-
+			message: '#^Type Database\\Factories\\OrderRefundItemFactory in generic type Illuminate\\Database\\Eloquent\\Factories\\HasFactory\<Database\\Factories\\OrderRefundItemFactory\> in PHPDoc tag @use is not subtype of template type TFactory of Illuminate\\Database\\Eloquent\\Factories\\Factory of trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: app/Models/OrderRefundItem.php
+
+		-
+			message: '#^Cannot call method isFuture\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: app/Models/Subscription.php
+
+		-
+			message: '#^Match arm comparison between string and App\\Enums\\SubscriptionStatus\:\:Active is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 2
+			path: app/Models/Subscription.php
+
+		-
+			message: '#^Match arm comparison between string and App\\Enums\\SubscriptionStatus\:\:PastDue is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 2
+			path: app/Models/Subscription.php
+
+		-
+			message: '#^Match arm comparison between string and App\\Enums\\SubscriptionStatus\:\:Trialing is always false\.$#'
+			identifier: match.alwaysFalse
+			count: 2
+			path: app/Models/Subscription.php
+
+		-
+			message: '#^Method App\\Models\\Subscription\:\:resolveNextBillingAt\(\) should return Illuminate\\Support\\Carbon\|null but returns Carbon\\CarbonInterface\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Subscription.php
+
+		-
+			message: '#^Method App\\Models\\Subscription\:\:resolveNextBillingAt\(\) should return Illuminate\\Support\\Carbon\|null but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Subscription.php
+
+		-
+			message: '#^Parameter \#1 \$from of method App\\Services\\SubscriptionManager\:\:nextBillingDate\(\) expects Carbon\\CarbonInterface\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Models/Subscription.php
+
+		-
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
+			count: 5
+			path: app/Models/Subscription.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
+			identifier: notIdentical.alwaysFalse
+			count: 1
+			path: app/Models/Subscription.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionIntent\:\:Evaluation will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Models/Subscription.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionStatus\:\:Active will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Models/Subscription.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionStatus\:\:PastDue will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Models/Subscription.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionStatus\:\:Trialing will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Models/Subscription.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_data_purged_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Tenant.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_data_retention_ends_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Tenant.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_gestao_settings\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Tenant.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/Tenant.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$nome_loja\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/Tenant.php
+
+		-
+			message: '#^Method App\\Models\\Tenant\:\:activeSubscription\(\) should return App\\Models\\Subscription\|null but returns Illuminate\\Database\\Eloquent\\Model\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Tenant.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:first\(\) expects \(callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: bool\)\|null, Closure\(App\\Models\\Subscription\)\: bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Models/Tenant.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>nome_loja" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Models/Tenant.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$bg_content_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$bg_content_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$bg_page_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$bg_page_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$bg_sidebar_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$bg_sidebar_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$bg_topbar_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$bg_topbar_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_alerta\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_alerta_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_alerta_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_erro\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_erro_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_erro_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_primaria\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_primaria_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_primaria_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_sucesso\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_sucesso_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_sucesso_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/TenantTheme.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Relations\\Pivot\:\:\$tu_papel\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Parameter \#1 \$order of method App\\Services\\OrderLifecycleManager\:\:recalculateTotal\(\) expects App\\Models\\Order, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 3
+			path: app/Observers/OrderItemObserver.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Observers/OrderObserver.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$low_stock_threshold\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Observers/OrderObserver.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Observers/OrderObserver.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Observers/OrderObserver.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Observers/OrderObserver.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isLowStock\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Observers/OrderObserver.php
+
+		-
+			message: '#^Method App\\Observers\\OrderObserver\:\:checkLowStockForItems\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Observers/OrderObserver.php
+
+		-
+			message: '#^Method App\\Observers\\OrderObserver\:\:onStatusChanged\(\) returns void but does not have any side effects\.$#'
+			identifier: void.pure
+			count: 1
+			path: app/Observers/OrderObserver.php
+
+		-
+			message: '#^Method App\\Observers\\OrderObserver\:\:sendOrderPaidEmail\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Observers/OrderObserver.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Observers/OrderObserver.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: array\{name\: mixed, variation\: mixed, quantity\: int, subtotal\: numeric\-string\}, Closure\(App\\Models\\OrderItem\)\: array\{name\: mixed, variation\: mixed, quantity\: int, subtotal\: numeric\-string\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Observers/OrderObserver.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:each\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: mixed, Closure\(App\\Models\\OrderItem\)\: void given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Observers/OrderObserver.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:each\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: mixed, Closure\(App\\Models\\User\)\: void given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Observers/OrderObserver.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between string and App\\Enums\\OrderStatus\:\:Paid will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: app/Observers/OrderObserver.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: app/Observers/OrderObserver.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Observers/OrderObserver.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>stock" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Observers/OrderObserver.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>title" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Observers/OrderObserver.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Observers/TenantObserver.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_schema\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Observers/TenantObserver.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_slug\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Observers/TenantObserver.php
+
+		-
+			message: '#^Call to an undefined method App\\Models\\Order\:\:seller\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Policies/OrderPolicy.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$bg_content_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$bg_content_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$bg_page_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$bg_page_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$bg_sidebar_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$bg_sidebar_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$bg_topbar_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$bg_topbar_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_alerta_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_alerta_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_erro_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_erro_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_primaria_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_primaria_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_sucesso_dark\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$cor_sucesso_light\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\TenantTheme\:\:\$favicon_path\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Tenant\>\:\:\$brand_logo_path\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Tenant\>\:\:\$te_name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Parameter \#3 \$callback of static method Illuminate\\Cache\\Repository\:\:remember\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Services/BrandingService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$commission_rate\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/CommissionCalculator.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$price_at_sale\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/OrderLifecycleManager.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$quantity\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/OrderLifecycleManager.php
+
+		-
+			message: '#^Cannot call method isCancellable\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/OrderLifecycleManager.php
+
+		-
+			message: '#^Parameter \#1 \$item of method App\\Services\\CommissionCalculator\:\:snapshotForItem\(\) expects App\\Models\\OrderItem, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/OrderLifecycleManager.php
+
+		-
+			message: '#^Property App\\Services\\OrderLifecycleManager\:\:\$stock is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: app/Services/OrderLifecycleManager.php
+
+		-
+			message: '#^Result of \|\| is always true\.$#'
+			identifier: booleanOr.alwaysTrue
+			count: 1
+			path: app/Services/OrderLifecycleManager.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between string and App\\Enums\\OrderStatus\:\:Paid will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: app/Services/OrderLifecycleManager.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: app/Services/OrderLifecycleManager.php
+
+		-
+			message: '#^Cannot call method isRefundable\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/OrderRefundManager.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:mapWithKeys\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: array\<int, int\>, Closure\(App\\Models\\OrderItem\)\: non\-empty\-array\<int, int\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/OrderRefundManager.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:filter\(\) expects \(callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: bool\)\|null, Closure\(App\\Models\\OrderItem\)\: bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/OrderRefundManager.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$plan\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/PlanLimitService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Order\:\:\$net\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/SalesReportService.php
+
+		-
+			message: '#^Parameter \#1 \$product of method App\\Services\\StockManager\:\:applyDelta\(\) expects App\\Models\\Product\|null, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Services/StockManager.php
+
+		-
+			message: '#^Parameter \#2 \$variation of method App\\Services\\StockManager\:\:applyDelta\(\) expects App\\Models\\ProductVariation\|null, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Services/StockManager.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>product_id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Services/StockManager.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_data_purged_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/SubscriptionManager.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/SubscriptionManager.php
+
+		-
+			message: '#^Cannot call method isPast\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: app/Services/SubscriptionManager.php
+
+		-
+			message: '#^Cannot call method lte\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/SubscriptionManager.php
+
+		-
+			message: '#^Method App\\Services\\SubscriptionManager\:\:startEvaluation\(\) should return App\\Models\\Subscription but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/SubscriptionManager.php
+
+		-
+			message: '#^Method App\\Services\\SubscriptionManager\:\:startSubscription\(\) should return App\\Models\\Subscription but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/SubscriptionManager.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:each\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: mixed, Closure\(App\\Models\\User\)\: void given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/SubscriptionManager.php
+
+		-
+			message: '#^Parameter \#1 \$subscription of method App\\Services\\SubscriptionManager\:\:activate\(\) expects App\\Models\\Subscription, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Services/SubscriptionManager.php
+
+		-
+			message: '#^Parameter \#2 \$since of method App\\Services\\SubscriptionManager\:\:markPastDue\(\) expects Illuminate\\Support\\Carbon\|null, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Services/SubscriptionManager.php
+
+		-
+			message: '#^Property App\\Models\\Subscription\:\:\$ends_at \(string\|null\) does not accept Carbon\\CarbonInterface\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Services/SubscriptionManager.php
+
+		-
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
+			count: 9
+			path: app/Services/SubscriptionManager.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionIntent\:\:Evaluation will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 2
+			path: app/Services/SubscriptionManager.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionStatus\:\:Active will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 2
+			path: app/Services/SubscriptionManager.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionStatus\:\:PastDue will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Services/SubscriptionManager.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionStatus\:\:Trialing will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 3
+			path: app/Services/SubscriptionManager.php
+
+		-
+			message: '#^Cannot call method format\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: app/Services/SubscriptionRenewalNoticeService.php
+
+		-
+			message: '#^Parameter \#1 \$date of method App\\Services\\SubscriptionRenewalNoticeService\:\:daysUntil\(\) expects Illuminate\\Support\\Carbon, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Services/SubscriptionRenewalNoticeService.php
+
+		-
+			message: '#^Parameter \$expiresAt of class App\\Data\\SubscriptionRenewalNotice constructor expects Illuminate\\Support\\Carbon, string given\.$#'
+			identifier: argument.type
+			count: 3
+			path: app/Services/SubscriptionRenewalNoticeService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_data_purged_at\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/TenantEvaluationService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_data_retention_ends_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/TenantEvaluationService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_schema\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/TenantEvaluationService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:items\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/TenantOrderPurgeService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/TenantTeamService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_schema\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Support/TenantContext.php

@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Filament\App\Resources\Products\Pages;
+
+use App\Filament\App\Resources\Products\ProductResource;
+use App\Filament\Concerns\RedirectsToIndexAfterCreate;
+use App\Services\PlanLimitService;
+use Filament\Facades\Filament;
+use Filament\Notifications\Notification;
+use Filament\Resources\Pages\CreateRecord;
+use RuntimeException;
+
+class CreateProduct extends CreateRecord
+{
+    use RedirectsToIndexAfterCreate;
+
+    protected static string $resource = ProductResource::class;
+
+    protected function beforeCreate(): void
+    {
+        $tenant = Filament::getTenant();
+
+        if ($tenant === null) {
+            return;
+        }
+
+        try {
+            app(PlanLimitService::class)->assertCanAddProduct($tenant);
+        } catch (RuntimeException $exception) {
+            Notification::make()
+                ->title($exception->getMessage())
+                ->danger()
+                ->send();
+
+            $this->halt();
+        }
+    }
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Produto adicionado';
+    }
+}

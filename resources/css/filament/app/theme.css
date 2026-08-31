@@ -1,0 +1,278 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/App/**/*';
+@source '../../../../resources/views/filament/app/**/*';
+
+/* ── Zenvyra Design System ────────────────────────────────────────────────── */
+/* Based on DESIGN.md — Modern Corporate, Inter, Indigo primary               */
+
+:root {
+    /* Font */
+    --default-font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    --default-font-family-weight-normal: 400;
+    --default-font-family-weight-medium: 500;
+    --default-font-family-weight-bold: 600;
+
+    /* ── Gray palette (from DESIGN.md surface tokens) */
+    --color-gray-50:  #f9f9ff;   /* surface / background */
+    --color-gray-100: #f0f3ff;   /* surface-container-low */
+    --color-gray-200: #e7eefe;   /* surface-container */
+    --color-gray-300: #dce2f3;   /* surface-container-highest / surface-variant */
+    --color-gray-400: #c7c4d7;   /* outline-variant */
+    --color-gray-500: #767586;   /* outline */
+    --color-gray-600: #464554;   /* on-surface-variant */
+    --color-gray-700: #2a313d;   /* inverse-surface */
+    --color-gray-800: #1e2533;
+    --color-gray-900: #151c27;   /* on-surface */
+    --color-gray-950: #0d1119;
+
+    /* ── Border radius (8px grid) */
+    --radius-sm:  0.25rem;   /* 4px  — checkboxes, inner tags */
+    --radius:     0.5rem;    /* 8px  — buttons, inputs, cards (default) */
+    --radius-md:  0.75rem;   /* 12px */
+    --radius-lg:  1rem;      /* 16px */
+    --radius-xl:  1.5rem;    /* 24px */
+}
+
+/* ── Base typography ─────────────────────────────────────────────────────── */
+
+html, body, .fi-body {
+    font-family: var(--default-font-family);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #f9f9ff;
+    color: #151c27;
+}
+
+/* ── Layout dimensions ───────────────────────────────────────────────────── */
+
+/* Sidebar: 220px fixed */
+.fi-sidebar {
+    width: 220px !important;
+    background-color: #ffffff;
+    border-right: 1px solid #e2e8f8;
+}
+
+.dark .fi-sidebar {
+    background-color: #1a1f2e;
+    border-right-color: #2a313d;
+}
+
+/* Header: 64px */
+.fi-topbar {
+    height: 64px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e2e8f8;
+}
+
+.dark .fi-topbar {
+    background-color: #1a1f2e;
+    border-bottom-color: #2a313d;
+}
+
+/* ── Main content area ───────────────────────────────────────────────────── */
+
+.fi-main {
+    background-color: #f9f9ff;
+}
+
+.dark .fi-main {
+    background-color: #0d1119;
+}
+
+/* ── Cards / Sections — Level 1 elevation ───────────────────────────────── */
+/* White card, 1px solid border #e2e8f8, 8px radius                          */
+
+.fi-section,
+.fi-wi-stats-overview-stat,
+.fi-ta-ctn,
+.fi-card {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f8;
+    border-radius: 0.5rem;
+}
+
+.dark .fi-section,
+.dark .fi-wi-stats-overview-stat,
+.dark .fi-ta-ctn,
+.dark .fi-card {
+    background-color: #1a1f2e;
+    border-color: #2a313d;
+}
+
+/* ── KPI stat cards: icon badge in the top-right corner ──────────────────── */
+
+.fi-wi-stats-overview-stat-content {
+    position: relative;
+}
+
+.fi-wi-stats-overview-stat-label-ctn {
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+
+.fi-wi-stats-overview-stat-label-ctn .fi-icon {
+    width: 2rem;
+    height: 2rem;
+    padding: 0.375rem;
+    border-radius: 0.5rem;
+    background-color: #e7eefe;
+    color: #4648d4;
+    flex-shrink: 0;
+}
+
+.dark .fi-wi-stats-overview-stat-label-ctn .fi-icon {
+    background-color: rgba(70, 72, 212, 0.15);
+    color: #c0c1ff;
+}
+
+/* ── Sidebar "Abrir PDV" featured button ─────────────────────────────────── */
+/* Solid Indigo, white bold text, full width, sits right under the brand.    */
+
+.fi-sidebar-pdv-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    height: 44px;
+    border-radius: 0.5rem;
+    background-color: #4648d4;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 14px;
+    transition: background-color 0.15s;
+}
+
+.fi-sidebar-pdv-btn:hover {
+    background-color: #3a3cb8;
+    color: #ffffff;
+}
+
+/* ── Sidebar navigation items ────────────────────────────────────────────── */
+/* Active: Indigo text + 2px left border; Hover: #f0f3ff bg                  */
+
+.fi-sidebar-item-button {
+    height: 40px;
+    border-radius: 0.5rem;
+    transition: background-color 0.15s;
+}
+
+.fi-sidebar-item-button:hover {
+    background-color: #f0f3ff;
+}
+
+.fi-sidebar-item-button.fi-active {
+    background-color: #e7eefe;
+    color: #4648d4;
+    border-left: 2px solid #4648d4;
+    font-weight: 600;
+}
+
+.dark .fi-sidebar-item-button:hover {
+    background-color: rgba(70, 72, 212, 0.08);
+}
+
+.dark .fi-sidebar-item-button.fi-active {
+    background-color: rgba(70, 72, 212, 0.15);
+    color: #c0c1ff;
+    border-left-color: #c0c1ff;
+}
+
+/* ── Data tables ─────────────────────────────────────────────────────────── */
+/* Header: #f0f3ff bg, label-sm uppercase; Row: 52px height                  */
+
+.fi-ta-header-cell {
+    background-color: #f0f3ff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #464554;
+}
+
+.dark .fi-ta-header-cell {
+    background-color: #1a1f2e;
+    color: #767586;
+}
+
+.fi-ta-row {
+    min-height: 52px;
+}
+
+/* ── Status badge / chips ────────────────────────────────────────────────── */
+/* Height 24px, pill shape, 10% opacity bg, 100% opacity text                */
+
+.fi-badge {
+    height: 24px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+/* Primary: Indigo #4648d4, white text, 8px radius                           */
+
+.fi-btn {
+    border-radius: 0.5rem;
+    font-weight: 600;
+}
+
+.fi-btn-color-primary {
+    background-color: #4648d4;
+    color: #ffffff;
+}
+
+.fi-btn-color-primary:hover {
+    background-color: #3a3cb8;
+}
+
+/* ── Form fields ─────────────────────────────────────────────────────────── */
+/* 1px border #e2e8f8, 8px radius, 12px horizontal padding                   */
+/* Focus: 1px Indigo border + 3px halo at 10% opacity                        */
+
+.fi-input,
+.fi-select-input,
+.fi-textarea {
+    border: 1px solid #e2e8f8;
+    border-radius: 0.5rem;
+    padding-left: 12px;
+    padding-right: 12px;
+    color: #151c27;
+    background-color: #ffffff;
+}
+
+.fi-input:focus,
+.fi-select-input:focus,
+.fi-textarea:focus {
+    border-color: #4648d4;
+    --tw-ring-color: rgba(70, 72, 212, 0.1);
+    --tw-ring-width: 3px;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(70, 72, 212, 0.1);
+}
+
+.dark .fi-input,
+.dark .fi-select-input,
+.dark .fi-textarea {
+    border-color: #2a313d;
+    background-color: #1a1f2e;
+    color: #dce2f3;
+}
+
+/* ── Popovers / Dropdowns — Level 2 elevation ────────────────────────────── */
+
+.fi-dropdown-panel,
+.fi-popover-panel {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f8;
+    border-radius: 0.5rem;
+    box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dark .fi-dropdown-panel,
+.dark .fi-popover-panel {
+    background-color: #1a1f2e;
+    border-color: #2a313d;
+}

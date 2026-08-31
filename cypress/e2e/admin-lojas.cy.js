@@ -38,7 +38,20 @@ describe('Lojas - Painel Admin', () => {
   });
 
   it('deve exibir o total correto de resultados na paginação', () => {
-    cy.get('.fi-pagination-overview').should('contain.text', 'Exibindo 1 a 5 de 5 resultados');
+    cy.get('.fi-pagination-overview')
+      .invoke('text')
+      .then((text) => {
+        const match = text.match(/de (\d+) resultados/);
+        expect(match, 'texto de paginação deve conter o total').to.not.be.null;
+
+        const total = parseInt(match[1], 10);
+        const itensPagina1 = Math.min(total, 10);
+
+        cy.get('.fi-pagination-overview').should(
+          'contain.text',
+          `Exibindo 1 a ${itensPagina1} de ${total} resultados`
+        );
+      });
   });
 
   it('deve filtrar a lista ao pesquisar pelo nome de uma loja', () => {

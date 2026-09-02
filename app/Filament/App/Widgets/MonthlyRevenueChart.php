@@ -19,6 +19,11 @@ class MonthlyRevenueChart extends ChartWidget
 
     public ?string $filter = '12';
 
+    public function getHeight(): string|int|null
+    {
+        return 240;
+    }
+
     protected function getFilters(): ?array
     {
         return [

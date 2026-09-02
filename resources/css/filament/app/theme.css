@@ -83,7 +83,7 @@ html, body, .fi-body {
 /* ── Cards / Sections — Level 1 elevation ───────────────────────────────── */
 /* White card, 1px solid border #e2e8f8, 8px radius                          */
 
-.fi-section,
+.fi-section:not(.fi-section-not-contained),
 .fi-wi-stats-overview-stat,
 .fi-ta-ctn,
 .fi-card {
@@ -92,7 +92,7 @@ html, body, .fi-body {
     border-radius: 0.5rem;
 }
 
-.dark .fi-section,
+.dark .fi-section:not(.fi-section-not-contained),
 .dark .fi-wi-stats-overview-stat,
 .dark .fi-ta-ctn,
 .dark .fi-card {

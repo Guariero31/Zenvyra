@@ -19,6 +19,11 @@ class SellersPerformanceChart extends ChartWidget
 
     protected int|string|array $columnSpan = 'full';
 
+    public function getHeight(): string|int|null
+    {
+        return 260;
+    }
+
     public static function canView(): bool
     {
         $tenant = Filament::getTenant();

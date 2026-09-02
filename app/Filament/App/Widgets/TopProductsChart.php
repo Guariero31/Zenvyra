@@ -17,6 +17,11 @@ class TopProductsChart extends ChartWidget
 
     protected int|string|array $columnSpan = 'full';
 
+    public function getHeight(): string|int|null
+    {
+        return 260;
+    }
+
     protected function getData(): array
     {
         $data = app(SalesReportService::class)->topProductsByRevenue();

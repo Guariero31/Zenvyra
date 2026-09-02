@@ -26,9 +26,9 @@ class SubscriptionResource extends Resource
 
     protected static ?string $navigationLabel = 'Assinaturas';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'SaaS';
+    protected static \UnitEnum|string|null $navigationGroup = 'Faturamento';
 
-    protected static ?int $navigationSort = 40;
+    protected static ?int $navigationSort = 20;
 
     public static function form(Schema $schema): Schema
     {

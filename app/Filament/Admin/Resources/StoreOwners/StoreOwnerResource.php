@@ -27,7 +27,7 @@ class StoreOwnerResource extends Resource
 
     protected static ?string $navigationLabel = 'Lojistas';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'SaaS';
+    protected static \UnitEnum|string|null $navigationGroup = 'Clientes';
 
     protected static ?int $navigationSort = 20;
 

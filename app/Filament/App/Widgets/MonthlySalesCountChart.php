@@ -71,12 +71,12 @@ class MonthlySalesCountChart extends ChartWidget
             ],
             'scales' => [
                 'x' => [
-                    'grid' => ['color' => 'rgba(255,255,255,0.04)'],
-                    'ticks' => ['color' => 'rgba(255,255,255,0.45)'],
+                    'grid' => ['color' => 'rgba(0,0,0,0.04)'],
+                    'ticks' => ['color' => '#767586'],
                 ],
                 'y' => [
-                    'grid' => ['color' => 'rgba(255,255,255,0.04)'],
-                    'ticks' => ['color' => 'rgba(255,255,255,0.45)'],
+                    'grid' => ['color' => 'rgba(0,0,0,0.04)'],
+                    'ticks' => ['color' => '#767586'],
                     'beginAtZero' => true,
                 ],
             ],

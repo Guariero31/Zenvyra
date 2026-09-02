@@ -14,6 +14,17 @@ class Dashboard extends \Filament\Pages\Dashboard
 
     protected static ?int $navigationSort = 1;
 
+    /**
+     * 3 colunas: os widgets de gráfico/tabela usam columnSpan 2 (2/3) e 1
+     * (1/3) para ficarem lado a lado nas linhas de baixo, seguindo o
+     * layout de referência (Receita Mensal + Formas de Pagamento, e
+     * Pedidos Recentes + Top Vendedores).
+     */
+    public function getColumns(): int|array
+    {
+        return 3;
+    }
+
     protected function getHeaderActions(): array
     {
         return [

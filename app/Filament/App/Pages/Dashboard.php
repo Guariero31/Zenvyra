@@ -6,6 +6,7 @@ namespace App\Filament\App\Pages;
 
 use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 
 class Dashboard extends \Filament\Pages\Dashboard
@@ -13,6 +14,16 @@ class Dashboard extends \Filament\Pages\Dashboard
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSquares2x2;
 
     protected static ?int $navigationSort = 1;
+
+    /**
+     * O painel usa maxContentWidth('full'), mas o dashboard fica melhor
+     * com a largura padrão do Filament (evita widgets esticados demais
+     * em telas grandes).
+     */
+    public function getMaxContentWidth(): Width|string|null
+    {
+        return Width::SevenExtraLarge;
+    }
 
     /**
      * 3 colunas: os widgets de gráfico/tabela usam columnSpan 2 (2/3) e 1

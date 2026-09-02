@@ -17,6 +17,11 @@ class PaymentMethodRevenueChart extends ChartWidget
 
     protected ?string $description = 'Participação de cada meio de pagamento (12 meses).';
 
+    public function getHeight(): string|int|null
+    {
+        return 240;
+    }
+
     protected function getData(): array
     {
         $data = app(SalesReportService::class)->revenueByPaymentMethod();

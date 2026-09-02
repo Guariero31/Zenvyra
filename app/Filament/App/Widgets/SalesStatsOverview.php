@@ -17,6 +17,8 @@ class SalesStatsOverview extends BaseWidget
 
     protected int|array|null $columns = 4;
 
+    protected int|string|array $columnSpan = 'full';
+
     protected ?string $pollingInterval = null;
 
     protected function getStats(): array

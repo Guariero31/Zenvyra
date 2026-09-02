@@ -27,7 +27,7 @@ class TenantResource extends Resource
 
     protected static ?string $navigationLabel = 'Lojas';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'SaaS';
+    protected static \UnitEnum|string|null $navigationGroup = 'Clientes';
 
     protected static ?int $navigationSort = 10;
 

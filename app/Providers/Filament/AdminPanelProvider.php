@@ -45,7 +45,8 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->colors(fn (): array => $branding->coresFilamentMaster())
             ->navigationGroups([
-                NavigationGroup::make('SaaS'),
+                NavigationGroup::make('Clientes'),
+                NavigationGroup::make('Faturamento'),
                 NavigationGroup::make('Configurações'),
             ])
             ->renderHook(

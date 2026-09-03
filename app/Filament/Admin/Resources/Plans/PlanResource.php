@@ -26,9 +26,9 @@ class PlanResource extends Resource
 
     protected static ?string $navigationLabel = 'Planos';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'SaaS';
+    protected static \UnitEnum|string|null $navigationGroup = 'Faturamento';
 
-    protected static ?int $navigationSort = 30;
+    protected static ?int $navigationSort = 10;
 
     protected static ?string $recordTitleAttribute = 'name';
 

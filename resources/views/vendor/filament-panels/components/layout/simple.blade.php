@@ -18,24 +18,21 @@
     ])
 
     <script>
-        // Filament toggles `dark` on <html> based on localStorage/system
-        // preference — and re-applies it via its own Alpine-driven theme
-        // watcher after this script runs once, so a single classList.remove()
-        // here isn't enough. A MutationObserver keeps stripping it for as
-        // long as this page is open, so the login screen never goes dark.
+        // Filament's own base layout only (re-)applies the `dark` class at
+        // two points: on initial parse, and on the `livewire:navigated`
+        // event (SPA-style navigation) — see components/layout/base.blade.php.
+        // We hook the exact same two points to force it back off, instead of
+        // an open-ended MutationObserver, which risked fighting Filament's
+        // own class writes in a feedback loop on every navigation.
         (function () {
-            var root = document.documentElement;
-
             function forceLight() {
+                var root = document.documentElement;
                 root.classList.remove('dark');
                 root.style.colorScheme = 'light';
             }
 
             forceLight();
-            new MutationObserver(forceLight).observe(root, {
-                attributes: true,
-                attributeFilter: ['class'],
-            });
+            document.addEventListener('livewire:navigated', forceLight);
         })();
     </script>
 

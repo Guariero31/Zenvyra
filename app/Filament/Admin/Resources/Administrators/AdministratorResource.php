@@ -27,9 +27,9 @@ class AdministratorResource extends Resource
 
     protected static ?string $navigationLabel = 'Administradores';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'SaaS';
+    protected static \UnitEnum|string|null $navigationGroup = 'Configurações';
 
-    protected static ?int $navigationSort = 50;
+    protected static ?int $navigationSort = 80;
 
     protected static ?string $recordTitleAttribute = 'name';
 

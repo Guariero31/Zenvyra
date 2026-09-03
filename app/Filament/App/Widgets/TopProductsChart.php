@@ -17,6 +17,11 @@ class TopProductsChart extends ChartWidget
 
     protected int|string|array $columnSpan = 'full';
 
+    public function getHeight(): string|int|null
+    {
+        return 260;
+    }
+
     protected function getData(): array
     {
         $data = app(SalesReportService::class)->topProductsByRevenue();
@@ -46,13 +51,13 @@ class TopProductsChart extends ChartWidget
             ],
             'scales' => [
                 'x' => [
-                    'grid' => ['color' => 'rgba(255,255,255,0.04)'],
-                    'ticks' => ['color' => 'rgba(255,255,255,0.45)'],
+                    'grid' => ['color' => 'rgba(0,0,0,0.04)'],
+                    'ticks' => ['color' => '#767586'],
                     'beginAtZero' => true,
                 ],
                 'y' => [
-                    'grid' => ['color' => 'rgba(255,255,255,0.04)'],
-                    'ticks' => ['color' => 'rgba(255,255,255,0.45)'],
+                    'grid' => ['color' => 'rgba(0,0,0,0.04)'],
+                    'ticks' => ['color' => '#767586'],
                 ],
             ],
         ];

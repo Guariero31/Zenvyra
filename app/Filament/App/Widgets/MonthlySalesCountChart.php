@@ -9,13 +9,20 @@ use Filament\Widgets\ChartWidget;
 
 class MonthlySalesCountChart extends ChartWidget
 {
-    protected static ?int $sort = 5;
+    protected static ?int $sort = 6;
+
+    protected int|string|array $columnSpan = 'full';
 
     protected ?string $heading = 'Crescimento de pedidos';
 
     protected ?string $description = 'Quantidade de pedidos efetivados por mês.';
 
     public ?string $filter = '12';
+
+    public function getHeight(): string|int|null
+    {
+        return 240;
+    }
 
     protected function getFilters(): ?array
     {
@@ -64,12 +71,12 @@ class MonthlySalesCountChart extends ChartWidget
             ],
             'scales' => [
                 'x' => [
-                    'grid' => ['color' => 'rgba(255,255,255,0.04)'],
-                    'ticks' => ['color' => 'rgba(255,255,255,0.45)'],
+                    'grid' => ['color' => 'rgba(0,0,0,0.04)'],
+                    'ticks' => ['color' => '#767586'],
                 ],
                 'y' => [
-                    'grid' => ['color' => 'rgba(255,255,255,0.04)'],
-                    'ticks' => ['color' => 'rgba(255,255,255,0.45)'],
+                    'grid' => ['color' => 'rgba(0,0,0,0.04)'],
+                    'ticks' => ['color' => '#767586'],
                     'beginAtZero' => true,
                 ],
             ],

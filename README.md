@@ -57,6 +57,7 @@ Recursos complementares:
 - PostgreSQL (isolamento por schema)
 - [leandrocfe/filament-ptbr-form-fields](https://github.com/leandrocfe/filament-ptbr-form-fields) — campos pt-BR (R$, telefone)
 - Testes com PHPUnit
+- Testes end-to-end (E2E) com Cypress
 
 ## Instalação
 
@@ -114,9 +115,62 @@ A raiz (`/`) redireciona para o painel admin (`/admin`).
 
 ## Testes
 
+### PHPUnit
+
 ```bash
 php artisan test --compact
 ```
+
+### E2E (Cypress)
+
+Testes ponta a ponta do Painel Admin, cobrindo navegação, listagens, filtros, paginação e formulários, sempre evitando ações que alterem dados reais (ex.: ativar/desativar registros).
+
+**Especificações disponíveis** (`cypress/e2e/`):
+
+| Arquivo | Cobertura |
+|---|---|
+| `admin-login.cy.js` | Fluxo de autenticação do painel admin |
+| `admin-dashboard.cy.js` | Dashboard e widgets do painel admin |
+| `admin-lojas.cy.js` | Listagem, filtros e navegação da tela de Lojas |
+| `admin-lojistas.cy.js` | Listagem, filtros e navegação da tela de Lojistas |
+| `admin-planos.cy.js` | Listagem, ordenação e navegação da tela de Planos |
+| `landing-page.cy.js` | Página inicial pública (landing page) |
+
+**Configuração local**
+
+1. Instale as dependências (já inclusas no `package.json` do projeto):
+   ```bash
+   npm install
+   ```
+2. Crie um arquivo `cypress.env.json` na raiz do projeto (não é versionado, veja `.gitignore`) com as credenciais de um usuário admin de teste:
+   ```json
+   {
+     "ADMIN_EMAIL": "master@zenvyra.com.br",
+     "ADMIN_PASSWORD": "password"
+   }
+   ```
+
+**Executando os testes**
+
+```bash
+# Interface interativa (recomendado durante o desenvolvimento dos testes)
+npx cypress open
+
+# Modo headless, direto no terminal
+npx cypress run
+
+# Rodando um spec específico
+npx cypress run --spec "cypress/e2e/admin-planos.cy.js"
+```
+
+### CI/CD (GitHub Actions)
+
+Os testes Cypress rodam automaticamente a cada push na branch `prd`, via o workflow `.github/workflows/cypress.yml`. O resultado fica disponível na aba **Actions** do repositório, com vídeos e screenshots de falhas anexados como artefatos.
+
+Para funcionar, o repositório precisa ter os seguintes *secrets* configurados em **Settings → Secrets and variables → Actions**:
+
+- `ADMIN_EMAIL` — e-mail do usuário admin de teste
+- `ADMIN_PASSWORD` — senha do usuário admin de teste
 
 ## Estrutura relevante
 
@@ -139,4 +193,13 @@ database/
 ├─ migrations/tenant/   # schema de cada loja
 ├─ factories/
 └─ seeders/             # PlanSeeder, DemoAccountsSeeder, TenantSeeder, TenantDataSeeder
+
+cypress/
+├─ e2e/                 # especificações de teste (.cy.js)
+├─ fixtures/            # massa de dados estática para os testes
+└─ support/              # comandos e configuração global do Cypress
+
+.github/
+└─ workflows/
+   └─ cypress.yml       # pipeline de CI que roda os testes Cypress a cada push na branch prd
 ```

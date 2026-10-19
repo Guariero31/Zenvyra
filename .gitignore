@@ -24,3 +24,14 @@ cypress/screenshots
 /storage/*.key
 /storage/pail
 /vendor
+_ide_helper.php
+Homestead.json
+Homestead.yaml
+Thumbs.db
+
+# Graphify — artefatos gerados localmente (cache AST, graph.json, etc.)
+/graphify-out/
+/app/graphify-out/
+
+# Agentes locais
+/.agents/

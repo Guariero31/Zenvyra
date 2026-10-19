@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\SubscriptionIntent;
+use App\Enums\SubscriptionStatus;
 use App\Filament\Admin\Resources\Administrators\Pages\CreateAdministrator;
 use App\Filament\Admin\Resources\Administrators\Pages\EditAdministrator;
 use App\Filament\Admin\Resources\Administrators\Pages\ListAdministrators;
@@ -165,6 +167,30 @@ class AdminResourcesTest extends TestCase
             ->assertNotified();
 
         $this->assertFalse($tenant->refresh()->te_ativo);
+    }
+
+    public function test_canceled_tenant_subscription_can_be_activated_from_tenants_list(): void
+    {
+        $plan = Plan::factory()->create(['is_active' => true]);
+        $tenant = Tenant::create(['te_name' => 'Loja Cancelada', 'te_ativo' => false]);
+        $subscription = $tenant->subscriptions()->create([
+            'plan_id' => $plan->id,
+            'intent' => SubscriptionIntent::Commercial,
+            'status' => SubscriptionStatus::Canceled,
+            'starts_at' => now()->subMonth(),
+            'canceled_at' => now(),
+        ]);
+
+        $this->assertFalse($tenant->hasActiveSubscription());
+
+        Livewire::test(ListTenants::class)
+            ->assertTableActionVisible('activateSubscription', $tenant)
+            ->callTableAction('activateSubscription', $tenant)
+            ->assertNotified();
+
+        $this->assertSame(SubscriptionStatus::Active, $subscription->refresh()->status);
+        $this->assertTrue($tenant->refresh()->te_ativo);
+        $this->assertTrue($tenant->hasActiveSubscription());
     }
 
     public function test_admin_flag_can_be_toggled_for_other_users(): void

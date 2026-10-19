@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\Tenants\Tables;
 
+use App\Filament\Admin\Resources\Tenants\Actions\ActivateTenantSubscriptionAction;
 use App\Filament\Admin\Resources\Tenants\Actions\PurgeEvaluationDataAction;
 use App\Filament\Admin\Resources\Tenants\Actions\ToggleTenantStatusAction;
 use Filament\Actions\EditAction;
@@ -65,6 +66,7 @@ class TenantsTable
             ])
             ->recordActions([
                 ToggleTenantStatusAction::make(),
+                ActivateTenantSubscriptionAction::make(),
                 PurgeEvaluationDataAction::make(),
                 EditAction::make()
                     ->label(false),

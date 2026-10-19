@@ -31,3 +31,6 @@ Thumbs.db
 # Graphify — artefatos gerados localmente (cache AST, graph.json, etc.)
 /graphify-out/
 /app/graphify-out/
+
+# Agentes locais
+/.agents/

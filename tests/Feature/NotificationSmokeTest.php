@@ -84,7 +84,7 @@ class NotificationSmokeTest extends TestCase
     public function test_creating_a_store_owner_shows_a_contextual_notification_title(): void
     {
         $admin = User::factory()->create(['is_platform_admin' => true]);
-        $this->actingAs($admin);
+        $this->actingAs($admin, 'admin');
         Filament::setCurrentPanel('admin');
         Filament::bootCurrentPanel();
 

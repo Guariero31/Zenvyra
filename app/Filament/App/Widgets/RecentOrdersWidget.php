@@ -17,7 +17,9 @@ class RecentOrdersWidget extends BaseWidget
 {
     protected static ?int $sort = 4;
 
-    protected int|string|array $columnSpan = 2;
+    protected static bool $isLazy = false;
+
+    protected int|string|array $columnSpan = ['default' => 1, 'xl' => 3];
 
     protected static ?string $heading = 'Pedidos recentes';
 
@@ -28,40 +30,41 @@ class RecentOrdersWidget extends BaseWidget
                 Order::query()
                     ->with(['customer'])
                     ->latest()
-                    ->limit(5)
+                    ->limit(3)
             )
             ->paginated(false)
             ->columns([
                 TextColumn::make('id')
-                    ->label('#')
+                    ->label('Pedido')
                     ->formatStateUsing(fn (int $state): string => "#{$state}")
                     ->weight(FontWeight::SemiBold)
-                    ->color('primary'),
+                    ->color('gray'),
 
                 TextColumn::make('customer.name')
                     ->label('Cliente')
                     ->placeholder('Sem cliente'),
 
-                TextColumn::make('total_amount')
-                    ->label('Valor')
-                    ->money('BRL')
-                    ->weight(FontWeight::Medium),
-
-                TextColumn::make('status')
-                    ->label('Status')
-                    ->badge(),
-
                 TextColumn::make('created_at')
                     ->label('Data')
                     ->dateTime('d/m H\hi')
                     ->color('gray'),
+
+                TextColumn::make('total_amount')
+                    ->label('Total')
+                    ->money('BRL')
+                    ->weight(FontWeight::Medium),
+
+                TextColumn::make('status')
+                    ->label('Situação')
+                    ->badge(),
+
             ])
             ->headerActions([
                 Action::make('ver_todos')
                     ->label('Ver todos')
                     ->icon(Heroicon::OutlinedArrowRight)
                     ->url(OrderResource::getUrl('index'))
-                    ->color('gray'),
+                    ->color('gray')->link(),
             ])
             ->recordUrl(
                 fn (Order $record): string => OrderResource::getUrl('edit', ['record' => $record])

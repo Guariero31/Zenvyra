@@ -55,7 +55,7 @@ class CreateRedirectsToIndexTest extends TestCase
     {
         $admin = User::factory()->create(['is_platform_admin' => true]);
 
-        $this->actingAs($admin);
+        $this->actingAs($admin, 'admin');
         Filament::setCurrentPanel('admin');
         Filament::bootCurrentPanel();
 

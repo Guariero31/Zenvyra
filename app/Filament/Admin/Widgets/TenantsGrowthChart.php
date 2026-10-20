@@ -9,13 +9,15 @@ use Filament\Widgets\ChartWidget;
 
 class TenantsGrowthChart extends ChartWidget
 {
-    protected ?string $heading = 'Novas lojas por mês';
+    protected ?string $heading = 'Crescimento de lojas';
 
-    protected ?string $maxHeight = '280px';
+    protected ?string $maxHeight = '190px';
 
     protected ?string $pollingInterval = null;
 
-    protected int|string|array $columnSpan = 'full';
+    protected static bool $isLazy = false;
+
+    protected int|string|array $columnSpan = ['default' => 1, 'xl' => 2];
 
     /**
      * @return array<string, mixed>
@@ -41,8 +43,8 @@ class TenantsGrowthChart extends ChartWidget
                 [
                     'label' => 'Novas lojas',
                     'data' => $values,
-                    'borderColor' => '#f59e0b',
-                    'backgroundColor' => 'rgba(245, 158, 11, 0.2)',
+                    'borderColor' => '#89b61e',
+                    'backgroundColor' => 'rgba(163, 211, 49, 0.12)',
                     'fill' => true,
                     'tension' => 0.3,
                 ],

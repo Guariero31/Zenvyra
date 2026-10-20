@@ -43,6 +43,8 @@ class AppPanelProvider extends PanelProvider
         return $panel
             ->id('app')
             ->path('app')
+            ->darkMode(false)
+            ->sidebarWidth('15rem')
             ->viteTheme('resources/css/filament/app/theme.css')
             ->font('Inter', provider: GoogleFontProvider::class)
             ->brandName(fn (): string => $this->resolverNomeTenant($branding))
@@ -51,7 +53,7 @@ class AppPanelProvider extends PanelProvider
             ->login()
             ->passwordReset()
             ->tenant(Tenant::class, slugAttribute: 'te_slug')
-            ->colors(fn (): array => $this->resolverCoresTenant($branding))
+            ->colors(fn (): array => array_replace($this->resolverCoresTenant($branding), ['primary' => Color::hex('#20211f')]))
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
                 fn (): View => view('filament.hooks.branding-head-tenant'),
@@ -75,10 +77,6 @@ class AppPanelProvider extends PanelProvider
                         'notice' => $notice,
                     ]);
                 },
-            )
-            ->renderHook(
-                PanelsRenderHook::SIDEBAR_LOGO_AFTER,
-                fn (): View => view('filament.app.components.sidebar-pdv-button'),
             )
             ->discoverResources(in: app_path('Filament/App/Resources'), for: 'App\Filament\App\Resources')
             ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\Filament\App\Pages')

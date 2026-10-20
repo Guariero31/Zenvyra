@@ -18,7 +18,7 @@ class HomeController extends StoreController
 
         // Featured products (always shown below the carousel)
         $featured = Product::where('status', 'active')
-            ->with('primaryImage')
+            ->with(['primaryImage', 'category', 'variations'])
             ->latest()
             ->limit(4)
             ->get();

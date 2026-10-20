@@ -17,6 +17,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * Loja/empresa cadastrada na central (te_tenants). Cada tenant possui um schema
  * físico isolado no PostgreSQL, identificado por te_schema. O Filament resolve
  * o tenant na URL através do te_slug.
+ *
+ * @property bool $te_ativo
+ * @property string $te_slug
  */
 class Tenant extends Model implements HasName
 {
@@ -77,6 +80,12 @@ class Tenant extends Model implements HasName
     public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    /** @return HasOne<Subscription, $this> */
+    public function currentSubscription(): HasOne
+    {
+        return $this->hasOne(Subscription::class)->latestOfMany();
     }
 
     /**

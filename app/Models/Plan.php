@@ -10,6 +10,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property string $price
+ * @property BillingPeriod $billing_period
+ */
 class Plan extends Model
 {
     /** @use HasFactory<PlanFactory> */

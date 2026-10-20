@@ -45,7 +45,7 @@ class AdminResourcesTest extends TestCase
         Filament::setCurrentPanel('admin');
 
         $this->admin = User::factory()->platformAdmin()->create();
-        $this->actingAs($this->admin);
+        $this->actingAs($this->admin, 'admin');
     }
 
     public function test_admin_identidade_visual_resource_page_can_load(): void

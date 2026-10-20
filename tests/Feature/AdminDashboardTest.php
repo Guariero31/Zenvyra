@@ -30,7 +30,7 @@ class AdminDashboardTest extends TestCase
 
         Filament::setCurrentPanel('admin');
 
-        $this->actingAs(User::factory()->platformAdmin()->create());
+        $this->actingAs(User::factory()->platformAdmin()->create(), 'admin');
     }
 
     public function test_dashboard_page_renders(): void

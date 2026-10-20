@@ -218,7 +218,7 @@ class ProductVariationsToggleTest extends TestCase
         $method->setAccessible(true);
         $stats = $method->invoke($component);
 
-        $lowStockStat = collect($stats)->first(fn ($stat) => str_contains((string) $stat->getLabel(), 'Estoque baixo'));
+        $lowStockStat = collect($stats)->first(fn ($stat) => str_contains((string) $stat->getLabel(), 'Produtos para repor'));
 
         $this->assertNotNull($lowStockStat);
         $this->assertStringContainsString('1', (string) $lowStockStat->getValue());

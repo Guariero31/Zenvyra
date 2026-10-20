@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\SubscriptionIntent;
 use App\Enums\SubscriptionStatus;
 use App\Services\SubscriptionManager;
+use Carbon\CarbonInterface;
 use Database\Factories\SubscriptionFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,6 +17,17 @@ use Illuminate\Support\Carbon;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
+/**
+ * @property SubscriptionStatus $status
+ * @property-read Carbon|null $next_billing_at
+ * @property-write CarbonInterface|string|null $next_billing_at
+ * @property Carbon|null $trial_ends_at
+ * @property Carbon|null $starts_at
+ * @property-read Carbon|null $ends_at
+ * @property-write CarbonInterface|string|null $ends_at
+ * @property Carbon|null $grace_ends_at
+ * @property Carbon|null $canceled_at
+ */
 class Subscription extends Model
 {
     /** @use HasFactory<SubscriptionFactory> */
@@ -67,6 +79,7 @@ class Subscription extends Model
         return $this->belongsTo(Tenant::class);
     }
 
+    /** @return BelongsTo<Plan, $this> */
     public function plan(): BelongsTo
     {
         return $this->belongsTo(Plan::class);

@@ -8,6 +8,7 @@ use App\Filament\App\Resources\Products\ProductResource;
 use App\Filament\Exports\ProductExporter;
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\PanelDashboardService;
 use Filament\Actions\Action;
 use Filament\Actions\ExportAction;
 use Filament\Resources\Pages\Page;
@@ -62,14 +63,7 @@ class ListProducts extends Page
                 })
             )
             ->when($this->categoryId, fn ($q) => $q->where('category_id', $this->categoryId))
-            ->when($this->stockFilter === 'low', fn ($q) => $q->where(function ($q): void {
-                $q->where(fn ($q) => $q
-                    ->where('has_variations', false)
-                    ->whereColumn('stock', '<=', 'low_stock_threshold'))
-                    ->orWhere(fn ($q) => $q
-                        ->where('has_variations', true)
-                        ->whereHas('variations', fn ($q) => $q->whereColumn('stock', '<=', 'low_stock_threshold')));
-            }))
+            ->when($this->stockFilter === 'low', fn ($query) => $query->whereIn('id', app(PanelDashboardService::class)->restockQuery()->select('id')))
             ->when($this->stockFilter === 'out', fn ($q) => $q->where(function ($q): void {
                 $q->where(fn ($q) => $q
                     ->where('has_variations', false)

@@ -12,13 +12,13 @@ class ProductController extends StoreController
     public function __invoke(string $slug, int $product): View
     {
         $product = Product::where('status', 'active')
-            ->with(['category', 'images', 'variations'])
+            ->with(['category', 'primaryImage', 'images', 'variations'])
             ->findOrFail($product);
 
         $related = Product::where('status', 'active')
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
-            ->with('primaryImage')
+            ->with(['primaryImage', 'category', 'variations'])
             ->limit(4)
             ->get();
 

@@ -27,7 +27,7 @@ class IdentidadeVisualTest extends TestCase
     public function test_master_resource_registers_navigation_item(): void
     {
         Filament::setCurrentPanel('admin');
-        $this->actingAs(User::factory()->platformAdmin()->create());
+        $this->actingAs(User::factory()->platformAdmin()->create(), 'admin');
 
         $items = IdentidadeVisualResource::getNavigationItems();
 
@@ -38,7 +38,7 @@ class IdentidadeVisualTest extends TestCase
     public function test_master_resource_renders_and_persists_branding(): void
     {
         Filament::setCurrentPanel('admin');
-        $this->actingAs(User::factory()->platformAdmin()->create());
+        $this->actingAs(User::factory()->platformAdmin()->create(), 'admin');
 
         $registro = IdentidadeVisual::obterOuCriar();
 
@@ -71,7 +71,7 @@ class IdentidadeVisualTest extends TestCase
     public function test_master_restore_defaults_updates_form_without_saving(): void
     {
         Filament::setCurrentPanel('admin');
-        $this->actingAs(User::factory()->platformAdmin()->create());
+        $this->actingAs(User::factory()->platformAdmin()->create(), 'admin');
 
         $registro = IdentidadeVisual::create([
             'nome_sistema' => 'Nome customizado',
@@ -95,7 +95,7 @@ class IdentidadeVisualTest extends TestCase
     public function test_master_page_shows_preview_and_history(): void
     {
         Filament::setCurrentPanel('admin');
-        $this->actingAs(User::factory()->platformAdmin()->create());
+        $this->actingAs(User::factory()->platformAdmin()->create(), 'admin');
 
         $registro = IdentidadeVisual::obterOuCriar();
 

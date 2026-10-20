@@ -6,7 +6,7 @@ namespace App\Filament\App\Widgets;
 
 use App\Enums\OrderStatus;
 use App\Models\Order;
-use App\Models\Product;
+use App\Services\PanelDashboardService;
 use App\Services\SalesReportService;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -15,7 +15,9 @@ class SalesStatsOverview extends BaseWidget
 {
     protected static ?int $sort = 1;
 
-    protected int|array|null $columns = 4;
+    protected static bool $isLazy = false;
+
+    protected int|array|null $columns = ['default' => 1, 'sm' => 2, 'xl' => 4];
 
     protected int|string|array $columnSpan = 'full';
 
@@ -29,24 +31,7 @@ class SalesStatsOverview extends BaseWidget
             ->where('status', OrderStatus::Pending)
             ->count();
 
-        // Simple products: compare their own stock/threshold. Variation
-        // products don't carry a meaningful stock/threshold of their own
-        // (that section is hidden once "tem variações?" is ligado) — those
-        // are counted separately, based on each variation's own threshold.
-        $simpleLowStockCount = Product::query()
-            ->where('status', 'active')
-            ->where('has_variations', false)
-            ->whereColumn('stock', '<=', 'low_stock_threshold')
-            ->where('low_stock_threshold', '>', 0)
-            ->count();
-
-        $variableLowStockCount = Product::query()
-            ->where('status', 'active')
-            ->where('has_variations', true)
-            ->whereHas('variations', fn ($query) => $query->whereColumn('stock', '<=', 'low_stock_threshold'))
-            ->count();
-
-        $lowStockCount = $simpleLowStockCount + $variableLowStockCount;
+        $lowStockCount = app(PanelDashboardService::class)->restockQuery()->count();
 
         return [
             Stat::make('Vendas do mês', $this->money($kpis['net']))
@@ -66,8 +51,8 @@ class SalesStatsOverview extends BaseWidget
                 ->icon('heroicon-o-clipboard-document-list')
                 ->color($pendingCount > 0 ? 'warning' : 'success'),
 
-            Stat::make('Estoque baixo', $lowStockCount.' '.($lowStockCount === 1 ? 'item' : 'itens'))
-                ->description($lowStockCount > 0 ? 'Reposição urgente' : 'Estoque saudável')
+            Stat::make('Produtos para repor', $lowStockCount)
+                ->description($lowStockCount > 0 ? 'Com estoque baixo ou zerado' : 'Estoque saudável')
                 ->descriptionIcon($lowStockCount > 0 ? 'heroicon-m-exclamation-circle' : 'heroicon-m-check-circle')
                 ->icon('heroicon-o-archive-box')
                 ->color($lowStockCount > 0 ? 'danger' : 'success'),

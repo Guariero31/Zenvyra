@@ -6,7 +6,7 @@ namespace App\Filament\App\Pages;
 
 use App\Filament\App\Widgets\StockMovementsWidget;
 use App\Filament\App\Widgets\StockProductsWidget;
-use App\Models\Product;
+use App\Services\PanelDashboardService;
 use BackedEnum;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Livewire;
@@ -33,20 +33,7 @@ class StockPage extends Page
 
     public static function getNavigationBadge(): ?string
     {
-        $simpleCount = Product::query()
-            ->where('has_variations', false)
-            ->whereColumn('stock', '<=', 'low_stock_threshold')
-            ->where('stock', '>', 0)
-            ->count();
-
-        $variableCount = Product::query()
-            ->where('has_variations', true)
-            ->whereHas('variations', fn ($query) => $query
-                ->whereColumn('stock', '<=', 'low_stock_threshold')
-                ->where('stock', '>', 0))
-            ->count();
-
-        $count = $simpleCount + $variableCount;
+        $count = app(PanelDashboardService::class)->restockQuery()->count();
 
         return $count > 0 ? (string) $count : null;
     }

@@ -4,46 +4,28 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Widgets;
 
-use App\Enums\SubscriptionStatus;
-use App\Models\Subscription;
-use App\Models\Tenant;
-use Filament\Widgets\Widget;
+use App\Services\PanelDashboardService;
+use Filament\Widgets\StatsOverviewWidget;
+use Filament\Widgets\StatsOverviewWidget\Stat;
 
-class PlatformOverviewWidget extends Widget
+class PlatformOverviewWidget extends StatsOverviewWidget
 {
-    protected string $view = 'filament.admin.widgets.platform-overview';
+    protected static bool $isLazy = false;
 
-    protected int|string|array $columnSpan = 'full';
+    protected int|array|null $columns = ['default' => 1, 'sm' => 2, 'xl' => 4];
 
-    /**
-     * @return array<string, mixed>
-     */
-    protected function getViewData(): array
+    protected ?string $pollingInterval = null;
+
+    protected function getStats(): array
     {
-        $totalStores = Tenant::count();
-        $activeStores = Tenant::where('te_ativo', true)->count();
-
-        $monthlyRevenue = Subscription::query()
-            ->where('status', SubscriptionStatus::Active->value)
-            ->with('plan:id,price')
-            ->get()
-            ->sum(fn (Subscription $subscription): float => (float) ($subscription->plan?->price ?? 0));
-
-        $upcoming = Subscription::query()
-            ->whereNotNull('next_billing_at')
-            ->whereBetween('next_billing_at', [now(), now()->addDays(7)])
-            ->whereIn('status', [
-                SubscriptionStatus::Active->value,
-                SubscriptionStatus::PastDue->value,
-            ])
-            ->count();
+        $service = app(PanelDashboardService::class);
+        $summary = $service->platformSummary();
 
         return [
-            'totalStores' => $totalStores,
-            'activeStores' => $activeStores,
-            'activePercentage' => $totalStores > 0 ? (int) round($activeStores / $totalStores * 100) : 0,
-            'monthlyRevenue' => $monthlyRevenue,
-            'upcoming' => $upcoming,
+            Stat::make('Lojas com acesso', $summary['stores'])->icon('heroicon-o-building-storefront')->description('Acesso liberado pela assinatura'),
+            Stat::make('Receita recebida', '—')->icon('heroicon-o-chart-bar')->description('Recebimentos ainda não registrados'),
+            Stat::make('Receita prevista', $service->formatCents($summary['forecastCents']))->icon('heroicon-o-arrow-trending-up')->description('Valor mensal dos planos ativos'),
+            Stat::make('Assinaturas em atraso', $summary['overdue'])->icon('heroicon-o-clock')->description($summary['overdue'] ? 'Precisam de atenção' : 'Nenhuma assinatura em atraso')->color($summary['overdue'] ? 'warning' : 'success'),
         ];
     }
 }

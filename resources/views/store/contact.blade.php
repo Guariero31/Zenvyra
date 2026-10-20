@@ -5,125 +5,15 @@
 @section('og_description', 'Entre em contato com ' . ($theme->nome_loja ?? $tenant->te_name) . '. Estamos aqui para ajudar.')
 @section('meta_description', 'Entre em contato com ' . ($theme->nome_loja ?? $tenant->te_name) . '. Estamos aqui para ajudar.')
 
-@push('styles')
-<style>
-    .contact-wrap {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 4rem;
-        padding: 3rem 2rem;
-        max-width: 960px;
-        margin: 0 auto;
-    }
-
-    /* LEFT — INFO */
-    .contact-info__title {
-        font-size: 30px;
-        font-style: italic;
-        font-weight: 500;
-        letter-spacing: -1px;
-        line-height: 1.1;
-        margin-bottom: 2.5rem;
-    }
-    .contact-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-        margin-bottom: 1.5rem;
-    }
-    .contact-item__icon {
-        width: 18px;
-        height: 18px;
-        flex-shrink: 0;
-        color: #9ca3af;
-        margin-top: 1px;
-    }
-    .contact-item__label {
-        font-size: 10px;
-        letter-spacing: .08em;
-        text-transform: uppercase;
-        color: #9ca3af;
-        margin-bottom: 2px;
-    }
-    .contact-item__value { font-size: 13px; font-weight: 500; }
-
-    /* RIGHT — FORM */
-    .contact-form__title {
-        font-size: 12px;
-        font-weight: 500;
-        letter-spacing: .08em;
-        text-transform: uppercase;
-        margin-bottom: 2rem;
-        color: #9ca3af;
-    }
-    .cf-field {
-        margin-bottom: 1.75rem;
-    }
-    .cf-label {
-        display: block;
-        font-size: 10px;
-        letter-spacing: .1em;
-        text-transform: uppercase;
-        color: #9ca3af;
-        margin-bottom: 6px;
-    }
-    .cf-input,
-    .cf-textarea {
-        width: 100%;
-        border: none;
-        border-bottom: 1px solid #e5e7eb;
-        padding: 6px 0 10px;
-        font-size: 14px;
-        font-family: inherit;
-        background: transparent;
-        outline: none;
-        color: #111;
-        transition: border-color .15s;
-        resize: none;
-    }
-    .cf-input:focus,
-    .cf-textarea:focus { border-color: #111; }
-    .cf-textarea { min-height: 100px; }
-
-    .cf-submit {
-        margin-top: .5rem;
-        padding: 12px 28px;
-        background: #111;
-        color: #fff;
-        border: none;
-        cursor: pointer;
-        font-size: 11px;
-        letter-spacing: .1em;
-        text-transform: uppercase;
-        font-family: inherit;
-        border-radius: 6px;
-        transition: background .15s;
-    }
-    .cf-submit:hover { background: #333; }
-
-    .cf-success {
-        display: none;
-        padding: 14px 16px;
-        background: #f0fdf4;
-        border-radius: 8px;
-        font-size: 13px;
-        color: #166534;
-        margin-top: 1rem;
-    }
-
-    @media (max-width: 700px) {
-        .contact-wrap { grid-template-columns: 1fr; gap: 2.5rem; padding: 2rem 1rem; }
-    }
-</style>
-@endpush
-
 @section('content')
 
 <div class="contact-wrap">
 
     {{-- LEFT --}}
     <div class="contact-info">
-        <h1 class="contact-info__title">Entre em<br>contato</h1>
+        <p class="eyebrow">Estamos por aqui</p>
+        <h1 class="contact-info__title">Vamos conversar?</h1>
+        <p class="contact-intro">Tire suas dúvidas sobre produtos, disponibilidade e entrega diretamente com a loja.</p>
 
         @if($whatsapp)
         <div class="contact-item">
@@ -168,40 +58,43 @@
 
     {{-- RIGHT — FORM --}}
     <div class="contact-form">
-        <div class="contact-form__title">Enviar mensagem</div>
+        <h2 class="contact-form__title">Enviar mensagem</h2>
 
         @if(session('contact_success'))
-        <div class="cf-success" style="display:block;margin-bottom:1.5rem;">
+        <div role="status" class="cf-success" style="display:block;margin-bottom:1.5rem;">
             Mensagem enviada! Retornaremos em breve.
         </div>
         @else
 
         @if($errors->any())
-        <div style="padding:12px 16px;background:#fef2f2;border-radius:8px;font-size:13px;color:#991b1b;margin-bottom:1.25rem;">
+        <div class="form-errors" role="alert">
             @foreach($errors->all() as $error)
                 <div>{{ $error }}</div>
             @endforeach
         </div>
         @endif
 
-        <form action="{{ route('store.contact.send', $tenant->te_slug) }}" method="POST">
+        <form action="{{ route('store.contact.send', $tenant->te_slug) }}" method="POST" data-submit-label="Enviando mensagem…">
             @csrf
             <div class="cf-field">
                 <label class="cf-label" for="cf_name">Seu nome</label>
                 <input class="cf-input" type="text" id="cf_name" name="name"
-                       value="{{ old('name') }}" required autocomplete="name">
+                       value="{{ old('name') }}" required autocomplete="name" aria-invalid="{{ $errors->has('name') ? 'true' : 'false' }}" aria-describedby="cf_name_error">
+                <span class="field-error" id="cf_name_error">@error('name'){{ $message }}@enderror</span>
             </div>
             <div class="cf-field">
                 <label class="cf-label" for="cf_email">E-mail</label>
                 <input class="cf-input" type="email" id="cf_email" name="email"
-                       value="{{ old('email') }}" required autocomplete="email">
+                       value="{{ old('email') }}" required autocomplete="email" aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}" aria-describedby="cf_email_error">
+                <span class="field-error" id="cf_email_error">@error('email'){{ $message }}@enderror</span>
             </div>
             <div class="cf-field">
                 <label class="cf-label" for="cf_message">Mensagem</label>
                 <textarea class="cf-textarea" id="cf_message" name="message"
-                          required>{{ old('message') }}</textarea>
+                          required aria-invalid="{{ $errors->has('message') ? 'true' : 'false' }}" aria-describedby="cf_message_error">{{ old('message') }}</textarea>
+                <span class="field-error" id="cf_message_error">@error('message'){{ $message }}@enderror</span>
             </div>
-            <button type="submit" class="cf-submit">Enviar mensagem</button>
+            <button type="submit" class="button cf-submit" data-original-label="Enviar mensagem">Enviar mensagem</button>
         </form>
 
         @endif

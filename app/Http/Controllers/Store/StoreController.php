@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Tenant;
 use App\Models\TenantTheme;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 abstract class StoreController extends Controller
@@ -36,7 +37,8 @@ abstract class StoreController extends Controller
 
         $tickerTexts = count($tickerItems) > 0
             ? collect($tickerItems)->pluck('text')->filter()->values()
-            : Category::has('products')->orderBy('name')->pluck('name');
+            : Category::whereHas('products', fn (Builder $productQuery): Builder => $productQuery->where('status', 'active'))
+                ->orderBy('name')->pluck('name');
 
         return [
             'tenant' => $this->tenant,

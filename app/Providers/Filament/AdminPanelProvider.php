@@ -14,6 +14,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Colors\Color;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Contracts\View\View;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -38,12 +39,16 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->authGuard('admin')
+            ->darkMode(false)
+            ->sidebarWidth('15rem')
+            ->maxContentWidth('full')
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->font('Inter', provider: GoogleFontProvider::class)
             ->brandName(fn (): string => $branding->nomeMaster())
             ->brandLogo(fn (): ?HtmlString => $branding->logoHtmlMaster())
             ->login()
-            ->colors(fn (): array => $branding->coresFilamentMaster())
+            ->colors(fn (): array => array_replace($branding->coresFilamentMaster(), ['primary' => Color::hex('#20211f')]))
             ->navigationGroups([
                 NavigationGroup::make('Clientes'),
                 NavigationGroup::make('Faturamento'),

@@ -4,37 +4,44 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Pages;
 
-use App\Filament\Admin\Widgets\ExpiringEvaluationsWidget;
+use App\Filament\Admin\Resources\Tenants\TenantResource;
+use App\Filament\Admin\Widgets\PlatformAgendaWidget;
+use App\Filament\Admin\Widgets\PlatformAttentionWidget;
 use App\Filament\Admin\Widgets\PlatformOverviewWidget;
-use App\Filament\Admin\Widgets\QuickActionsWidget;
-use App\Filament\Admin\Widgets\StoresByPlanChart;
-use App\Filament\Admin\Widgets\SubscriptionStatusChart;
+use App\Filament\Admin\Widgets\StoresOverviewWidget;
+use App\Filament\Admin\Widgets\SubscriptionBreakdownWidget;
 use App\Filament\Admin\Widgets\TenantsGrowthChart;
+use Filament\Actions\Action;
 use Filament\Pages\Dashboard as BaseDashboard;
 
 class Dashboard extends BaseDashboard
 {
-    protected static ?string $title = 'Dashboard Administrativo';
+    protected static ?string $title = 'Sua plataforma, em perspectiva.';
+
+    protected static ?string $navigationLabel = 'Visão geral';
+
+    public function getPageClasses(): array
+    {
+        return ['fi-page-dashboard'];
+    }
 
     public function getSubheading(): ?string
     {
-        return 'Visão geral do ecossistema Zenvyra';
+        return 'Visão geral das lojas e assinaturas.';
     }
 
     public function getColumns(): int|array
     {
-        return 1;
+        return ['default' => 1, 'xl' => 3];
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [Action::make('createStore')->label('Criar loja')->icon('heroicon-o-plus')->url(TenantResource::getUrl('create'))];
     }
 
     public function getWidgets(): array
     {
-        return [
-            PlatformOverviewWidget::class,
-            ExpiringEvaluationsWidget::class,
-            QuickActionsWidget::class,
-            TenantsGrowthChart::class,
-            SubscriptionStatusChart::class,
-            StoresByPlanChart::class,
-        ];
+        return [PlatformOverviewWidget::class, PlatformAttentionWidget::class, StoresOverviewWidget::class, PlatformAgendaWidget::class, TenantsGrowthChart::class, SubscriptionBreakdownWidget::class];
     }
 }

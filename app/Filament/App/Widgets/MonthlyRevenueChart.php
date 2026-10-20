@@ -11,18 +11,17 @@ class MonthlyRevenueChart extends ChartWidget
 {
     protected static ?int $sort = 2;
 
-    protected ?string $heading = 'Receita Mensal';
+    protected ?string $heading = 'Vendas no período';
 
     protected ?string $description = 'Faturamento bruto e líquido por mês.';
 
-    protected int|string|array $columnSpan = 2;
+    protected ?string $maxHeight = '190px';
+
+    protected static bool $isLazy = false;
+
+    protected int|string|array $columnSpan = ['default' => 1, 'xl' => 3];
 
     public ?string $filter = '12';
-
-    public function getHeight(): string|int|null
-    {
-        return 240;
-    }
 
     protected function getFilters(): ?array
     {
@@ -41,25 +40,25 @@ class MonthlyRevenueChart extends ChartWidget
                 [
                     'label' => 'Faturamento bruto (R$)',
                     'data' => $series['gross'],
-                    'borderColor' => 'rgb(70, 72, 212)',
-                    'backgroundColor' => 'rgba(70, 72, 212, 0.10)',
+                    'borderColor' => '#89b61e',
+                    'backgroundColor' => 'rgba(163, 211, 49, 0.12)',
                     'fill' => true,
                     'tension' => 0.4,
                     'pointRadius' => 4,
                     'pointHoverRadius' => 6,
-                    'pointBackgroundColor' => 'rgb(70, 72, 212)',
+                    'pointBackgroundColor' => '#89b61e',
                     'borderWidth' => 2,
                 ],
                 [
                     'label' => 'Faturamento líquido (R$)',
                     'data' => $series['net'],
-                    'borderColor' => 'rgb(0, 110, 45)',
+                    'borderColor' => '#42463a',
                     'backgroundColor' => 'rgba(0, 110, 45, 0.08)',
                     'fill' => true,
                     'tension' => 0.4,
                     'pointRadius' => 3,
                     'pointHoverRadius' => 5,
-                    'pointBackgroundColor' => 'rgb(0, 110, 45)',
+                    'pointBackgroundColor' => '#42463a',
                     'borderWidth' => 1.5,
                     'borderDash' => [6, 4],
                 ],
@@ -85,11 +84,11 @@ class MonthlyRevenueChart extends ChartWidget
             'scales' => [
                 'x' => [
                     'grid' => ['color' => 'rgba(0,0,0,0.04)'],
-                    'ticks' => ['color' => '#767586'],
+                    'ticks' => ['color' => '#66675e'],
                 ],
                 'y' => [
                     'grid' => ['color' => 'rgba(0,0,0,0.04)'],
-                    'ticks' => ['color' => '#767586'],
+                    'ticks' => ['color' => '#66675e'],
                     'beginAtZero' => true,
                 ],
             ],

@@ -5,723 +5,100 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zenvyra — Gestão de lojas simplificada</title>
   <meta name="description" content="Catálogo, estoque e pedidos em um painel simples. Para lojas de todos os tamanhos.">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --green: #B6F542;
-      --green-hover: #C8F85E;
-      --green-mid: #5C9E0A;
-      --green-tint: #F2FADF;
-      --green-tint-2: #E6F5C4;
-      --black: #0A0A0A;
-      --dark: #111111;
-      --dark-2: #1C1C1A;
-      --white: #FFFFFF;
-      --gray-50: #F8F8F5;
-      --gray-100: #F0EFE8;
-      --gray-200: #E4E2D8;
-      --gray-400: #A8A69C;
-      --gray-600: #6B6965;
-      --gray-800: #2C2B28;
-      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      --radius: 8px;
-      --radius-lg: 12px;
-      --radius-xl: 20px;
-      --max-w: 1160px;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: var(--font);
-      font-size: 16px;
-      line-height: 1.65;
-      color: var(--gray-800);
-      background: var(--white);
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-
-    a { text-decoration: none; color: inherit; }
-    img { display: block; max-width: 100%; }
-
-    /* ── NAV ── */
-    .nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 0 24px;
-      transition: background 0.3s, border-color 0.3s;
-    }
-    .nav.scrolled {
-      background: rgba(10,10,10,0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .nav-inner {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--white);
-    }
-    .nav-logo-dot {
-      width: 8px; height: 8px;
-      background: var(--green);
-      border-radius: 50%;
-    }
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      list-style: none;
-    }
-    .nav-links a {
-      font-size: 14px;
-      color: rgba(255,255,255,0.55);
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--white); }
-    .nav-cta {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .btn-ghost-nav {
-      font-size: 14px;
-      color: rgba(255,255,255,0.6);
-      padding: 7px 14px;
-      border-radius: var(--radius);
-      transition: color 0.2s;
-    }
-    .btn-ghost-nav:hover { color: var(--white); }
-    .btn-green {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--green);
-      color: var(--black);
-      font-size: 14px;
-      font-weight: 500;
-      padding: 8px 18px;
-      border-radius: var(--radius);
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s;
-    }
-    .btn-green:hover { background: var(--green-hover); transform: translateY(-1px); }
-    .btn-green:active { transform: translateY(0); }
-
-    /* ── HERO ── */
-    .hero {
-      background: var(--black);
-      padding: 160px 24px 100px;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-glow {
-      position: absolute;
-      top: -80px; left: 50%;
-      transform: translateX(-50%);
-      width: 600px; height: 400px;
-      background: radial-gradient(ellipse at center, rgba(182,245,66,0.12) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .hero-inner {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 64px;
-      align-items: center;
-    }
-    .hero-text { position: relative; z-index: 1; }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(182,245,66,0.1);
-      border: 1px solid rgba(182,245,66,0.2);
-      color: var(--green);
-      font-size: 12px;
-      font-weight: 500;
-      padding: 5px 12px;
-      border-radius: 20px;
-      margin-bottom: 24px;
-      letter-spacing: 0.02em;
-    }
-    .hero-badge-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse-dot 2s infinite; }
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-    .hero h1 {
-      font-size: clamp(36px, 5vw, 60px);
-      font-weight: 500;
-      color: var(--white);
-      line-height: 1.12;
-      letter-spacing: -0.02em;
-      margin-bottom: 20px;
-    }
-    .hero h1 span { color: var(--green); }
-    .hero-sub {
-      font-size: 18px;
-      color: rgba(255,255,255,0.5);
-      margin-bottom: 36px;
-      max-width: 440px;
-      line-height: 1.6;
-    }
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-    .btn-green-lg {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--green);
-      color: var(--black);
-      font-size: 15px;
-      font-weight: 500;
-      padding: 12px 24px;
-      border-radius: var(--radius);
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s;
-    }
-    .btn-green-lg:hover { background: var(--green-hover); transform: translateY(-1px); }
-    .btn-outline-white {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: transparent;
-      color: rgba(255,255,255,0.7);
-      font-size: 15px;
-      padding: 12px 24px;
-      border-radius: var(--radius);
-      border: 1px solid rgba(255,255,255,0.12);
-      cursor: pointer;
-      transition: border-color 0.2s, color 0.2s;
-    }
-    .btn-outline-white:hover { border-color: rgba(255,255,255,0.3); color: var(--white); }
-
-    /* ── HERO MOCKUP ── */
-    .hero-mockup {
-      position: relative;
-      z-index: 1;
-    }
-    .mockup-frame {
-      background: #0F0F0F;
-      border: 1px solid #222;
-      border-radius: var(--radius-xl);
-      overflow: hidden;
-      box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
-    }
-    .mockup-bar {
-      background: #0A0A0A;
-      border-bottom: 1px solid #1A1A1A;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .mockup-dot { width: 8px; height: 8px; border-radius: 50%; }
-    .mockup-url {
-      flex: 1;
-      background: #1A1A1A;
-      border-radius: 4px;
-      height: 20px;
-      margin: 0 8px;
-    }
-    .mockup-body { display: flex; height: 300px; }
-    .mockup-sidebar {
-      width: 140px;
-      background: #0A0A0A;
-      border-right: 1px solid #1A1A1A;
-      padding: 12px 0;
-      flex-shrink: 0;
-    }
-    .mockup-logo {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 0 12px 10px;
-      border-bottom: 1px solid #1A1A1A;
-      margin-bottom: 8px;
-    }
-    .mockup-logo-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
-    .mockup-logo-text { font-size: 10px; font-weight: 500; color: #fff; }
-    .m-nav { display: flex; flex-direction: column; gap: 1px; padding: 0 8px; }
-    .m-ni { display: flex; align-items: center; gap: 5px; padding: 5px 6px; border-radius: 5px; font-size: 9px; color: #444; }
-    .m-ni.active { color: var(--green); background: rgba(182,245,66,0.08); }
-    .m-ni-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
-    .mockup-main { flex: 1; padding: 12px; overflow: hidden; }
-    .m-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-    .m-title { font-size: 11px; font-weight: 500; color: #fff; }
-    .m-btn { background: var(--green); color: #000; font-size: 8px; font-weight: 500; padding: 3px 8px; border-radius: 4px; }
-    .m-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 5px; margin-bottom: 10px; }
-    .m-sc { background: #161616; border: 1px solid #1E1E1E; border-radius: 5px; padding: 6px 8px; }
-    .m-sl { font-size: 7px; color: #444; margin-bottom: 2px; }
-    .m-sv { font-size: 13px; font-weight: 500; color: #fff; }
-    .m-table { background: #161616; border: 1px solid #1E1E1E; border-radius: 5px; overflow: hidden; }
-    .m-tr { display: flex; justify-content: space-between; align-items: center; padding: 5px 8px; border-bottom: 1px solid #1E1E1E; }
-    .m-tr:last-child { border-bottom: none; }
-    .m-tr span:first-child { font-size: 8px; color: #bbb; }
-    .m-badge { font-size: 7px; padding: 1px 6px; border-radius: 10px; font-weight: 500; }
-    .m-badge.ok { background: #1a2e05; color: var(--green); }
-    .m-badge.low { background: #2e1a05; color: #ef9f27; }
-    .m-badge.out { background: #2e0505; color: #e24b4a; }
-
-    /* ── SOCIAL PROOF ── */
-    .social-proof {
-      background: var(--gray-50);
-      border-top: 1px solid var(--gray-200);
-      border-bottom: 1px solid var(--gray-200);
-      padding: 32px 24px;
-    }
-    .social-proof-inner {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 48px;
-      flex-wrap: wrap;
-    }
-    .sp-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .sp-value {
-      font-size: 22px;
-      font-weight: 500;
-      color: var(--gray-800);
-      letter-spacing: -0.02em;
-    }
-    .sp-value span { color: var(--green-mid); }
-    .sp-label { font-size: 13px; color: var(--gray-600); }
-    .sp-divider { width: 1px; height: 32px; background: var(--gray-200); }
-
-    /* ── SECTIONS ── */
-    section { padding: 96px 24px; }
-    .section-inner { max-width: var(--max-w); margin: 0 auto; }
-    .section-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--green-mid);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
-    .section-tag::before {
-      content: '';
-      display: inline-block;
-      width: 6px; height: 6px;
-      background: var(--green-mid);
-      border-radius: 50%;
-    }
-    .section-h2 {
-      font-size: clamp(28px, 4vw, 42px);
-      font-weight: 500;
-      color: var(--gray-800);
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-      margin-bottom: 16px;
-    }
-    .section-sub {
-      font-size: 18px;
-      color: var(--gray-600);
-      max-width: 520px;
-      line-height: 1.6;
-    }
-    .section-header { margin-bottom: 56px; }
-    .section-header.center { text-align: center; }
-    .section-header.center .section-sub { margin: 0 auto; }
-
-    /* ── FEATURES ── */
-    .features { background: var(--white); }
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-    .feature-card {
-      background: var(--gray-50);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-    .feature-card:hover {
-      border-color: var(--green-tint-2);
-      transform: translateY(-2px);
-    }
-    .feature-icon {
-      width: 40px; height: 40px;
-      background: var(--green-tint);
-      border-radius: var(--radius);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-    }
-    .feature-icon svg { width: 20px; height: 20px; stroke: var(--green-mid); fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
-    .feature-h3 {
-      font-size: 16px;
-      font-weight: 500;
-      color: var(--gray-800);
-      margin-bottom: 8px;
-      letter-spacing: -0.01em;
-    }
-    .feature-p {
-      font-size: 14px;
-      color: var(--gray-600);
-      line-height: 1.6;
-    }
-
-    /* ── HOW IT WORKS ── */
-    .how { background: var(--gray-50); border-top: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200); }
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0;
-    }
-    .step {
-      padding: 32px;
-      position: relative;
-    }
-    .step:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      top: 48px; right: 0;
-      width: 1px; height: 48px;
-      background: var(--gray-200);
-    }
-    .step-num {
-      width: 36px; height: 36px;
-      background: var(--green);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--black);
-      margin-bottom: 16px;
-    }
-    .step h3 {
-      font-size: 17px;
-      font-weight: 500;
-      color: var(--gray-800);
-      margin-bottom: 8px;
-      letter-spacing: -0.01em;
-    }
-    .step p {
-      font-size: 14px;
-      color: var(--gray-600);
-      line-height: 1.6;
-    }
-
-    /* ── PRICING ── */
-    .pricing { background: var(--white); }
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      align-items: start;
-    }
-    .pricing-card {
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      background: var(--white);
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .pricing-card:hover {
-      border-color: var(--gray-400);
-    }
-    .pricing-card.featured {
-      border: 2px solid var(--green);
-      position: relative;
-    }
-    .pricing-badge {
-      position: absolute;
-      top: -12px; left: 50%;
-      transform: translateX(-50%);
-      background: var(--green);
-      color: var(--black);
-      font-size: 11px;
-      font-weight: 500;
-      padding: 3px 12px;
-      border-radius: 20px;
-      white-space: nowrap;
-    }
-    .plan-name {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--gray-600);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-    .plan-price {
-      font-size: 38px;
-      font-weight: 500;
-      color: var(--gray-800);
-      letter-spacing: -0.03em;
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-    .plan-price sup { font-size: 18px; vertical-align: super; font-weight: 400; }
-    .plan-period { font-size: 13px; color: var(--gray-400); margin-bottom: 20px; }
-    .plan-desc { font-size: 14px; color: var(--gray-600); margin-bottom: 20px; line-height: 1.5; }
-    .plan-divider { border: none; border-top: 1px solid var(--gray-200); margin-bottom: 20px; }
-    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
-    .plan-features li {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      font-size: 14px;
-      color: var(--gray-700);
-    }
-    .plan-features li::before {
-      content: '';
-      width: 16px; height: 16px;
-      background: var(--green-tint);
-      border-radius: 50%;
-      flex-shrink: 0;
-      margin-top: 2px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3 8l3.5 3.5L13 5' stroke='%235C9E0A' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-      background-size: cover;
-    }
-    .plan-cta { display: block; text-align: center; padding: 11px; border-radius: var(--radius); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; border: none; }
-    .plan-cta.primary { background: var(--green); color: var(--black); }
-    .plan-cta.primary:hover { background: var(--green-hover); }
-    .plan-cta.secondary { background: transparent; color: var(--gray-800); border: 1px solid var(--gray-200); }
-    .plan-cta.secondary:hover { border-color: var(--gray-400); }
-
-    /* ── CTA FINAL ── */
-    .cta-final {
-      background: var(--black);
-      padding: 100px 24px;
-      text-align: center;
-    }
-    .cta-final-inner { max-width: 640px; margin: 0 auto; }
-    .cta-final h2 {
-      font-size: clamp(28px, 4vw, 46px);
-      font-weight: 500;
-      color: var(--white);
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-      margin-bottom: 16px;
-    }
-    .cta-final h2 span { color: var(--green); }
-    .cta-final p { font-size: 17px; color: rgba(255,255,255,0.45); margin-bottom: 36px; }
-    .cta-actions { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
-
-    /* ── FOOTER ── */
-    footer {
-      background: var(--dark-2);
-      border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 48px 24px;
-    }
-    .footer-inner {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 24px;
-    }
-    .footer-logo { display: flex; align-items: center; gap: 7px; }
-    .footer-logo-dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; }
-    .footer-logo-text { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.7); }
-    .footer-copy { font-size: 13px; color: rgba(255,255,255,0.25); }
-    .footer-links { display: flex; gap: 24px; }
-    .footer-links a { font-size: 13px; color: rgba(255,255,255,0.35); transition: color 0.2s; }
-    .footer-links a:hover { color: rgba(255,255,255,0.7); }
-
-    /* ── ANIMATIONS ── */
-    .fade-up {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .fade-up.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .fade-in {
-      opacity: 0;
-      transition: opacity 0.6s ease;
-    }
-    .fade-in.visible { opacity: 1; }
-
-    .stagger-1 { transition-delay: 0.05s; }
-    .stagger-2 { transition-delay: 0.1s; }
-    .stagger-3 { transition-delay: 0.15s; }
-    .stagger-4 { transition-delay: 0.2s; }
-    .stagger-5 { transition-delay: 0.25s; }
-    .stagger-6 { transition-delay: 0.3s; }
-
-    @media (prefers-reduced-motion: reduce) {
-      .fade-up, .fade-in { opacity: 1 !important; transform: none !important; transition: none !important; }
-    }
-
-    /* ── MOBILE ── */
-    @media (max-width: 900px) {
-      .hero-inner { grid-template-columns: 1fr; gap: 48px; }
-      .hero-mockup { display: none; }
-      .features-grid { grid-template-columns: 1fr 1fr; }
-      .steps { grid-template-columns: 1fr; }
-      .step:not(:last-child)::after { display: none; }
-      .pricing-grid { grid-template-columns: 1fr; }
-      .nav-links { display: none; }
-      .sp-divider { display: none; }
-    }
-    @media (max-width: 600px) {
-      section { padding: 64px 20px; }
-      .hero { padding: 120px 20px 72px; }
-      .features-grid { grid-template-columns: 1fr; }
-      .social-proof-inner { gap: 24px; }
-    }
-  </style>
+  <link rel="stylesheet" href="{{ asset('css/marketing.css') }}?v={{ filemtime(public_path('css/marketing.css')) }}">
+  <script src="{{ asset('js/marketing.js') }}?v={{ filemtime(public_path('js/marketing.js')) }}" defer></script>
 </head>
-<body>
+<body class="landing landing--light">
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
   <!-- NAV -->
   <nav class="nav" id="nav">
     <div class="nav-inner">
-      <a href="/" class="nav-logo">
+      <a href="{{ route('landing') }}" class="nav-logo">
         <div class="nav-logo-dot"></div>
         Zenvyra
       </a>
       <ul class="nav-links">
-        <li><a href="#funcionalidades">Funcionalidades</a></li>
+        <li><a href="#funcionalidades">Recursos</a></li>
         <li><a href="#como-funciona">Como funciona</a></li>
-        <li><a href="#precos">Preços</a></li>
+        <li><a href="#precos">Planos</a></li>
       </ul>
       <div class="nav-cta">
+        <details class="landing-menu">
+          <summary aria-label="Abrir menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></summary>
+          <nav aria-label="Menu para celular">
+            <a href="#funcionalidades">Recursos</a>
+            <a href="#como-funciona">Como funciona</a>
+            <a href="#precos">Planos</a>
+            <a href="{{ url('/app/login') }}">Entrar</a>
+          </nav>
+        </details>
         <a href="{{ url('/app/login') }}" class="btn-ghost-nav">Entrar</a>
-        <a href="{{ route('register.show') }}" class="btn-green">Começar grátis</a>
+        <a href="{{ route('register.show') }}" class="btn-green">Começar avaliação</a>
       </div>
     </div>
   </nav>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-glow"></div>
+  <main id="conteudo" tabindex="-1">
+  <section class="hero" aria-labelledby="hero-title">
     <div class="hero-inner">
       <div class="hero-text">
-        <div class="hero-badge">
-          <div class="hero-badge-dot"></div>
-          Plataforma multi-loja
-        </div>
-        <h1>Gerencie sua loja com <span>mais clareza.</span></h1>
-        <p class="hero-sub">Catálogo, estoque e pedidos em um painel simples — para lojistas que querem mais tempo para vender.</p>
+        <h1 id="hero-title"><span>Seu negócio cresce.</span><span>A <em>gestão</em> acompanha.</span></h1>
+        <p class="hero-sub">Organize produtos, estoque e pedidos.<br>Cuide da sua loja com mais clareza.</p>
         <div class="hero-actions">
-          <a href="{{ route('register.show') }}" class="btn-green-lg">Começar grátis</a>
-          <a href="#como-funciona" class="btn-outline-white">Ver como funciona</a>
+          <a href="{{ route('register.show') }}" class="btn-green-lg">Experimentar a Zenvyra <span aria-hidden="true">→</span></a>
+          <a href="#como-funciona" class="btn-outline-white">Ver o sistema</a>
         </div>
+        <p class="hero-reassurance">{{ config('subscriptions.evaluation_days') }} dias para avaliar. Sem cartão de crédito.</p>
       </div>
-      <div class="hero-mockup">
-        <div class="mockup-frame">
-          <div class="mockup-bar">
-            <div class="mockup-dot" style="background:#ff5f57"></div>
-            <div class="mockup-dot" style="background:#febc2e"></div>
-            <div class="mockup-dot" style="background:#28c840"></div>
-            <div class="mockup-url"></div>
+      <figure class="hero-mockup" aria-label="Prévia ilustrativa do painel da Zenvyra">
+        <div class="preview-panel">
+          <div class="preview-sidebar" aria-hidden="true">
+            <div class="preview-brand"><span class="brand-dot"></span>Zenvyra</div>
+            <div class="preview-nav"><span class="is-active"><svg viewBox="0 0 24 24"><path d="M3 10l9-7 9 7v11h-7v-7h-4v7H3z"/></svg><span>Início</span></span><span><svg viewBox="0 0 24 24"><path d="M12 2L3 7v10l9 5 9-5V7zM3 7l9 5 9-5M12 12v10"/></svg><span>Produtos</span></span><span><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 5V2h8v3M9 12h6"/></svg><span>Estoque</span></span><span><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><span>Pedidos</span></span><span><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0116 0v3"/></svg><span>Clientes</span></span><span><svg viewBox="0 0 24 24"><path d="M3 15h4v7H3zM10 9h4v13h-4zM17 2h4v20h-4z"/></svg><span>Relatórios</span></span></div>
+            <div class="preview-settings">Configurações</div>
           </div>
-          <div class="mockup-body">
-            <div class="mockup-sidebar">
-              <div class="mockup-logo">
-                <div class="mockup-logo-dot"></div>
-                <span class="mockup-logo-text">Zenvyra</span>
-              </div>
-              <div class="m-nav">
-                <div class="m-ni"><div class="m-ni-dot"></div>Dashboard</div>
-                <div class="m-ni"><div class="m-ni-dot"></div>Pedidos</div>
-                <div class="m-ni"><div class="m-ni-dot"></div>Catálogo</div>
-                <div class="m-ni active"><div class="m-ni-dot"></div>Estoque</div>
-                <div class="m-ni"><div class="m-ni-dot"></div>Clientes</div>
-                <div class="m-ni"><div class="m-ni-dot"></div>Vendedores</div>
-              </div>
+          <div class="preview-main">
+            <div class="preview-heading"><strong>Estoque</strong><span>Últimos 30 dias <span aria-hidden="true">⌄</span></span></div>
+            <div class="preview-stats">
+              <div><span>Produtos no estoque</span><strong>482</strong><small>↑ 12%</small></div>
+              <div><span>Entradas</span><strong>158</strong><small>↑ 8%</small></div>
+              <div><span>Saídas</span><strong>129</strong><small>↑ 5%</small></div>
             </div>
-            <div class="mockup-main">
-              <div class="m-topbar">
-                <span class="m-title">Estoque</span>
-                <span class="m-btn">+ Entrada</span>
-              </div>
-              <div class="m-stats">
-                <div class="m-sc"><div class="m-sl">Total</div><div class="m-sv">142</div></div>
-                <div class="m-sc"><div class="m-sl">Baixo</div><div class="m-sv" style="color:#ef9f27">8</div></div>
-                <div class="m-sc"><div class="m-sl">Zerado</div><div class="m-sv" style="color:#e24b4a">3</div></div>
-              </div>
-              <div class="m-table">
-                <div class="m-tr"><span>Camiseta Básica Preta</span><span class="m-badge ok">47 un.</span></div>
-                <div class="m-tr"><span>Calça Slim Fit</span><span class="m-badge low">6 un.</span></div>
-                <div class="m-tr"><span>Tênis Runner Pro</span><span class="m-badge out">0 un.</span></div>
-                <div class="m-tr"><span>Boné Snapback</span><span class="m-badge ok">23 un.</span></div>
-                <div class="m-tr"><span>Mochila Urban</span><span class="m-badge ok">31 un.</span></div>
-              </div>
-            </div>
+            <div class="preview-chart-title">Movimentação de estoque</div>
+            <svg class="preview-chart" viewBox="0 0 440 145" role="img" aria-label="Gráfico ilustrativo de movimentação de estoque">
+              <defs><linearGradient id="chart-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#b6f542" stop-opacity=".35"/><stop offset="100%" stop-color="#b6f542" stop-opacity=".02"/></linearGradient></defs>
+              <g stroke="#eceee6" stroke-width="1"><path d="M26 24H426M26 60H426M26 96H426M26 130H426"/></g>
+              <path d="M26 118L48 95L70 98L92 89L114 103L136 92L158 80L180 90L202 89L224 65L246 74L268 68L290 75L312 47L334 47L356 28L378 35L400 20L426 26V130H26Z" fill="url(#chart-fill)"/>
+              <path d="M26 118L48 95L70 98L92 89L114 103L136 92L158 80L180 90L202 89L224 65L246 74L268 68L290 75L312 47L334 47L356 28L378 35L400 20L426 26" fill="none" stroke="#7cac12" stroke-width="2" stroke-linejoin="round"/>
+              <g fill="#73786b" font-size="9" font-family="system-ui"><text x="24" y="144">1 abr</text><text x="114" y="144">8 abr</text><text x="211" y="144">15 abr</text><text x="310" y="144">22 abr</text><text x="399" y="144">30 abr</text></g>
+            </svg>
+            <div class="preview-list-title">Produtos mais movimentados <span>Visão geral</span></div>
+            <div class="preview-product"><span class="preview-product-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l5 2 5-2 5 5-4 3-2-2v11H8V10l-2 2-4-3z"/></svg></span><div><strong>Camiseta Básica</strong><span>Roupas</span></div><span>124 un.</span><i style="--level:80%"></i></div>
+            <div class="preview-product"><span class="preview-product-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14v14H5zM8 7V5a4 4 0 018 0v2"/></svg></span><div><strong>Bolsa Tote</strong><span>Acessórios</span></div><span>96 un.</span><i style="--level:60%"></i></div>
+            <div class="preview-product"><span class="preview-product-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10l2 18h-6l-1-11-1 11H5z"/></svg></span><div><strong>Calça Slim</strong><span>Roupas</span></div><span>67 un.</span><i style="--level:40%"></i></div>
           </div>
         </div>
-      </div>
+        <div class="preview-notification" aria-hidden="true"><span class="preview-check">✓</span><strong>Pedido registrado</strong><p>Tudo certo. Mais uma venda organizada.</p><span class="preview-notification-label">Um passo a menos na sua rotina.</span></div>
+        <figcaption>Prévia ilustrativa do painel</figcaption>
+      </figure>
     </div>
   </section>
-
-  <!-- SOCIAL PROOF -->
-  <div class="social-proof">
-    <div class="social-proof-inner">
-      <div class="sp-item">
-        <div>
-          <div class="sp-value"><span>+</span>{{ $stats['tenants'] }}</div>
-          <div class="sp-label">lojas ativas</div>
-        </div>
-      </div>
-      <div class="sp-divider"></div>
-      <div class="sp-item">
-        <div>
-          <div class="sp-value">99<span>.9%</span></div>
-          <div class="sp-label">de uptime</div>
-        </div>
-      </div>
-      <div class="sp-divider"></div>
-      <div class="sp-item">
-        <div>
-          <div class="sp-value"><span>+</span>{{ number_format($stats['orders'], 0, ',', '.') }}</div>
-          <div class="sp-label">pedidos processados</div>
-        </div>
-      </div>
-      <div class="sp-divider"></div>
-      <div class="sp-item">
-        <div>
-          <div class="sp-value">100<span>%</span></div>
-          <div class="sp-label">suporte em PT-BR</div>
-        </div>
-      </div>
+  <section class="benefit-band" aria-label="O essencial para a sua loja">
+    <div class="benefit-band__inner">
+      <div class="benefit-item"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 11h20l2 18H4zM11 11V8a5 5 0 0110 0v3"/></svg><div><h2>Catálogo online</h2><p>Divulgue seus produtos e mantenha as informações sempre atualizadas.</p></div></div>
+      <div class="benefit-item"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2L3 9v14l13 7 13-7V9zM3 9l13 7 13-7M16 16v14"/></svg><div><h2>Estoque sob controle</h2><p>Saiba o que tem, o que está acabando e evite rupturas.</p></div></div>
+      <div class="benefit-item"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 18h5v11H4zM14 11h5v18h-5zM24 3h5v26h-5z"/></svg><div><h2>Vendas organizadas</h2><p>Acompanhe pedidos, clientes e resultados em um só lugar.</p></div></div>
     </div>
-  </div>
-
+  </section>
+  <section class="editorial-intro" aria-labelledby="editorial-title">
+    <div class="editorial-inner">
+      <h2 id="editorial-title">Menos tarefas repetidas.<br>Mais espaço para vender.</h2>
+      <div class="editorial-detail"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><h3>Pedidos mais simples</h3><p>Registre e acompanhe seus pedidos em poucos cliques, com mais agilidade no dia a dia.</p></div>
+      <div class="editorial-detail"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h8l10 10-8 8L3 11z"/><circle cx="7.5" cy="7.5" r="1"/></svg><h3>Produtos sempre organizados</h3><p>Cadastre produtos com variações, controle informações e mantenha tudo pronto para vender.</p></div>
+    </div>
+  </section>
   <!-- FEATURES -->
   <section class="features" id="funcionalidades">
     <div class="section-inner">
@@ -763,8 +140,8 @@
           <div class="feature-icon">
             <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
           </div>
-          <h3 class="feature-h3">Multi-loja nativo</h3>
-          <p class="feature-p">Cada loja com dados completamente isolados em seu próprio schema PostgreSQL. Sem mistura, sem vazamento.</p>
+          <h3 class="feature-h3">Um espaço para sua loja</h3>
+          <p class="feature-p">Um ambiente próprio para sua loja, com seus produtos, sua equipe e seus dados organizados no mesmo lugar.</p>
         </div>
         <div class="feature-card fade-up stagger-6">
           <div class="feature-icon">
@@ -789,7 +166,7 @@
         <div class="step fade-up stagger-1">
           <div class="step-num">1</div>
           <h3>Crie sua loja</h3>
-          <p>Informe o nome e pronto. Seu ambiente isolado é provisionado automaticamente — sem necessidade de configurar banco de dados ou servidor.</p>
+          <p>Preencha seus dados, dê um nome à sua loja e acesse seu painel. Tudo pelo navegador, sem instalar programas.</p>
         </div>
         <div class="step fade-up stagger-2">
           <div class="step-num">2</div>
@@ -837,7 +214,7 @@
           @endphp
           <div class="pricing-card {{ $isFeatured ? 'featured' : '' }} fade-up stagger-{{ $stagger }}">
             @if ($isFeatured)
-              <div class="pricing-badge">Mais popular</div>
+              <div class="pricing-badge">Plano Pro</div>
             @endif
             <div class="plan-name">{{ $plan->name }}</div>
             <div class="plan-price"><sup>R$</sup>{{ number_format($plan->price, 2, ',', '.') }}</div>
@@ -848,11 +225,13 @@
               @foreach ($capacidade as $item)
                 <li>{{ $item }}</li>
               @endforeach
-              @foreach ($features as $feature)
-                <li>{{ $feature }}</li>
+              @foreach ($features as $featureKey => $feature)
+                @if (!in_array($featureKey, ['usuarios', 'produtos'], true) && is_scalar($feature))
+                  <li>{{ is_string($featureKey) ? ucfirst(str_replace('_', ' ', $featureKey)).': ' : '' }}{{ $feature }}</li>
+                @endif
               @endforeach
             </ul>
-            <a href="{{ route('register.show') }}" class="plan-cta {{ $isFeatured ? 'primary' : 'secondary' }}">Começar agora</a>
+            <a href="{{ route('register.show', ['plano' => $plan->slug]) }}" class="plan-cta {{ $isFeatured ? 'primary' : 'secondary' }}">Conhecer plano {{ $plan->name }}</a>
           </div>
           @php $stagger++; @endphp
         @endforeach
@@ -860,17 +239,27 @@
     </div>
   </section>
 
+  <section class="faq" id="duvidas" aria-labelledby="faq-title">
+    <div class="faq-inner">
+      <div class="section-header center"><div class="section-tag">Antes de começar</div><h2 class="section-h2" id="faq-title">Dúvidas frequentes</h2></div>
+      <details><summary>Preciso instalar algum programa?</summary><p>Não. Você acessa o painel pelo navegador para organizar seus produtos, estoque e pedidos.</p></details>
+      <details><summary>Como funciona o catálogo online?</summary><p>Sua loja tem uma página própria para apresentar os produtos. Os clientes podem entrar em contato com você para combinar a compra.</p></details>
+      <details><summary>O cadastro já contrata um plano?</summary><p>O cadastro inicia a avaliação da plataforma. Você conhece o sistema antes de escolher um plano para continuar.</p></details>
+      <details><summary>Posso usar a identidade da minha loja?</summary><p>Sim. Você pode configurar o nome, as cores e o logotipo da sua loja no painel.</p></details>
+    </div>
+  </section>
   <!-- CTA FINAL -->
   <section class="cta-final">
     <div class="cta-final-inner">
       <h2>Sua loja pronta para operar <span>hoje.</span></h2>
       <p>Sem instalação, sem configuração. Comece o período de teste e veja a diferença.</p>
       <div class="cta-actions">
-        <a href="{{ route('register.show') }}" class="btn-green-lg">Criar minha loja grátis</a>
+        <a href="{{ route('register.show') }}" class="btn-green-lg">Começar minha avaliação</a>
       </div>
     </div>
   </section>
 
+  </main>
   <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
@@ -882,42 +271,12 @@
         <a href="{{ route('legal.terms') }}">Termos de uso</a>
         <a href="{{ route('legal.privacy') }}">Privacidade</a>
         <a href="mailto:contato@zenvyra.com.br">Contato</a>
-        <a href="{{ url('/admin') }}" style="opacity:.4">Admin</a>
+
       </div>
       <span class="footer-copy">© {{ date('Y') }} Zenvyra. Todos os direitos reservados.</span>
     </div>
   </footer>
 
-  <script>
-    // Navbar scroll effect
-    const nav = document.getElementById('nav');
-    window.addEventListener('scroll', () => {
-      nav.classList.toggle('scrolled', window.scrollY > 40);
-    }, { passive: true });
 
-    // Scroll animations
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-    document.querySelectorAll('.fade-up, .fade-in').forEach(el => observer.observe(el));
-
-    // Smooth anchor scroll
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', e => {
-        const id = a.getAttribute('href').slice(1);
-        const el = document.getElementById(id);
-        if (el) {
-          e.preventDefault();
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
-    });
-  </script>
 </body>
 </html>

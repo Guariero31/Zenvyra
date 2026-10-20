@@ -1,51 +1,15 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Console/Commands/NotifyExpiringSubscriptions.php
-
-		-
-			message: '#^Cannot call method format\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Console/Commands/NotifyExpiringSubscriptions.php
-
-		-
 			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:each\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: mixed, Closure\(App\\Models\\User\)\: void given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/Console/Commands/NotifyExpiringSubscriptions.php
 
 		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 2
-			path: app/Console/Commands/RefreshSubscriptionStates.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
-			identifier: notIdentical.alwaysFalse
-			count: 1
-			path: app/Console/Commands/RefreshSubscriptionStates.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionStatus\:\:Active will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Console/Commands/RefreshSubscriptionStates.php
-
-		-
 			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_schema\.$#'
 			identifier: property.notFound
 			count: 1
-			path: app/Console/Commands/RepairTenantOrderIsolation.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_slug\.$#'
-			identifier: property.notFound
-			count: 2
 			path: app/Console/Commands/RepairTenantOrderIsolation.php
 
 		-
@@ -77,24 +41,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: app/Filament/Admin/Resources/Subscriptions/Tables/SubscriptionsTable.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between string and App\\Enums\\SubscriptionStatus\:\:Active will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: app/Filament/Admin/Resources/Subscriptions/Tables/SubscriptionsTable.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between string and App\\Enums\\SubscriptionStatus\:\:Canceled will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: app/Filament/Admin/Resources/Subscriptions/Tables/SubscriptionsTable.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_ativo\.$#'
-			identifier: property.notFound
-			count: 5
-			path: app/Filament/Admin/Resources/Tenants/Actions/ToggleTenantStatusAction.php
 
 		-
 			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:subscriptions\(\)\.$#'
@@ -137,18 +83,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: app/Filament/Admin/Resources/Tenants/Tables/TenantsTable.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$price\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Filament/Admin/Widgets/PlatformOverviewWidget.php
-
-		-
-			message: '#^Using nullsafe property access "\?\-\>price" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: app/Filament/Admin/Widgets/PlatformOverviewWidget.php
 
 		-
 			message: '#^Method App\\Filament\\Admin\\Widgets\\QuickActionsWidget\:\:getViewData\(\) should return array\<int, array\{title\: string, description\: string, url\: string\}\> but returns array\{actions\: array\{array\{title\: ''Criar Nova Loja'', description\: ''Adicione um novo…'', url\: string\}, array\{title\: ''Ver Relatórios'', description\: ''Análise de uso e…'', url\: string\}, array\{title\: ''Gestão de Planos'', description\: ''Configure planos e…'', url\: string\}\}\}\.$#'
@@ -427,19 +361,7 @@ parameters:
 			path: app/Http/Controllers/RegisterController.php
 
 		-
-			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_slug\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Http/Controllers/RegisterController.php
-
-		-
 			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Store/ContactFormController.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_slug\.$#'
 			identifier: property.notFound
 			count: 1
 			path: app/Http/Controllers/Store/ContactFormController.php
@@ -461,12 +383,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: app/Http/Controllers/SubscriptionBlockedController.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_slug\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Middleware/EnsureSubscriptionIsActive.php
 
 		-
 			message: '#^Parameter \#1 \$subscription of method App\\Services\\SubscriptionManager\:\:refreshState\(\) expects App\\Models\\Subscription, Illuminate\\Database\\Eloquent\\Model given\.$#'
@@ -625,79 +541,13 @@ parameters:
 			path: app/Models/OrderRefundItem.php
 
 		-
-			message: '#^Cannot call method isFuture\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: app/Models/Subscription.php
-
-		-
-			message: '#^Match arm comparison between string and App\\Enums\\SubscriptionStatus\:\:Active is always false\.$#'
-			identifier: match.alwaysFalse
-			count: 2
-			path: app/Models/Subscription.php
-
-		-
-			message: '#^Match arm comparison between string and App\\Enums\\SubscriptionStatus\:\:PastDue is always false\.$#'
-			identifier: match.alwaysFalse
-			count: 2
-			path: app/Models/Subscription.php
-
-		-
-			message: '#^Match arm comparison between string and App\\Enums\\SubscriptionStatus\:\:Trialing is always false\.$#'
-			identifier: match.alwaysFalse
-			count: 2
-			path: app/Models/Subscription.php
-
-		-
 			message: '#^Method App\\Models\\Subscription\:\:resolveNextBillingAt\(\) should return Illuminate\\Support\\Carbon\|null but returns Carbon\\CarbonInterface\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: app/Models/Subscription.php
 
 		-
-			message: '#^Method App\\Models\\Subscription\:\:resolveNextBillingAt\(\) should return Illuminate\\Support\\Carbon\|null but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: app/Models/Subscription.php
-
-		-
-			message: '#^Parameter \#1 \$from of method App\\Services\\SubscriptionManager\:\:nextBillingDate\(\) expects Carbon\\CarbonInterface\|null, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Models/Subscription.php
-
-		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 5
-			path: app/Models/Subscription.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
-			identifier: notIdentical.alwaysFalse
-			count: 1
-			path: app/Models/Subscription.php
-
-		-
 			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionIntent\:\:Evaluation will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Subscription.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionStatus\:\:Active will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Subscription.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionStatus\:\:PastDue will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Models/Subscription.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionStatus\:\:Trialing will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 1
 			path: app/Models/Subscription.php
@@ -1003,12 +853,6 @@ parameters:
 			path: app/Observers/TenantObserver.php
 
 		-
-			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_slug\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Observers/TenantObserver.php
-
-		-
 			message: '#^Call to an undefined method App\\Models\\Order\:\:seller\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -1243,24 +1087,6 @@ parameters:
 			path: app/Services/SubscriptionManager.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/SubscriptionManager.php
-
-		-
-			message: '#^Cannot call method isPast\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: app/Services/SubscriptionManager.php
-
-		-
-			message: '#^Cannot call method lte\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Services/SubscriptionManager.php
-
-		-
 			message: '#^Method App\\Services\\SubscriptionManager\:\:startEvaluation\(\) should return App\\Models\\Subscription but returns Illuminate\\Database\\Eloquent\\Model\.$#'
 			identifier: return.type
 			count: 1
@@ -1285,21 +1111,9 @@ parameters:
 			path: app/Services/SubscriptionManager.php
 
 		-
-			message: '#^Parameter \#2 \$since of method App\\Services\\SubscriptionManager\:\:markPastDue\(\) expects Illuminate\\Support\\Carbon\|null, string given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Services/SubscriptionManager.php
-
-		-
-			message: '#^Property App\\Models\\Subscription\:\:\$ends_at \(string\|null\) does not accept Carbon\\CarbonInterface\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: app/Services/SubscriptionManager.php
-
-		-
 			message: '#^Result of && is always false\.$#'
 			identifier: booleanAnd.alwaysFalse
-			count: 9
+			count: 3
 			path: app/Services/SubscriptionManager.php
 
 		-
@@ -1307,42 +1121,6 @@ parameters:
 			identifier: identical.alwaysFalse
 			count: 2
 			path: app/Services/SubscriptionManager.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionStatus\:\:Active will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 2
-			path: app/Services/SubscriptionManager.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionStatus\:\:PastDue will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Services/SubscriptionManager.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and App\\Enums\\SubscriptionStatus\:\:Trialing will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 3
-			path: app/Services/SubscriptionManager.php
-
-		-
-			message: '#^Cannot call method format\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: app/Services/SubscriptionRenewalNoticeService.php
-
-		-
-			message: '#^Parameter \#1 \$date of method App\\Services\\SubscriptionRenewalNoticeService\:\:daysUntil\(\) expects Illuminate\\Support\\Carbon, string given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Services/SubscriptionRenewalNoticeService.php
-
-		-
-			message: '#^Parameter \$expiresAt of class App\\Data\\SubscriptionRenewalNotice constructor expects Illuminate\\Support\\Carbon, string given\.$#'
-			identifier: argument.type
-			count: 3
-			path: app/Services/SubscriptionRenewalNoticeService.php
 
 		-
 			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_data_purged_at\.$#'
@@ -1367,12 +1145,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: app/Services/TenantOrderPurgeService.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_slug\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/TenantTeamService.php
 
 		-
 			message: '#^Access to an undefined property App\\Models\\Tenant\:\:\$te_schema\.$#'

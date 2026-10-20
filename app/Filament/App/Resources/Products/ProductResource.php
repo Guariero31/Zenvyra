@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\App\Resources\Products;
 
 use App\Filament\App\Resources\Products\Pages\CreateProduct;
@@ -30,7 +32,7 @@ class ProductResource extends Resource
 
     protected static ?string $pluralModelLabel = 'produtos';
 
-    protected static ?string $navigationLabel = 'Catálogo';
+    protected static ?string $navigationLabel = 'Produtos';
 
     protected static \UnitEnum|string|null $navigationGroup = 'Catálogo';
 

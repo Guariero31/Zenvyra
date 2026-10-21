@@ -32,7 +32,7 @@ html, body, .fi-body { font-family: 'Inter', system-ui, sans-serif; -webkit-font
 .fi-topbar-start { min-width: 218px; margin-right: 20px; }
 .fi-topbar-start .fi-logo { margin-left: 0; font-size: 22px; letter-spacing: -.04em; font-weight: 750; }
 .fi-topbar-end { flex: 1; }
-.fi-global-search { margin-right: auto; width: min(550px, 65%); }
+.fi-global-search { margin-right: auto; }
 .fi-global-search-field { width: 100%; }
 .fi-global-search-field .fi-input-wrp { width: 100%; background: #fff; }
 .fi-sidebar { background: #fcfcf9; border-right: 1px solid var(--panel-border); }
@@ -133,7 +133,7 @@ html, body, .fi-body { font-family: 'Inter', system-ui, sans-serif; -webkit-font
 .fi-page-dashboard .fi-page-header-main-ctn { padding-top: 0; }
 .fi-wi-stats-overview .fi-section-content { padding: 0; }
 .fi-topbar-end > .fi-global-search-ctn { flex: 1; margin-right: auto; }
-.fi-global-search { width: min(600px, 100%); }
+.fi-global-search { flex: 0 1 auto; width: min(360px, 100%); }
 .fi-global-search-field .fi-input-wrp { width: 100%; }
 .fi-page-dashboard .fi-wi-widget { min-width: 0; }
 .fi-wi-stats-overview-stat-description.fi-color-warning { color: #8d5b04; }

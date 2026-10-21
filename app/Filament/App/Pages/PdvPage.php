@@ -124,6 +124,15 @@ class PdvPage extends Page
         return Category::orderBy('name')->get();
     }
 
+    /** @return Collection<int, Product> */
+    #[Computed]
+    public function cartProducts(): Collection
+    {
+        return Product::query()->with('primaryImage')
+            ->whereIn('id', array_column($this->cart, 'product_id'))
+            ->get()->keyBy('id');
+    }
+
     #[Computed]
     public function customerResults(): Collection
     {

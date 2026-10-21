@@ -11,6 +11,7 @@ use App\Filament\App\Pages\PdvPage;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductVariation;
 use App\Models\StockMovement;
 use App\Models\Tenant;
 use App\Models\User;
@@ -107,6 +108,54 @@ class PdvFinalizeOrderTest extends TestCase
         $this->assertSame(2, $product->refresh()->stock);
         $this->assertSame(0, Order::query()->count());
         $this->assertSame(0, StockMovement::query()->count());
+    }
+
+    public function test_redesigned_checkout_updates_quantities_discount_and_cash_change(): void
+    {
+        $this->actingAsSeller();
+        $product = $this->createProduct(stock: 3, price: '79.90');
+
+        Livewire::test(PdvPage::class)
+            ->assertSee('Vamos vender?')
+            ->assertSee('Sua venda começa aqui')
+            ->set('showCustomerResults', true)
+            ->assertOk()
+            ->call('addProduct', $product->id)
+            ->assertSet('cart.0.quantity', 1)
+            ->call('incrementQuantity', 0)
+            ->assertSet('cart.0.quantity', 2)
+            ->set('discountAmount', '9.80')
+            ->set('paymentMethod', 'dinheiro')
+            ->set('cashGiven', '200')
+            ->assertSee('150,00')
+            ->assertSee('Troco')
+            ->assertSee('50,00')
+            ->call('decrementQuantity', 0)
+            ->assertSet('cart.0.quantity', 1)
+            ->call('removeFromCart', 0)
+            ->assertSee('Sua venda começa aqui');
+
+        $this->assertSame(3, $product->refresh()->stock);
+        $this->assertSame(0, Order::query()->count());
+    }
+
+    public function test_variation_dialog_and_cart_image_render_without_a_product_photo(): void
+    {
+        $this->actingAsSeller();
+        $product = $this->createProduct(stock: 0, price: '120.00');
+        $product->update(['has_variations' => true]);
+        $variation = ProductVariation::factory()->create(['product_id' => $product->id, 'name' => 'Bege · 39', 'stock' => 2]);
+
+        Livewire::test(PdvPage::class)
+            ->call('addProduct', $product->id)
+            ->assertSet('showVariationModal', true)
+            ->assertSee('Selecionar variação')
+            ->call('addProductVariation', $product->id, $variation->id)
+            ->assertSet('showVariationModal', false)
+            ->assertSee('Bege · 39')
+            ->assertSee('images/product-placeholder.svg', escape: false)
+            ->call('cancelSale')
+            ->assertSet('cart', []);
     }
 
     private function actingAsSeller(): void

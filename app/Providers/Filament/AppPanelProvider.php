@@ -43,7 +43,7 @@ class AppPanelProvider extends PanelProvider
         return $panel
             ->id('app')
             ->path('app')
-            ->darkMode(false)
+            ->darkMode()
             ->sidebarWidth('15rem')
             ->viteTheme('resources/css/filament/app/theme.css')
             ->font('Inter', provider: GoogleFontProvider::class)
@@ -53,7 +53,8 @@ class AppPanelProvider extends PanelProvider
             ->login()
             ->passwordReset()
             ->tenant(Tenant::class, slugAttribute: 'te_slug')
-            ->colors(fn (): array => array_replace($this->resolverCoresTenant($branding), ['primary' => Color::hex('#20211f')]))
+            ->tenantMenu(false)
+            ->colors(fn (): array => $this->resolverCoresTenant($branding))
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
                 fn (): View => view('filament.hooks.branding-head-tenant'),

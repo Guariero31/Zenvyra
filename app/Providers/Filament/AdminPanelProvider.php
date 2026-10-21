@@ -40,7 +40,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->authGuard('admin')
-            ->darkMode(false)
+            ->darkMode()
             ->sidebarWidth('15rem')
             ->maxContentWidth('full')
             ->viteTheme('resources/css/filament/admin/theme.css')

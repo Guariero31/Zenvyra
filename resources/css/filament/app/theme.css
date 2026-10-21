@@ -1,5 +1,7 @@
 @import '../../../../vendor/filament/filament/resources/css/theme.css';
 @import '../panels.css';
+@import '../pdv.css';
+@import '../tenant.css';
 
 @source '../../../../app/Filament/App/**/*';
 @source '../../../../resources/views/filament/app/**/*';

@@ -13,6 +13,7 @@ use App\Filament\Admin\Widgets\PlatformOverviewWidget;
 use App\Filament\Admin\Widgets\StoresOverviewWidget;
 use App\Filament\Admin\Widgets\SubscriptionBreakdownWidget;
 use App\Filament\App\Pages\Dashboard;
+use App\Filament\App\Pages\PdvPage;
 use App\Filament\App\Resources\Orders\Pages\ListOrders;
 use App\Filament\App\Widgets\BestSellingProductsWidget;
 use App\Filament\App\Widgets\RestockProductsWidget;
@@ -23,7 +24,9 @@ use App\Models\Product;
 use App\Models\ProductVariation;
 use App\Models\Subscription;
 use App\Models\Tenant;
+use App\Models\TenantTheme;
 use App\Models\User;
+use App\Services\BrandingService;
 use App\Services\PanelDashboardService;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -33,6 +36,13 @@ use Tests\TestCase;
 class PanelDashboardExperienceTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function test_both_panels_allow_light_dark_and_system_preferences(): void
+    {
+        foreach (['admin', 'app'] as $panel) {
+            $this->assertTrue(Filament::getPanel($panel)->hasDarkMode());
+        }
+    }
 
     public function test_platform_forecast_is_monthly_and_uses_only_current_subscriptions(): void
     {
@@ -115,5 +125,21 @@ class PanelDashboardExperienceTest extends TestCase
         Filament::setCurrentPanel('app');
         Filament::setTenant($tenant);
         Filament::bootCurrentPanel();
+    }
+
+    public function test_store_panel_uses_its_own_name_and_primary_color(): void
+    {
+        $this->bootStore();
+        $tenant = Filament::getTenant();
+        TenantTheme::obterOuCriarParaTenant($tenant->getKey())->update([
+            'nome_loja' => 'Minha Marca',
+            'cor_primaria_light' => '#2563EB',
+        ]);
+        $branding = app(BrandingService::class);
+        $branding->invalidarCacheTenant($tenant->getKey());
+
+        $this->assertSame('Minha Marca', Filament::getBrandName());
+        $this->assertSame($branding->coresFilamentTenant($tenant)['primary'], Filament::getPanel('app')->getColors()['primary']);
+        Livewire::test(PdvPage::class)->assertSee('Minha Marca');
     }
 }

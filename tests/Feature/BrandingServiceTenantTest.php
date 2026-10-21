@@ -94,6 +94,17 @@ class BrandingServiceTenantTest extends TestCase
         $this->assertSame('Marca Custom', $nome);
     }
 
+    public function test_light_only_background_does_not_leak_into_dark_mode(): void
+    {
+        $tenant = Tenant::factory()->create();
+        TenantTheme::obterOuCriarParaTenant($tenant->id)->update(['bg_page_light' => '#FFFFFF']);
+
+        $css = $this->service->gerarCssVariaveisTenant($tenant);
+
+        $this->assertStringContainsString('--brand-bg-page: #FFFFFF;', $css);
+        $this->assertStringContainsString('--brand-bg-page: var(--panel-canvas, #f6f5f0);', $css);
+    }
+
     public function test_nome_tenant_falls_back_to_te_name_when_no_nome_loja(): void
     {
         $tenant = Tenant::create(['te_name' => 'Fallback Shop']);

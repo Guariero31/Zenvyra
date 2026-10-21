@@ -53,6 +53,7 @@ class AppPanelProvider extends PanelProvider
             ->login()
             ->passwordReset()
             ->tenant(Tenant::class, slugAttribute: 'te_slug')
+            ->tenantMenu(false)
             ->colors(fn (): array => array_replace($this->resolverCoresTenant($branding), ['primary' => Color::hex('#20211f')]))
             ->renderHook(
                 PanelsRenderHook::HEAD_END,

@@ -118,6 +118,8 @@ class PdvFinalizeOrderTest extends TestCase
         Livewire::test(PdvPage::class)
             ->assertSee('Vamos vender?')
             ->assertSee('Sua venda começa aqui')
+            ->set('showCustomerResults', true)
+            ->assertOk()
             ->call('addProduct', $product->id)
             ->assertSet('cart.0.quantity', 1)
             ->call('incrementQuantity', 0)

@@ -137,7 +137,7 @@ class PdvPage extends Page
     public function customerResults(): Collection
     {
         if (strlen($this->customerSearch) < 2) {
-            return collect();
+            return new Collection;
         }
 
         return Customer::where('name', 'ilike', "%{$this->customerSearch}%")

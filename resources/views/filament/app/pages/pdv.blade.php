@@ -13,7 +13,7 @@
 
     {{-- TOPBAR --}}
     <div class="pdv-top">
-        <div class="pdv-brand">Zenvyra<span class="pdv-brand-dot" aria-hidden="true">.</span> <small>PDV</small></div>
+        <div class="pdv-brand">{{ filament()->getBrandName() }} <small>PDV</small></div>
         <div class="pdv-vsep"></div>
         <div class="pdv-meta">Operador: <strong>{{ $operator?->name }}</strong></div>
         <div class="pdv-meta">Loja: <strong>{{ $tenant?->te_name }}</strong></div>
@@ -21,6 +21,9 @@
         <div class="pdv-clock" x-data="{t:''}" x-init="setInterval(()=>{t=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})},1000)" x-text="t"></div>
         <div class="pdv-vsep"></div>
         <div class="pdv-pill-green">Caixa aberto</div>
+        <div class="pdv-theme-control">
+            <x-filament-panels::theme-switcher />
+        </div>
         <a href="{{ $dashUrl }}" class="pdv-exit-btn">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
             Sair do PDV
@@ -99,7 +102,7 @@
 
                             <div class="pdv-card-img">
                                 @if ($imgUrl)
-                                    <img src="{{ $imgUrl }}" alt="{{ $product->title }}" loading="lazy">
+                                    <img src="{{ $imgUrl }}" alt="{{ $product->title }}" loading="lazy" x-on:error.once="$el.src = '{{ asset('images/product-placeholder.svg') }}'">
                                 @else
                                     <img src="{{ asset('images/product-placeholder.svg') }}" alt="" loading="lazy">
                                 @endif
@@ -271,27 +274,27 @@
             <div class="pdv-payment">
                 <div class="pdv-label">Forma de pagamento</div>
                 <div class="pdv-payment-grid">
-                    <button type="button" class="pdv-pay-btn {{ $paymentMethod === 'pix' ? 'active' : '' }}" wire:click="$set('paymentMethod','pix')">
+                    <button type="button" class="pdv-pay-btn {{ $paymentMethod === 'pix' ? 'active' : '' }}" aria-pressed="{{ $paymentMethod === 'pix' ? 'true' : 'false' }}" wire:click="$set('paymentMethod','pix')">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m8.5 2 4.5 4.5L17.5 2"/><path d="M2 8.5 6.5 13 2 17.5"/><path d="m8.5 22 4.5-4.5 4.5 4.5"/><path d="M22 8.5 17.5 13l4.5 4.5"/></svg>
                         PIX
                     </button>
-                    <button type="button" class="pdv-pay-btn {{ $paymentMethod === 'cartao_credito' ? 'active' : '' }}" wire:click="$set('paymentMethod','cartao_credito')">
+                    <button type="button" class="pdv-pay-btn {{ $paymentMethod === 'cartao_credito' ? 'active' : '' }}" aria-pressed="{{ $paymentMethod === 'cartao_credito' ? 'true' : 'false' }}" wire:click="$set('paymentMethod','cartao_credito')">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
                         Crédito
                     </button>
-                    <button type="button" class="pdv-pay-btn {{ $paymentMethod === 'cartao_debito' ? 'active' : '' }}" wire:click="$set('paymentMethod','cartao_debito')">
+                    <button type="button" class="pdv-pay-btn {{ $paymentMethod === 'cartao_debito' ? 'active' : '' }}" aria-pressed="{{ $paymentMethod === 'cartao_debito' ? 'true' : 'false' }}" wire:click="$set('paymentMethod','cartao_debito')">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
                         Débito
                     </button>
-                    <button type="button" class="pdv-pay-btn {{ $paymentMethod === 'dinheiro' ? 'active' : '' }}" wire:click="$set('paymentMethod','dinheiro')">
+                    <button type="button" class="pdv-pay-btn {{ $paymentMethod === 'dinheiro' ? 'active' : '' }}" aria-pressed="{{ $paymentMethod === 'dinheiro' ? 'true' : 'false' }}" wire:click="$set('paymentMethod','dinheiro')">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></svg>
                         Dinheiro
                     </button>
-                    <button type="button" class="pdv-pay-btn {{ $paymentMethod === 'transferencia' ? 'active' : '' }}" wire:click="$set('paymentMethod','transferencia')">
+                    <button type="button" class="pdv-pay-btn {{ $paymentMethod === 'transferencia' ? 'active' : '' }}" aria-pressed="{{ $paymentMethod === 'transferencia' ? 'true' : 'false' }}" wire:click="$set('paymentMethod','transferencia')">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                         Transferência
                     </button>
-                    <button type="button" class="pdv-pay-btn {{ $paymentMethod === 'outro' ? 'active' : '' }}" wire:click="$set('paymentMethod','outro')">
+                    <button type="button" class="pdv-pay-btn {{ $paymentMethod === 'outro' ? 'active' : '' }}" aria-pressed="{{ $paymentMethod === 'outro' ? 'true' : 'false' }}" wire:click="$set('paymentMethod','outro')">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
                         Outro
                     </button>
@@ -328,8 +331,8 @@
                     @disabled(empty($cart))
                 >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
-                    <span wire:loading.remove>Finalizar venda</span>
-                    <span wire:loading>Processando…</span>
+                    <span wire:loading.remove wire:target="finalizeOrder">Finalizar venda</span>
+                    <span wire:loading wire:target="finalizeOrder">Processando…</span>
                     <kbd>F8</kbd>
                 </button>
                 <div class="pdv-sec-row">

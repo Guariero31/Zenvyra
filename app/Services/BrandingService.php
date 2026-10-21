@@ -314,6 +314,18 @@ class BrandingService
      */
     private function gerarCssLightDark(array $light, array $dark, string $darkPrimaryHex): string
     {
+        foreach ([
+            '--brand-bg-page' => 'var(--panel-canvas, #f6f5f0)',
+            '--brand-bg-content' => 'var(--panel-canvas, #f6f5f0)',
+            '--brand-bg-sidebar' => 'var(--panel-sidebar, #fcfcf9)',
+            '--brand-bg-topbar' => 'var(--panel-canvas, #f6f5f0)',
+        ] as $variable => $fallback) {
+            if (filled($light[$variable] ?? null) || filled($dark[$variable] ?? null)) {
+                $light[$variable] ??= $fallback;
+                $dark[$variable] ??= $fallback;
+            }
+        }
+
         $format = static function (array $vars): string {
             return collect($vars)
                 ->filter(fn (?string $value): bool => filled($value))

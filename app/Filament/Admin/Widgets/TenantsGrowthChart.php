@@ -43,7 +43,7 @@ class TenantsGrowthChart extends ChartWidget
                 [
                     'label' => 'Novas lojas',
                     'data' => $values,
-                    'borderColor' => '#89b61e',
+                    'borderColor' => '#739c24',
                     'backgroundColor' => 'rgba(163, 211, 49, 0.12)',
                     'fill' => true,
                     'tension' => 0.3,

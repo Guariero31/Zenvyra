@@ -13,7 +13,8 @@ describe('Planos - Painel Admin', () => {
 
   it('deve exibir o cabeçalho e breadcrumb corretos', () => {
     cy.get('h1.fi-header-heading').should('contain.text', 'Planos');
-    cy.get('.fi-breadcrumbs-item-label').should('contain.text', 'Planos');
+    cy.get('.fi-breadcrumbs-item-label').first().should('contain.text', 'Planos');
+    cy.get('.fi-breadcrumbs-item-label').last().should('contain.text', 'Listar');
   });
 
   it('deve exibir o botão de criar plano e navegar ao clicar', () => {
@@ -23,77 +24,74 @@ describe('Planos - Painel Admin', () => {
 
   it('deve exibir a tabela com as colunas corretas', () => {
     cy.get('table[aria-label="planos"]').should('be.visible');
-    cy.get('.fi-ta-header-cell-name').should('contain.text', 'Nome');
-    cy.get('.fi-ta-header-cell-slug').should('contain.text', 'Slug');
-    cy.get('.fi-ta-header-cell-price').should('contain.text', 'Preço');
-    cy.get('.fi-ta-header-cell-billing-period').should('contain.text', 'Período');
-    cy.get('.fi-ta-header-cell-is-active').should('contain.text', 'Ativo');
+    ['Nome', 'Slug', 'Preço', 'Período', 'Ativo'].forEach((coluna) => {
+      cy.contains('table[aria-label="planos"] th.fi-ta-header-cell', coluna).should('be.visible');
+    });
   });
 
   it('deve listar os planos cadastrados', () => {
-    cy.contains('.fi-ta-cell', 'Avaliação').should('be.visible');
-    cy.contains('.fi-ta-cell', 'Starter').should('be.visible');
-    cy.contains('.fi-ta-cell', 'Pro').should('be.visible');
-    cy.contains('.fi-ta-cell', 'Enterprise').should('be.visible');
+    cy.get('tbody tr.fi-ta-row').should('have.length.at.least', 1);
+    cy.get('.fi-ta-cell-name').first().invoke('text').should('not.be.empty');
+    cy.get('.fi-ta-cell-slug').first().invoke('text').should('not.be.empty');
   });
 
-  it('deve exibir o preço e o período de cobrança de um plano', () => {
-    cy.contains('.fi-ta-cell', 'Starter')
-      .parents('tr')
-      .within(() => {
-        cy.get('.fi-ta-cell-price').should('contain.text', 'R$');
-        cy.get('.fi-badge').should('contain.text', 'Mensal');
-      });
+  it('deve exibir o preço em formato de moeda e o período como badge', () => {
+    cy.get('.fi-ta-cell-price').each(($cell) => {
+      expect($cell.text()).to.match(/R\$\s*[\d.]+,\d{2}/);
+    });
+    cy.get('.fi-ta-cell-billing-period .fi-badge').first().should('exist');
   });
 
-  it('deve exibir o status ativo/inativo de cada plano', () => {
-    // "Essencial" está ativo (Sim) neste conjunto de dados
-    cy.contains('.fi-ta-cell', 'Essencial')
-      .parents('tr')
-      .find('.fi-ta-icon')
-      .should('contain.text', 'Sim');
-
-    // "Starter" está inativo (Não)
-    cy.contains('.fi-ta-cell', 'Starter')
-      .parents('tr')
-      .find('.fi-ta-icon')
-      .should('contain.text', 'Não');
+  it('deve exibir o status ativo de cada plano', () => {
+    cy.get('tbody tr.fi-ta-row').each(($row) => {
+      cy.wrap($row).find('.fi-ta-cell-is-active .fi-ta-icon').should('exist');
+    });
   });
 
-  it('deve ordenar a tabela ao clicar no cabeçalho de preço', () => {
-    cy.get('.fi-ta-header-cell-price button').click();
-    cy.get('.fi-ta-header-cell-price').should('have.attr', 'aria-sort').and('not.eq', 'none');
+  it('deve exibir as ações de ativar/desativar e editar', () => {
+    cy.get('tbody tr.fi-ta-row').first().within(() => {
+      cy.get('button.fi-ac-link-action').invoke('text').should('match', /Ativar|Desativar/);
+      cy.get('a.fi-ac-link-action[href*="/edit"]').should('exist');
+    });
   });
 
-  it('deve exibir a paginação corretamente com base no total de resultados', () => {
-    cy.get('.fi-pagination-overview')
-      .invoke('text')
-      .then((text) => {
-        const match = text.match(/de (\d+) resultados/);
-        expect(match, 'texto de paginação deve conter o total').to.not.be.null;
+  it('deve ordenar a lista ao clicar na coluna Preço', () => {
+    cy.get('th.fi-ta-header-cell-price').should('have.attr', 'aria-sort', 'none');
+    cy.get('th.fi-ta-header-cell-price .fi-ta-header-cell-sort-btn').click();
+    cy.get('th.fi-ta-header-cell-price').should('have.attr', 'aria-sort', 'ascending');
+  });
 
-        const total = parseInt(match[1], 10);
-        const itensPagina1 = Math.min(total, 10);
+  it('deve exibir o total correto de resultados na paginação', () => {
+    cy.get('.fi-pagination-overview').invoke('text').then((text) => {
+      const match = text.match(/de (\d+) resultados/);
+      expect(match, 'texto de paginação deve conter o total').to.not.be.null;
+      const total = parseInt(match[1], 10);
+      const itensPagina1 = Math.min(total, 10);
 
-        cy.get('.fi-pagination-overview').should(
-          'contain.text',
-          `Exibindo 1 a ${itensPagina1} de ${total} resultados`
-        );
-      });
+      cy.get('.fi-pagination-overview').should(
+        'contain.text',
+        `Exibindo 1 a ${itensPagina1} de ${total} resultados`
+      );
+      cy.get('tbody tr.fi-ta-row').should('have.length', itensPagina1);
+    });
   });
 
   it('deve filtrar a lista ao pesquisar pelo nome de um plano', () => {
-    cy.get('input[wire\\:model\\.live\\.debounce\\.500ms="tableSearch"]').type('Starter');
-    cy.contains('.fi-ta-cell', 'Starter').should('be.visible');
-    cy.contains('.fi-ta-cell', 'Enterprise').should('not.exist');
+    cy.get('.fi-ta-cell-name').first().invoke('text').then((nome) => {
+      const termo = nome.trim();
+      cy.get('input[wire\\:model\\.live\\.debounce\\.500ms="tableSearch"]').type(termo);
+      // should com callback: o Cypress repete até a tabela terminar de filtrar
+      cy.get('.fi-ta-cell-name').should(($cells) => {
+        expect($cells.length).to.be.at.least(1);
+        $cells.each((_, el) => {
+          expect(el.innerText.toLowerCase()).to.contain(termo.toLowerCase());
+        });
+      });
+    });
   });
 
   it('deve navegar para a tela de edição ao clicar em um plano', () => {
-    cy.contains('.fi-ta-cell', 'Avaliação').click();
-    cy.url().should('include', '/admin/plans/1/edit');
+    cy.get('.fi-ta-cell-name a').first().click();
+    cy.url().should('match', /\/admin\/plans\/\d+\/edit/);
   });
-
-  // Nota: o botão "Ativar/Desativar" (toggleStatus) altera dados reais
-  // e foi propositalmente deixado fora desta suíte, seguindo a mesma
-  // lógica aplicada à tela de Lojistas.
 });

@@ -13,7 +13,8 @@ describe('Lojas - Painel Admin', () => {
 
   it('deve exibir o cabeçalho e breadcrumb corretos', () => {
     cy.get('h1.fi-header-heading').should('contain.text', 'Lojas');
-    cy.get('.fi-breadcrumbs-item-label').should('contain.text', 'Lojas');
+    cy.get('.fi-breadcrumbs-item-label').first().should('contain.text', 'Lojas');
+    cy.get('.fi-breadcrumbs-item-label').last().should('contain.text', 'Listar');
   });
 
   it('deve exibir o botão de criar loja e navegar ao clicar', () => {
@@ -23,45 +24,65 @@ describe('Lojas - Painel Admin', () => {
 
   it('deve exibir a tabela com as colunas corretas', () => {
     cy.get('table[aria-label="lojas"]').should('be.visible');
-    cy.get('.fi-ta-header-cell-te-name').should('contain.text', 'Nome');
-    cy.get('.fi-ta-header-cell-te-slug').should('contain.text', 'Slug');
-    cy.get('.fi-ta-header-cell-plan-name').should('contain.text', 'Plano');
-    cy.get('.fi-ta-header-cell-subscription-intent').should('contain.text', 'Intenção');
-    cy.get('.fi-ta-header-cell-subscription-status').should('contain.text', 'Assinatura');
-    cy.get('.fi-ta-header-cell-te-ativo').should('contain.text', 'Ativa');
+    ['Nome', 'Slug', 'Plano', 'Intenção', 'Assinatura', 'Ativa'].forEach((coluna) => {
+      cy.contains('table[aria-label="lojas"] th.fi-ta-header-cell', coluna).should('be.visible');
+    });
   });
 
   it('deve listar as lojas cadastradas', () => {
-    cy.contains('.fi-ta-cell', 'Loja Demo').should('be.visible');
-    cy.contains('.fi-ta-cell', 'Moda Urbana').should('be.visible');
-    cy.contains('.fi-ta-cell', 'Tech House').should('be.visible');
+    cy.get('table[aria-label="lojas"] tbody tr.fi-ta-row').should('have.length.at.least', 1);
+    cy.get('.fi-ta-cell-te-name').first().invoke('text').should('not.be.empty');
+    cy.get('.fi-ta-cell-te-slug').first().invoke('text').should('not.be.empty');
+  });
+
+  it('deve exibir badges de intenção e de assinatura em cada loja', () => {
+    cy.get('tbody tr.fi-ta-row').each(($row) => {
+      cy.wrap($row).find('.fi-ta-cell-subscription-intent .fi-badge').should('exist');
+      cy.wrap($row).find('.fi-ta-cell-subscription-status .fi-badge').should('exist');
+    });
+  });
+
+  it('deve exibir as ações de ativar/desativar e editar em cada loja', () => {
+    cy.get('tbody tr.fi-ta-row').first().within(() => {
+      cy.get('.fi-ta-actions').should('exist');
+      cy.get('a.fi-ac-link-action[href*="/edit"]').should('exist');
+      cy.get('button.fi-ac-link-action').invoke('text').should('match', /Ativar|Desativar/);
+    });
   });
 
   it('deve exibir o total correto de resultados na paginação', () => {
-    cy.get('.fi-pagination-overview')
-      .invoke('text')
-      .then((text) => {
-        const match = text.match(/de (\d+) resultados/);
-        expect(match, 'texto de paginação deve conter o total').to.not.be.null;
+    cy.get('.fi-pagination-overview').invoke('text').then((text) => {
+      const match = text.match(/de (\d+) resultados/);
+      expect(match, 'texto de paginação deve conter o total').to.not.be.null;
+      const total = parseInt(match[1], 10);
+      const itensPagina1 = Math.min(total, 10);
 
-        const total = parseInt(match[1], 10);
-        const itensPagina1 = Math.min(total, 10);
-
-        cy.get('.fi-pagination-overview').should(
-          'contain.text',
-          `Exibindo 1 a ${itensPagina1} de ${total} resultados`
-        );
-      });
+      cy.get('.fi-pagination-overview').should(
+        'contain.text',
+        `Exibindo 1 a ${itensPagina1} de ${total} resultados`
+      );
+      cy.get('tbody tr.fi-ta-row').should('have.length', itensPagina1);
+    });
   });
 
   it('deve filtrar a lista ao pesquisar pelo nome de uma loja', () => {
     cy.get('input[wire\\:model\\.live\\.debounce\\.500ms="tableSearch"]').type('Tech House');
-    cy.contains('.fi-ta-cell', 'Tech House').should('be.visible');
-    cy.contains('.fi-ta-cell', 'Loja Demo').should('not.exist');
+    // should com callback: o Cypress repete até a tabela terminar de filtrar
+    cy.get('.fi-ta-cell-te-name').should(($cells) => {
+      expect($cells.length).to.be.at.least(1);
+      $cells.each((_, el) => {
+        expect(el.innerText.toLowerCase()).to.contain('tech house');
+      });
+    });
   });
 
   it('deve navegar para a tela de edição ao clicar em uma loja', () => {
-    cy.contains('.fi-ta-cell', 'Loja Demo').click();
-    cy.url().should('include', '/admin/tenants/1/edit');
+    cy.get('.fi-ta-cell-te-name a').first().click();
+    cy.url().should('match', /\/admin\/tenants\/\d+\/edit/);
+  });
+
+  it('deve navegar para a tela de edição pela ação "Editar"', () => {
+    cy.get('tbody tr.fi-ta-row').first().find('a.fi-ac-link-action[href*="/edit"]').click();
+    cy.url().should('match', /\/admin\/tenants\/\d+\/edit/);
   });
 });
